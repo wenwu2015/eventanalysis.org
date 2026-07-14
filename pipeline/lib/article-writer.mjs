@@ -18,6 +18,7 @@ function assertPublicDraftSafe(article) {
   const missingLocales = requiredLocales.filter((locale) => !article.translations?.[locale]);
   if (missingLocales.length) throw new Error(`Missing required translations: ${missingLocales.join(", ")}`);
   if (!article.slug || !article.id) throw new Error("Article id and slug are required");
+  if (!article.sport) throw new Error("Article sport is required");
   if (!Number.isFinite(article.match?.homeScore) || !Number.isFinite(article.match?.awayScore)) throw new Error("Deterministic final score is required");
 }
 
@@ -31,6 +32,7 @@ function writingPrompt(facts, requiredLocales) {
       "Keep fact and analysis visibly distinct.",
       "Do not mention providers, URLs, videos, screenshots or private evidence.",
       "Return JSON only, matching the existing Article structure in lib/content.ts.",
+      "Preserve the supplied sport code; do not infer or change the sport.",
       "Use one shared fact object and preserve every number exactly across all language editions.",
       "Do not publish an English placeholder when a requested translation is missing.",
       "Set status to needs_review. Never set published or approved.",

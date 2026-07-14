@@ -13,6 +13,10 @@ Event Analysis is a 21-language post-match football analysis publication. The fi
 
 Every route is emitted as a standalone `dist/**/index.html` file and loads only `/assets/site.css`. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
 
+### Sport expansion boundary
+
+Version one enables only `football`. `content/sports.json` is the single sport registry; basketball, volleyball and badminton are registered as `planned` and therefore produce no routes, navigation, feeds, sitemap entries or collection jobs. Every article and private fact bundle carries a `sport` code. Football keeps the short existing URL, while future sports already have isolated `/sports/:sport` base paths. Enabling another sport later requires its source adapter, deterministic rules and localized editorial vocabulary to pass review before changing its registry status to `active`.
+
 ## Local development
 
 Node.js 22.13 or newer is required.

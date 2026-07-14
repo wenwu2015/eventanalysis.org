@@ -1,4 +1,5 @@
 {
+  "activeSports": ["football"],
   "lookbackHours": 48,
   "maxCandidates": 20,
   "maxDraftsPerRun": 3,

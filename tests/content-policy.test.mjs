@@ -40,3 +40,15 @@ test("the football language matrix is complete and never requires English fallba
   assert.match(writer, /Missing required translations/);
   assert.match(writer, /Do not publish an English placeholder/);
 });
+
+test("version one exposes football only while future ball sports remain isolated", async () => {
+  const sports = JSON.parse(await readFile(resolve(root, "content/sports.json"), "utf8"));
+  assert.deepEqual(sports.filter(({ status }) => status === "active").map(({ code }) => code), ["football"]);
+  for (const planned of ["basketball", "volleyball", "badminton"]) {
+    const sport = sports.find(({ code }) => code === planned);
+    assert.equal(sport?.status, "planned");
+    assert.equal(sport?.publicBasePath, `/sports/${planned}`);
+  }
+  const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/policy.json"), "utf8"));
+  assert.deepEqual(policy.activeSports, ["football"]);
+});

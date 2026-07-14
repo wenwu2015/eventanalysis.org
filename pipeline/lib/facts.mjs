@@ -35,6 +35,7 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
   return {
     schemaVersion: 1,
     id: `match-${event.id}`,
+    sport: String(event.sport || "football").toLowerCase(),
     collectedAt: new Date().toISOString(),
     status: missing.length ? "data_incomplete" : "needs_review",
     match: {

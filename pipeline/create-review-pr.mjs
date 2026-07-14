@@ -16,6 +16,7 @@ const body = [
   "- [ ] Core result confirmed by two independent authorised sources",
   "- [ ] Historical record and deterministic rates checked",
   "- [ ] Personnel changes checked",
+  "- [ ] Sport code is active and uses the correct deterministic rules",
   "- [ ] Facts and analysis clearly separated",
   "- [ ] Numbers match across all required language editions",
   "- [ ] No language route uses English as a placeholder translation",

@@ -32,7 +32,10 @@ if (!sofa) {
     });
   });
 
-  const ranked = rankCandidates(candidates).slice(0, config.policy.maxCandidates);
+  const allowedSports = new Set(config.policy.activeSports || ["football"]);
+  const ranked = rankCandidates(candidates.filter((event) =>
+    allowedSports.has(String(event.sport || "football").toLowerCase())
+  )).slice(0, config.policy.maxCandidates);
   const selected = ranked.slice(0, config.policy.maxDraftsPerRun);
   for (const event of selected) {
     const result = await withEphemeralJob({

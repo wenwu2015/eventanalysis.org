@@ -4,11 +4,14 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { publishedArticles, ui, winRate } from "../lib/content.ts";
 import { localeByCode, localeDefinitions } from "../lib/locales.ts";
+import { activeSports, articlePath, sportByCode } from "../lib/sports.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
 const baseUrl = "https://eventanalysis.org";
 const adConfig = JSON.parse(await readFile(resolve(root, "site/ad-config.json"), "utf8"));
+const activeSportCodes = new Set(activeSports.map(({ code }) => code));
+const publicArticles = publishedArticles.filter((article) => activeSportCodes.has(article.sport));
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -132,13 +135,14 @@ function headline(value) {
 
 function homePage(locale) {
   const copy = ui[locale];
-  const article = publishedArticles.find((item) => item.translations[locale]);
+  const article = publicArticles.find((item) => item.translations[locale]);
   const translation = article?.translations[locale];
   let lead;
   let numbers = "";
   if (article && translation) {
     const h2h = article.headToHeadBeforeMatch;
-    lead = `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span class="story-status">${escapeHtml(copy.home.reviewed)}</span><span>${escapeHtml(translation.competition)}</span></div><h2><a href="/${locale}/articles/${article.slug}">${escapeHtml(translation.title)}</a></h2><p>${escapeHtml(translation.deck)}</p><a class="story-link" href="/${locale}/articles/${article.slug}">${escapeHtml(copy.home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(translation.resultLabel)}</span><div><div class="scoreline"><span>${escapeHtml(translation.homeName)}</span><strong>${article.match.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(translation.awayName)}</span><strong>${article.match.awayScore}</strong></div></div><span class="score-date">${escapeHtml(translation.venue)} · 14.07.2024</span></div></article>`;
+    const path = articlePath(locale, article.sport, article.slug);
+    lead = `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span class="story-status">${escapeHtml(copy.home.reviewed)}</span><span>${escapeHtml(translation.competition)}</span></div><h2><a href="${path}">${escapeHtml(translation.title)}</a></h2><p>${escapeHtml(translation.deck)}</p><a class="story-link" href="${path}">${escapeHtml(copy.home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(translation.resultLabel)}</span><div><div class="scoreline"><span>${escapeHtml(translation.homeName)}</span><strong>${article.match.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(translation.awayName)}</span><strong>${article.match.awayScore}</strong></div></div><span class="score-date">${escapeHtml(translation.venue)} · 14.07.2024</span></div></article>`;
     numbers = `<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.numbers)}</h2><span class="eyebrow">H2H · PRE-MATCH</span></div><div class="numbers-grid"><div class="number-card"><strong>${h2h.matches}</strong><span>${escapeHtml(copy.home.meetings)}</span></div><div class="number-card"><strong>${winRate(h2h.homeWins, h2h.matches)}</strong><span>${escapeHtml(translation.homeName)} · ${escapeHtml(copy.home.winRate)}</span></div><div class="number-card"><strong>${winRate(h2h.awayWins, h2h.matches)}</strong><span>${escapeHtml(translation.awayName)} · ${escapeHtml(copy.home.winRate)}</span></div><div class="number-card"><strong>86′</strong><span>${escapeHtml(copy.home.winnerMinute)}</span></div></div></section>`;
   } else {
     lead = `<div class="edition-empty"><span class="edition-empty-code">${escapeHtml(locale.toUpperCase())}</span><div><h3>${escapeHtml(copy.home.emptyTitle)}</h3><p>${escapeHtml(copy.home.emptyBody)}</p></div></div>`;
@@ -150,11 +154,11 @@ function homePage(locale) {
 
 function archivePage(locale) {
   const copy = ui[locale];
-  const articles = publishedArticles.filter((article) => article.translations[locale]);
+  const articles = publicArticles.filter((article) => article.translations[locale]);
   const rows = articles.map((article) => {
     const translation = article.translations[locale];
     const date = new Intl.DateTimeFormat(localeByCode[locale].htmlLang).format(new Date(article.publishedAt));
-    return `<a class="archive-row" href="/${locale}/articles/${article.slug}"><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(date)}</time><h2>${escapeHtml(translation.title)}</h2><span class="archive-meta">${escapeHtml(translation.competition)}</span><strong class="archive-score">${article.match.homeScore}–${article.match.awayScore}</strong></a>`;
+    return `<a class="archive-row" href="${articlePath(locale, article.sport, article.slug)}"><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(date)}</time><h2>${escapeHtml(translation.title)}</h2><span class="archive-meta">${escapeHtml(translation.competition)}</span><strong class="archive-score">${article.match.homeScore}–${article.match.awayScore}</strong></a>`;
   }).join("") || `<p class="archive-empty">${escapeHtml(copy.archive.empty)}</p>`;
   const content = `<div class="page-width"><header class="page-hero"><p class="eyebrow">Event Analysis · Index</p><h1>${escapeHtml(copy.archive.title)}</h1><p>${escapeHtml(copy.archive.intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
   return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.archive.title, description: copy.archive.intro, canonical: `/${locale}/archive`, alternates: alternateLinks("/archive"), body: shell(locale, content) });
@@ -183,19 +187,21 @@ function articlePage(locale, article) {
   const verdict = t.verdictParagraphs.map((paragraph) => `<p><span class="analysis-label">${escapeHtml(labels.reading)}</span>${escapeHtml(paragraph)}</p>`).join("");
   const content = `<article class="page-width"><header class="article-header"><p class="eyebrow">${escapeHtml(t.competition)}</p><h1>${escapeHtml(t.title)}</h1><p class="article-deck">${escapeHtml(t.deck)}</p><div class="article-byline"><span>${escapeHtml(article.author)}</span><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(published)}</time><span>${escapeHtml(labels.reviewed)}</span></div></header><div class="matchboard" aria-label="${escapeHtml(`${t.homeName} ${article.match.homeScore}, ${t.awayName} ${article.match.awayScore}`)}"><div class="matchboard-team"><strong>${escapeHtml(t.homeName)}</strong><span>${escapeHtml(t.venue)}</span></div><div class="matchboard-score">${article.match.homeScore}–${article.match.awayScore}</div><div class="matchboard-team"><strong>${escapeHtml(t.awayName)}</strong><span>${escapeHtml(t.resultLabel)}</span></div></div><div class="article-layout"><aside class="article-rail" aria-label="Article facts"><div class="rail-box"><strong>${escapeHtml(labels.confidence)}</strong><span>${article.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(labels.historicalSample)}</strong><span>${h2h.matches} ${escapeHtml(labels.matches)}</span></div><div class="rail-box"><strong>${escapeHtml(labels.contentType)}</strong><span>${escapeHtml(labels.postMatch)}</span></div></aside><div class="article-body"><section><h2>${escapeHtml(t.h2hTitle)}</h2><p><span class="fact-label">${escapeHtml(labels.fact)}</span>${escapeHtml(t.h2hIntro)}</p><div class="data-table-wrap"><table class="data-table"><thead><tr><th>${escapeHtml(labels.outcome)}</th><th>${escapeHtml(labels.matches)}</th><th>${escapeHtml(labels.share)}</th></tr></thead><tbody>${rows}</tbody></table></div></section><section><h2>${escapeHtml(t.personnelTitle)}</h2>${personnel}</section>${adSlot("content-mid")}<section><h2>${escapeHtml(t.resultTitle)}</h2><div class="timeline">${timeline}</div>${results}</section><section><h2>${escapeHtml(t.verdictTitle)}</h2>${verdict}<div class="confidence"><div class="confidence-head"><span>${escapeHtml(labels.evidence)}</span><strong>${article.confidence}%</strong></div><div class="confidence-track"><div class="confidence-fill" style="width:${article.confidence}%"></div></div></div></section></div></div></article>`;
   const translatedLocales = Object.keys(article.translations);
-  const jsonLd = `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": [{ "@type": "Article", headline: t.title, description: t.deck, datePublished: article.publishedAt, dateModified: article.reviewedAt, inLanguage: localeByCode[locale].htmlLang, author: { "@type": "Organization", name: article.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: `${baseUrl}/${locale}/articles/${article.slug}` }, { "@type": "SportsEvent", name: `${t.homeName} ${article.match.homeScore}–${article.match.awayScore} ${t.awayName}`, startDate: article.match.startedAt, location: { "@type": "Place", name: t.venue }, homeTeam: { "@type": "SportsTeam", name: t.homeName }, awayTeam: { "@type": "SportsTeam", name: t.awayName } }] }).replaceAll("<", "\\u003c")}</script>`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: t.title, description: t.deck, canonical: `/${locale}/articles/${article.slug}`, alternates: alternateLinks(`/articles/${article.slug}`, translatedLocales), body: shell(locale, content), jsonLd });
+  const sportBase = sportByCode[article.sport].publicBasePath;
+  const canonicalPath = articlePath(locale, article.sport, article.slug);
+  const jsonLd = `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": [{ "@type": "Article", headline: t.title, description: t.deck, datePublished: article.publishedAt, dateModified: article.reviewedAt, inLanguage: localeByCode[locale].htmlLang, author: { "@type": "Organization", name: article.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: `${baseUrl}${canonicalPath}` }, { "@type": "SportsEvent", name: `${t.homeName} ${article.match.homeScore}–${article.match.awayScore} ${t.awayName}`, sport: sportByCode[article.sport].name, startDate: article.match.startedAt, location: { "@type": "Place", name: t.venue }, homeTeam: { "@type": "SportsTeam", name: t.homeName }, awayTeam: { "@type": "SportsTeam", name: t.awayName } }] }).replaceAll("<", "\\u003c")}</script>`;
+  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: t.title, description: t.deck, canonical: canonicalPath, alternates: alternateLinks(`${sportBase}/articles/${article.slug}`, translatedLocales), body: shell(locale, content), jsonLd });
 }
 
 function feed(locale) {
   const definition = localeByCode[locale];
-  const articles = publishedArticles.filter((article) => article.translations[locale]);
+  const articles = publicArticles.filter((article) => article.translations[locale]);
   const items = articles.map((article) => {
     const t = article.translations[locale];
-    const url = `${baseUrl}/${locale}/articles/${article.slug}`;
+    const url = `${baseUrl}${articlePath(locale, article.sport, article.slug)}`;
     return `<item><title>${escapeXml(t.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(article.publishedAt).toUTCString()}</pubDate><description>${escapeXml(t.deck)}</description></item>`;
   }).join("");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(definition.nativeName)}</title><link>${baseUrl}/${locale}</link><description>${escapeXml(definition.nativeName)} · Event Analysis</description><language>${definition.htmlLang}</language><lastBuildDate>${new Date(articles[0]?.publishedAt || publishedArticles[0].publishedAt).toUTCString()}</lastBuildDate>${items}</channel></rss>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(definition.nativeName)}</title><link>${baseUrl}/${locale}</link><description>${escapeXml(definition.nativeName)} · Event Analysis</description><language>${definition.htmlLang}</language><lastBuildDate>${new Date(articles[0]?.publishedAt || publicArticles[0].publishedAt).toUTCString()}</lastBuildDate>${items}</channel></rss>\n`;
 }
 
 async function writeFileEnsured(path, content) {
@@ -224,15 +230,15 @@ for (const { code } of localeDefinitions) {
   await writeFileEnsured(resolve(output, code, "feed.xml"), feed(code));
 }
 
-for (const article of publishedArticles) {
+for (const article of publicArticles) {
   for (const locale of Object.keys(article.translations)) {
-    await writeRoute(`/${locale}/articles/${article.slug}`, articlePage(locale, article));
+    await writeRoute(articlePath(locale, article.sport, article.slug), articlePage(locale, article));
   }
 }
 
 const staticPaths = ["/", ...localeDefinitions.flatMap(({ code }) => [`/${code}`, `/${code}/archive`, `/${code}/methodology`])];
-const articlePaths = publishedArticles.flatMap((article) => Object.keys(article.translations).map((locale) => `/${locale}/articles/${article.slug}`));
-const lastModified = new Date(publishedArticles[0].publishedAt).toISOString();
+const articlePaths = publicArticles.flatMap((article) => Object.keys(article.translations).map((locale) => articlePath(locale, article.sport, article.slug)));
+const lastModified = new Date(publicArticles[0].publishedAt).toISOString();
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticPaths, ...articlePaths].map((path) => `<url><loc>${baseUrl}${path}</loc><lastmod>${lastModified}</lastmod></url>`).join("")}</urlset>\n`;
 await writeFileEnsured(resolve(output, "sitemap.xml"), sitemap);
 await writeFileEnsured(resolve(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);

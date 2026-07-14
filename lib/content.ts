@@ -1,5 +1,6 @@
 import generatedArticlesJson from "../content/articles.generated.json" with { type: "json" };
 import { isLocale, type Locale } from "./locales.ts";
+import type { SportCode } from "./sports.ts";
 
 export type { Locale } from "./locales.ts";
 export { isLocale };
@@ -33,6 +34,7 @@ export type ArticleTranslation = {
 export type Article = {
   id: string;
   slug: string;
+  sport: SportCode;
   status: ArticleStatus;
   publishedAt: string;
   reviewedAt: string;
@@ -57,6 +59,7 @@ const editorialArticles: Article[] = [
   {
     id: "ea-euro-2024-final",
     slug: "spain-england-euro-2024-final",
+    sport: "football",
     status: "published",
     publishedAt: "2026-07-14T08:00:00+08:00",
     reviewedAt: "2026-07-14T07:30:00+08:00",

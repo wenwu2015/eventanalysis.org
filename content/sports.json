@@ -1,0 +1,30 @@
+[
+  {
+    "code": "football",
+    "name": "Football",
+    "status": "active",
+    "publicBasePath": "",
+    "eventSchema": "sports-event-v1"
+  },
+  {
+    "code": "basketball",
+    "name": "Basketball",
+    "status": "planned",
+    "publicBasePath": "/sports/basketball",
+    "eventSchema": "sports-event-v1"
+  },
+  {
+    "code": "volleyball",
+    "name": "Volleyball",
+    "status": "planned",
+    "publicBasePath": "/sports/volleyball",
+    "eventSchema": "sports-event-v1"
+  },
+  {
+    "code": "badminton",
+    "name": "Badminton",
+    "status": "planned",
+    "publicBasePath": "/sports/badminton",
+    "eventSchema": "sports-event-v1"
+  }
+]

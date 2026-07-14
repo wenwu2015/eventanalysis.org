@@ -14,6 +14,9 @@ if (article.status !== "approved") throw new Error("A human reviewer must set st
 const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8"));
 const missingLocales = locales.map(({ code }) => code).filter((locale) => !article.translations?.[locale]);
 if (missingLocales.length) throw new Error(`All required language versions must be approved. Missing: ${missingLocales.join(", ")}`);
+const sports = JSON.parse(await readFile(resolve(root, "content/sports.json"), "utf8"));
+const sport = sports.find(({ code }) => code === article.sport);
+if (!sport || sport.status !== "active") throw new Error(`Sport is not enabled for publication: ${article.sport || "missing"}`);
 article.status = "published";
 article.publishedAt ||= new Date().toISOString();
 article.reviewedAt = new Date().toISOString();
