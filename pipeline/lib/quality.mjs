@@ -26,7 +26,7 @@ export function hashText(value) {
   return createHash("sha256").update(normalizeText(value)).digest("hex");
 }
 
-function shingleSet(value, size = 5, locale = "en") {
+export function shingleSet(value, size = 5, locale = "en") {
   const words = tokens(value, locale);
   if (words.length < size) return new Set(words.length ? [words.join(" ")] : []);
   return new Set(Array.from({ length: words.length - size + 1 }, (_, index) => words.slice(index, index + size).join(" ")));
@@ -116,6 +116,13 @@ function independentSecondReview(item) {
 
 export function auditEdition({ item, locale, edition, corpus = [], sources = [], policy }) {
   const body = editionText(edition);
+  const bodyHash = hashText(body);
+  const titleHash = hashText(edition.title);
+  const deckHash = hashText(edition.deck);
+  const paragraphHashes = new Set((edition.sections || []).flatMap((section) => (section.paragraphs || []).map(({ text }) => hashText(text))));
+  const bodyShingles = shingleSet(body, 5, locale);
+  const bodyVector = semanticVector(body, locale);
+  const bodyClaimKeys = claimKeys(item);
   const findings = [];
   if (!languageLooksValid(locale, body)) findings.push({ severity: "BLOCK", code: "language_mismatch", detail: locale });
   if (!edition.sections?.length || !(item.claims || []).length) findings.push({ severity: "BLOCK", code: "missing_editorial_structure" });
@@ -125,13 +132,14 @@ export function auditEdition({ item, locale, edition, corpus = [], sources = [],
   }
 
   const similarities = [];
-  for (const candidate of corpus.filter((entry) => entry.contentId !== item.id)) {
-    const paragraphHashes = new Set((edition.sections || []).flatMap((section) => (section.paragraphs || []).map(({ text }) => hashText(text))));
+  for (const candidate of corpus.filter((entry) => entry.contentId !== item.id && entry.locale === locale)) {
     const exactParagraph = (candidate.paragraphHashes || []).some((hash) => paragraphHashes.has(hash));
-    const exact = hashText(body) === candidate.bodyHash || hashText(edition.title) === candidate.titleHash || hashText(edition.deck) === candidate.deckHash || exactParagraph;
-    const lexical = lexicalSimilarity(body, candidate.body, locale);
-    const semantic = cosineSimilarity(semanticVector(body, locale), candidate.vector || semanticVector(candidate.body, candidate.locale));
-    const claims = claimOverlap(item, candidate.item);
+    const exact = bodyHash === candidate.bodyHash || titleHash === candidate.titleHash || deckHash === candidate.deckHash || exactParagraph;
+    const lexical = jaccard(bodyShingles, candidate.shingles || shingleSet(candidate.body, 5, candidate.locale));
+    const claims = jaccard(bodyClaimKeys, candidate.claimKeys || claimKeys(candidate.item));
+    const semantic = lexical >= policy.lexicalReview || claims >= policy.claimOverlapReview
+      ? cosineSimilarity(bodyVector, candidate.vector || semanticVector(candidate.body, candidate.locale))
+      : 0;
     const intent = item.primaryIntentKey === candidate.item.primaryIntentKey;
     const sameEvents = (item.eventRefs || []).some((id) => (candidate.item.eventRefs || []).includes(id));
     const result = { contentId: candidate.contentId, locale: candidate.locale, exact, lexical, semantic, claims, intent, sameEvents };
@@ -140,7 +148,7 @@ export function auditEdition({ item, locale, edition, corpus = [], sources = [],
     if (intent) findings.push({ severity: "BLOCK", code: "duplicate_primary_intent", ...result });
     if (lexical >= policy.lexicalBlock) findings.push({ severity: "BLOCK", code: "lexical_duplicate", ...result });
     if (semantic >= policy.semanticBlock && claims >= policy.claimOverlapBlock) findings.push({ severity: "BLOCK", code: "semantic_claim_duplicate", ...result });
-    if (sameEvents) {
+    if (sameEvents && ["match_analysis", "moment_analysis"].includes(item.type) && ["match_analysis", "moment_analysis"].includes(candidate.item.type)) {
       const priorAnalysis = new Set((candidate.item.claims || []).filter(({ kind }) => kind === "analysis").map(({ summary }) => normalizeText(summary)));
       const newClaims = (item.claims || []).filter(({ kind, summary }) => kind === "analysis" && !priorAnalysis.has(normalizeText(summary))).length;
       if (newClaims < policy.minimumNewAnalysisClaimsForSameEvent) findings.push({ severity: "BLOCK", code: "insufficient_new_analysis_claims", newClaims, ...result });
@@ -168,7 +176,7 @@ export function buildCorpus(data) {
   for (const item of data.items) for (const [locale, edition] of Object.entries(item.editions || {})) {
     if (!["approved", "published"].includes(edition.status)) continue;
     const body = editionText(edition);
-    corpus.push({ contentId: item.id, locale, item, edition, body, bodyHash: hashText(body), titleHash: hashText(edition.title), deckHash: hashText(edition.deck), paragraphHashes: (edition.sections || []).flatMap((section) => (section.paragraphs || []).map(({ text }) => hashText(text))), vector: semanticVector(body, locale) });
+    corpus.push({ contentId: item.id, locale, item, edition, body, bodyHash: hashText(body), titleHash: hashText(edition.title), deckHash: hashText(edition.deck), paragraphHashes: (edition.sections || []).flatMap((section) => (section.paragraphs || []).map(({ text }) => hashText(text))), shingles: shingleSet(body, 5, locale), claimKeys: claimKeys(item), vector: semanticVector(body, locale) });
   }
   return corpus;
 }

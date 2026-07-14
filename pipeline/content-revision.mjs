@@ -35,6 +35,6 @@ if (process.argv.includes("--freeze")) {
   if (current.revision === revision) revisionPath = currentPath;
   else await access(revisionPath);
   const output = `dist/revisions/${contentId}/${revision}`;
-  await runCommand(["node", "--experimental-strip-types", "pipeline/generate-static-site.mjs", `--output=${output}`], { cwd: root, timeoutMs: 120_000, env: { EA_CONTENT_REVISION_FILE: revisionPath } });
+  await runCommand(["node", "pipeline/generate-static-site.mjs", `--output=${output}`], { cwd: root, timeoutMs: 120_000, env: { EA_CONTENT_REVISION_FILE: revisionPath } });
   console.log(`Rebuilt revision ${revision} at ${resolve(root, output)}`);
 } else throw new Error("Choose --freeze or --build");

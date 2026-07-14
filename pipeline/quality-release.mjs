@@ -8,15 +8,23 @@ const root = resolve(import.meta.dirname, "..");
 const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/quality-policy.json"), "utf8"));
 const data = await validateContentData(root, { requirePrivateEvidence: true });
 const corpus = buildCorpus(data);
-const sources = [];
+const evidence = new Map();
 for (const file of (await readdir(resolve(root, "private-evidence"))).filter((name) => name.endsWith(".json"))) {
   const packet = JSON.parse(await readFile(resolve(root, "private-evidence", file), "utf8"));
-  for (const record of packet.records || []) sources.push({ sourceId: record.sourceId, text: record.excerpt || "" });
+  for (const record of packet.records || []) evidence.set(record.id, { sourceId: record.sourceId, text: record.excerpt || "" });
+}
+const factMap = new Map(data.facts.map((fact) => [fact.id, fact]));
+function sourcesForItem(item) {
+  const ids = new Set();
+  for (const claim of item.claims || []) for (const factRef of claim.factRefs || []) {
+    for (const evidenceRef of factMap.get(factRef)?.evidenceRefs || []) ids.add(evidenceRef);
+  }
+  return [...ids].map((id) => evidence.get(id)).filter(Boolean);
 }
 const reports = [];
-for (const item of data.items) for (const [locale, edition] of Object.entries(item.editions || {})) {
-  if (!["approved", "published"].includes(edition.status)) continue;
-  reports.push(auditEdition({ item, locale, edition, corpus, sources, policy }));
+for (let index = 0; index < corpus.length; index += 1) {
+  const { item, locale, edition } = corpus[index];
+  reports.push(auditEdition({ item, locale, edition, corpus: corpus.slice(0, index), sources: sourcesForItem(item), policy }));
 }
 const status = reports.some((report) => report.status === "BLOCK") ? "BLOCK" : reports.some((report) => report.status === "REVIEW") ? "REVIEW" : "PASS";
 const destination = resolve(root, "pipeline/runtime/quality/release-report.json");

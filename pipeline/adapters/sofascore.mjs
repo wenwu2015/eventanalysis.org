@@ -24,6 +24,8 @@ export function normalizeSofaEvent(event) {
     source: "sofascore",
     sport: event.tournament?.category?.sport?.name || event.sport?.name || "Football",
     competition: event.tournament?.name || event.uniqueTournament?.name || "Unknown competition",
+    uniqueTournamentId: event.tournament?.uniqueTournament?.id ?? event.uniqueTournament?.id ?? null,
+    seasonId: event.season?.id ?? null,
     startTimestamp: event.startTimestamp,
     status,
     homeTeamId: String(event.homeTeam.id),

@@ -2,7 +2,7 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ui } from "../lib/ui-copy.ts";
+import { ui } from "../lib/ui-copy.mjs";
 import { validateContentData, routeKeyForType, routePath, absoluteUrl } from "./lib/data-store.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -54,7 +54,15 @@ function publishedEntries(locale, sport = "football") {
   return data.items
     .filter((item) => item.sport === sport && item.editions?.[locale]?.status === "published")
     .map((item) => ({ item, edition: item.editions[locale], path: route(locale, sport, routeKeyForType(item.type), item.editions[locale].slug) }))
-    .sort((a, b) => new Date(b.item.publishedAt) - new Date(a.item.publishedAt));
+    .sort((a, b) => {
+      const published = new Date(b.item.publishedAt) - new Date(a.item.publishedAt);
+      if (published) return published;
+      const priority = (entry) => entry.item.type === "match_analysis" ? 3 : entry.item.type === "competition_story" ? 2 : 1;
+      const typeOrder = priority(b) - priority(a);
+      if (typeOrder) return typeOrder;
+      const eventTime = (entry) => eventMap.get(entry.item.eventRefs?.[0])?.startedAt || "";
+      return eventTime(b).localeCompare(eventTime(a));
+    });
 }
 
 function validateAds(config) {
@@ -226,7 +234,7 @@ function editorialPage(locale, item, edition) {
 
 function h2hTable(locale, edition, value) {
   const labels = ui[locale].article;
-  const rate = (wins) => `${((wins / value.matches) * 100).toFixed(1)}%`;
+  const rate = (wins) => value.matches ? `${((wins / value.matches) * 100).toFixed(1)}%` : "—";
   const homeWins = value.homeWins ?? value.spainWins;
   const awayWins = value.awayWins ?? value.englandWins;
   const rows = [[`${edition.homeName} ${labels.wins}`, homeWins, rate(homeWins)], [labels.draws, value.draws, rate(value.draws)], [`${edition.awayName} ${labels.wins}`, awayWins, rate(awayWins)]].map(([name, count, share]) => `<tr><td>${escapeHtml(name)}</td><td>${count}</td><td>${share}</td></tr>`).join("");
@@ -284,7 +292,8 @@ for (const sport of activeSports) for (const locale of locales.map(({ code }) =>
     await writeFileEnsured(resolve(clientOutput, locale, sport.code, "search-index.json"), `${JSON.stringify(entries.map(({ item, edition, path }) => ({ id: item.id, type: item.type, year: new Date(item.publishedAt).getFullYear(), title: edition.title, deck: edition.deck, path: encodedPath(path), entityRefs: item.entityRefs, eventRefs: item.eventRefs })), null, 2)}\n`);
     await writeFileEnsured(resolve(clientOutput, locale, sport.code, "feed.xml"), feed(locale, sport.code, entries));
     staticPaths.push(allPath);
-    const grouped = Map.groupBy(entries, ({ item }) => item.type);
+    const grouped = new Map();
+    for (const entry of entries) grouped.set(entry.item.type, [...(grouped.get(entry.item.type) || []), entry]);
     for (const [type, typeEntries] of grouped) {
       const sectionPath = route(locale, sport.code, routeKeyForType(type));
       await writeRoute(sectionPath, collectionPage(locale, sport.code, routeKeyForType(type), typeEntries));

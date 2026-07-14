@@ -1,0 +1,1905 @@
+{
+  "schemaVersion": 2,
+  "records": [
+    {
+      "id": "event_world_cup_2026_7412447bb64d9b40",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-11T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5580eb5c1d1a8976",
+      "awayTeamId": "team_world_cup_2026_731a7d62c5dee9a6",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_868ef027c67bef6b",
+      "entityRefs": [
+        "team_world_cup_2026_5580eb5c1d1a8976",
+        "team_world_cup_2026_731a7d62c5dee9a6",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_868ef027c67bef6b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_8849eda700159b34",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-12T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f11bcc2fcfd74921",
+      "awayTeamId": "team_world_cup_2026_bc3a5ddc480d0db3",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_0315cce56e18e21b",
+      "entityRefs": [
+        "team_world_cup_2026_f11bcc2fcfd74921",
+        "team_world_cup_2026_bc3a5ddc480d0db3",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_0315cce56e18e21b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_05945369db17d6ef",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-12T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4dde497eb55d2d76",
+      "awayTeamId": "team_world_cup_2026_5f7c8aa5ef5b450b",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_4dde497eb55d2d76",
+        "team_world_cup_2026_5f7c8aa5ef5b450b",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_daa4d16f15667025",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-13T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6664543d670feef3",
+      "awayTeamId": "team_world_cup_2026_d29071a668347066",
+      "homeScore": 4,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_6664543d670feef3",
+        "team_world_cup_2026_d29071a668347066",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_e68c3f5475343316",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-13T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_b4cb7ec1ce1a3da7",
+      "awayTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_b4cb7ec1ce1a3da7",
+        "team_world_cup_2026_8dc3f4be93345156",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_847c655ba434a2fd",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-13T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8ccad866a7b7f299",
+      "awayTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_8ccad866a7b7f299",
+        "team_world_cup_2026_56caf3558bb98f93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_bb313128dc46735e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-14T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f85c742418737104",
+      "awayTeamId": "team_world_cup_2026_6f9579fec884a83d",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_f85c742418737104",
+        "team_world_cup_2026_6f9579fec884a83d",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_608906c410c1089f",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-14T04:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_cf8d7f277e097950",
+      "awayTeamId": "team_world_cup_2026_f4b87b92a1f9d300",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_cf8d7f277e097950",
+        "team_world_cup_2026_f4b87b92a1f9d300",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_7b997b1d80281de9",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-14T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_96ca669c9ad69d14",
+      "awayTeamId": "team_world_cup_2026_0a7e4d8641fa81e1",
+      "homeScore": 7,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_96ca669c9ad69d14",
+        "team_world_cup_2026_0a7e4d8641fa81e1",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_90af25a5582d7bc5",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-14T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1780435303a3b2de",
+      "awayTeamId": "team_world_cup_2026_ef0fd52229c36d48",
+      "homeScore": 2,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_1780435303a3b2de",
+        "team_world_cup_2026_ef0fd52229c36d48",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_23394f650c0539c4",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-14T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_948f7c29b4681e93",
+      "awayTeamId": "team_world_cup_2026_bb4bf0ca38d72066",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_948f7c29b4681e93",
+        "team_world_cup_2026_bb4bf0ca38d72066",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_40e2d5c0f2d35f96",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-15T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1528680e6126b11a",
+      "awayTeamId": "team_world_cup_2026_f587ae5f51fbc09e",
+      "homeScore": 5,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_24bc89d075251da1",
+      "entityRefs": [
+        "team_world_cup_2026_1528680e6126b11a",
+        "team_world_cup_2026_f587ae5f51fbc09e",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_24bc89d075251da1"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_2fee02096e3911c0",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-15T16:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "awayTeamId": "team_world_cup_2026_809c569905b50d1c",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_e49f5d016e04da76",
+        "team_world_cup_2026_809c569905b50d1c",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_fdfc8525b38dea7d",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-15T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "awayTeamId": "team_world_cup_2026_f826de0da37acb25",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_fb2f365990f010ac",
+        "team_world_cup_2026_f826de0da37acb25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_6eec92e8521ed168",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-15T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4db3a66960576361",
+      "awayTeamId": "team_world_cup_2026_1ca28144477431a3",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_4db3a66960576361",
+        "team_world_cup_2026_1ca28144477431a3",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_b7b63ec1ea46490d",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-16T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_ac629d895014e66e",
+      "awayTeamId": "team_world_cup_2026_c4eaa824b116a855",
+      "homeScore": 2,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_ac629d895014e66e",
+        "team_world_cup_2026_c4eaa824b116a855",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_face55abe7670abf",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-16T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_417194a893d487bd",
+      "awayTeamId": "team_world_cup_2026_76286d4c35bb77d6",
+      "homeScore": 3,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_417194a893d487bd",
+        "team_world_cup_2026_76286d4c35bb77d6",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_bf7ab0432d3bfd35",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-16T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_3632848a311f8b4a",
+      "awayTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "homeScore": 1,
+      "awayScore": 4,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_3632848a311f8b4a",
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_2c2e5b8595379686",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-17T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "awayTeamId": "team_world_cup_2026_70e8bee0d44dd89f",
+      "homeScore": 3,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "team_world_cup_2026_70e8bee0d44dd89f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_65f41b81481d81f5",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-17T04:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_32d81811434ce725",
+      "awayTeamId": "team_world_cup_2026_4aeb9360242ad583",
+      "homeScore": 3,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_32d81811434ce725",
+        "team_world_cup_2026_4aeb9360242ad583",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_dffa4767a44db678",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-17T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c01e767272f11f6e",
+      "awayTeamId": "team_world_cup_2026_a9bda46547e127ab",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_c01e767272f11f6e",
+        "team_world_cup_2026_a9bda46547e127ab",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_9dd6874f64575ced",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-17T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "awayTeamId": "team_world_cup_2026_e8a95af62d1d5077",
+      "homeScore": 4,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "team_world_cup_2026_e8a95af62d1d5077",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_70424324a75b966b",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-17T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e8e9ff2a7d90c8df",
+      "awayTeamId": "team_world_cup_2026_c10f40add3cb7962",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_e8e9ff2a7d90c8df",
+        "team_world_cup_2026_c10f40add3cb7962",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_f514266a867eeb00",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-18T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_be53c775d3d8d021",
+      "awayTeamId": "team_world_cup_2026_099d5964a4782b25",
+      "homeScore": 1,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_868ef027c67bef6b",
+      "entityRefs": [
+        "team_world_cup_2026_be53c775d3d8d021",
+        "team_world_cup_2026_099d5964a4782b25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_868ef027c67bef6b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_10080bf6f77217bf",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-18T16:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_bc3a5ddc480d0db3",
+      "awayTeamId": "team_world_cup_2026_731a7d62c5dee9a6",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_bc3a5ddc480d0db3",
+        "team_world_cup_2026_731a7d62c5dee9a6",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_a4bfdde706982a79",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-18T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "awayTeamId": "team_world_cup_2026_5f7c8aa5ef5b450b",
+      "homeScore": 4,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_8dc3f4be93345156",
+        "team_world_cup_2026_5f7c8aa5ef5b450b",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_6f4bad00c33e5fd9",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-18T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4dde497eb55d2d76",
+      "awayTeamId": "team_world_cup_2026_b4cb7ec1ce1a3da7",
+      "homeScore": 6,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_4dde497eb55d2d76",
+        "team_world_cup_2026_b4cb7ec1ce1a3da7",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_c61e020e7a8c4cca",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-19T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5580eb5c1d1a8976",
+      "awayTeamId": "team_world_cup_2026_f11bcc2fcfd74921",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_0315cce56e18e21b",
+      "entityRefs": [
+        "team_world_cup_2026_5580eb5c1d1a8976",
+        "team_world_cup_2026_f11bcc2fcfd74921",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_0315cce56e18e21b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_462ea0716c5e0ac6",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-19T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6664543d670feef3",
+      "awayTeamId": "team_world_cup_2026_cf8d7f277e097950",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_6664543d670feef3",
+        "team_world_cup_2026_cf8d7f277e097950",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_a59e080777716f37",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-19T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6f9579fec884a83d",
+      "awayTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_6f9579fec884a83d",
+        "team_world_cup_2026_56caf3558bb98f93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_d9dc1e8b4e4a4935",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-20T00:30:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8ccad866a7b7f299",
+      "awayTeamId": "team_world_cup_2026_f85c742418737104",
+      "homeScore": 3,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_8ccad866a7b7f299",
+        "team_world_cup_2026_f85c742418737104",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_16e7fdd0c42aa16a",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-20T03:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f4b87b92a1f9d300",
+      "awayTeamId": "team_world_cup_2026_d29071a668347066",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_f4b87b92a1f9d300",
+        "team_world_cup_2026_d29071a668347066",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_56a26c63731c4632",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-20T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1780435303a3b2de",
+      "awayTeamId": "team_world_cup_2026_1528680e6126b11a",
+      "homeScore": 5,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_1780435303a3b2de",
+        "team_world_cup_2026_1528680e6126b11a",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_beaf59a5a449a56c",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-20T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_96ca669c9ad69d14",
+      "awayTeamId": "team_world_cup_2026_948f7c29b4681e93",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_96ca669c9ad69d14",
+        "team_world_cup_2026_948f7c29b4681e93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_ec7049abf5b971e1",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-21T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_bb4bf0ca38d72066",
+      "awayTeamId": "team_world_cup_2026_0a7e4d8641fa81e1",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_bb4bf0ca38d72066",
+        "team_world_cup_2026_0a7e4d8641fa81e1",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_92fb19a7578b8ba3",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-21T04:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f587ae5f51fbc09e",
+      "awayTeamId": "team_world_cup_2026_ef0fd52229c36d48",
+      "homeScore": 0,
+      "awayScore": 4,
+      "placeId": "place_world_cup_2026_24bc89d075251da1",
+      "entityRefs": [
+        "team_world_cup_2026_f587ae5f51fbc09e",
+        "team_world_cup_2026_ef0fd52229c36d48",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_24bc89d075251da1"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_883385003f21f731",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-21T16:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "awayTeamId": "team_world_cup_2026_4db3a66960576361",
+      "homeScore": 4,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_e49f5d016e04da76",
+        "team_world_cup_2026_4db3a66960576361",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_6ecb536ca63f3472",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-21T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "awayTeamId": "team_world_cup_2026_ac629d895014e66e",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_fb2f365990f010ac",
+        "team_world_cup_2026_ac629d895014e66e",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_967f2d5f3dedc4d6",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-21T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1ca28144477431a3",
+      "awayTeamId": "team_world_cup_2026_809c569905b50d1c",
+      "homeScore": 2,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_1ca28144477431a3",
+        "team_world_cup_2026_809c569905b50d1c",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_3246fdc9d7818161",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-22T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c4eaa824b116a855",
+      "awayTeamId": "team_world_cup_2026_f826de0da37acb25",
+      "homeScore": 1,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_c4eaa824b116a855",
+        "team_world_cup_2026_f826de0da37acb25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_9e83384f7177ae3e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-22T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "awayTeamId": "team_world_cup_2026_32d81811434ce725",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "team_world_cup_2026_32d81811434ce725",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_e1e8b3b7f2154933",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-22T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_417194a893d487bd",
+      "awayTeamId": "team_world_cup_2026_3632848a311f8b4a",
+      "homeScore": 3,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_417194a893d487bd",
+        "team_world_cup_2026_3632848a311f8b4a",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_874d9efcd3b1127c",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-23T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "awayTeamId": "team_world_cup_2026_76286d4c35bb77d6",
+      "homeScore": 3,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "team_world_cup_2026_76286d4c35bb77d6",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_3f0c4b7d86722ba5",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-23T03:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4aeb9360242ad583",
+      "awayTeamId": "team_world_cup_2026_70e8bee0d44dd89f",
+      "homeScore": 1,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_4aeb9360242ad583",
+        "team_world_cup_2026_70e8bee0d44dd89f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_90d045bb95ab5a09",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-23T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c01e767272f11f6e",
+      "awayTeamId": "team_world_cup_2026_be53c775d3d8d021",
+      "homeScore": 5,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_c01e767272f11f6e",
+        "team_world_cup_2026_be53c775d3d8d021",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_3888d30a021c3f5b",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-23T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "awayTeamId": "team_world_cup_2026_e8e9ff2a7d90c8df",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "team_world_cup_2026_e8e9ff2a7d90c8df",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_23c5c6361f6481e3",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-23T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c10f40add3cb7962",
+      "awayTeamId": "team_world_cup_2026_e8a95af62d1d5077",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_c10f40add3cb7962",
+        "team_world_cup_2026_e8a95af62d1d5077",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_983b452d3b066d4d",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-24T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_099d5964a4782b25",
+      "awayTeamId": "team_world_cup_2026_a9bda46547e127ab",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_0315cce56e18e21b",
+      "entityRefs": [
+        "team_world_cup_2026_099d5964a4782b25",
+        "team_world_cup_2026_a9bda46547e127ab",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_0315cce56e18e21b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_f29f59ca1267cd56",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-24T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5f7c8aa5ef5b450b",
+      "awayTeamId": "team_world_cup_2026_b4cb7ec1ce1a3da7",
+      "homeScore": 3,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_5f7c8aa5ef5b450b",
+        "team_world_cup_2026_b4cb7ec1ce1a3da7",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_e841a7c59a13ca0f",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-24T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "awayTeamId": "team_world_cup_2026_4dde497eb55d2d76",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_8dc3f4be93345156",
+        "team_world_cup_2026_4dde497eb55d2d76",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_2f4c32f60a397549",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-24T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "awayTeamId": "team_world_cup_2026_f85c742418737104",
+      "homeScore": 4,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_56caf3558bb98f93",
+        "team_world_cup_2026_f85c742418737104",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_995c5b16baf4860a",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-24T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6f9579fec884a83d",
+      "awayTeamId": "team_world_cup_2026_8ccad866a7b7f299",
+      "homeScore": 0,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_6f9579fec884a83d",
+        "team_world_cup_2026_8ccad866a7b7f299",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_294bac53079ba724",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_bc3a5ddc480d0db3",
+      "awayTeamId": "team_world_cup_2026_5580eb5c1d1a8976",
+      "homeScore": 0,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_868ef027c67bef6b",
+      "entityRefs": [
+        "team_world_cup_2026_bc3a5ddc480d0db3",
+        "team_world_cup_2026_5580eb5c1d1a8976",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_868ef027c67bef6b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_5e85c826f8593643",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_731a7d62c5dee9a6",
+      "awayTeamId": "team_world_cup_2026_f11bcc2fcfd74921",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_24bc89d075251da1",
+      "entityRefs": [
+        "team_world_cup_2026_731a7d62c5dee9a6",
+        "team_world_cup_2026_f11bcc2fcfd74921",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_24bc89d075251da1"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_4e79c6f3ea8bd5ae",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_0a7e4d8641fa81e1",
+      "awayTeamId": "team_world_cup_2026_948f7c29b4681e93",
+      "homeScore": 0,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_0a7e4d8641fa81e1",
+        "team_world_cup_2026_948f7c29b4681e93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_72b74679b44e97a7",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_bb4bf0ca38d72066",
+      "awayTeamId": "team_world_cup_2026_96ca669c9ad69d14",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_bb4bf0ca38d72066",
+        "team_world_cup_2026_96ca669c9ad69d14",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_816b24e6276794fc",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_ef0fd52229c36d48",
+      "awayTeamId": "team_world_cup_2026_1528680e6126b11a",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_ef0fd52229c36d48",
+        "team_world_cup_2026_1528680e6126b11a",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_b25606d753698cb7",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-25T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f587ae5f51fbc09e",
+      "awayTeamId": "team_world_cup_2026_1780435303a3b2de",
+      "homeScore": 1,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_f587ae5f51fbc09e",
+        "team_world_cup_2026_1780435303a3b2de",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_48d9ddac58fb7bb6",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-26T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_d29071a668347066",
+      "awayTeamId": "team_world_cup_2026_cf8d7f277e097950",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_d29071a668347066",
+        "team_world_cup_2026_cf8d7f277e097950",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_c12888f195140db2",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-26T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f4b87b92a1f9d300",
+      "awayTeamId": "team_world_cup_2026_6664543d670feef3",
+      "homeScore": 3,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_f4b87b92a1f9d300",
+        "team_world_cup_2026_6664543d670feef3",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_61fa8e0fbb941eff",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-26T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "awayTeamId": "team_world_cup_2026_417194a893d487bd",
+      "homeScore": 1,
+      "awayScore": 4,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "team_world_cup_2026_417194a893d487bd",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_4bf92690ae5b033a",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-26T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_76286d4c35bb77d6",
+      "awayTeamId": "team_world_cup_2026_3632848a311f8b4a",
+      "homeScore": 5,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_76286d4c35bb77d6",
+        "team_world_cup_2026_3632848a311f8b4a",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_f9c5fe836c96d4a0",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_809c569905b50d1c",
+      "awayTeamId": "team_world_cup_2026_4db3a66960576361",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_809c569905b50d1c",
+        "team_world_cup_2026_4db3a66960576361",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_3aa9c35a157d7d8e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1ca28144477431a3",
+      "awayTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_0315cce56e18e21b",
+      "entityRefs": [
+        "team_world_cup_2026_1ca28144477431a3",
+        "team_world_cup_2026_e49f5d016e04da76",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_0315cce56e18e21b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_70fbbb9228d2e9f8",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T03:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_f826de0da37acb25",
+      "awayTeamId": "team_world_cup_2026_ac629d895014e66e",
+      "homeScore": 1,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_f826de0da37acb25",
+        "team_world_cup_2026_ac629d895014e66e",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_d8ee5410b1a8b79e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T03:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c4eaa824b116a855",
+      "awayTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "homeScore": 1,
+      "awayScore": 5,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_c4eaa824b116a855",
+        "team_world_cup_2026_fb2f365990f010ac",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_1730eb0da61ed725",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e8a95af62d1d5077",
+      "awayTeamId": "team_world_cup_2026_e8e9ff2a7d90c8df",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_e8a95af62d1d5077",
+        "team_world_cup_2026_e8e9ff2a7d90c8df",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_f3b4cde801ae257c",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c10f40add3cb7962",
+      "awayTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "homeScore": 0,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_c10f40add3cb7962",
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_6bf41fd2e0970e95",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T23:30:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_099d5964a4782b25",
+      "awayTeamId": "team_world_cup_2026_c01e767272f11f6e",
+      "homeScore": 0,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_099d5964a4782b25",
+        "team_world_cup_2026_c01e767272f11f6e",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_491c867dc89145f0",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-27T23:30:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_a9bda46547e127ab",
+      "awayTeamId": "team_world_cup_2026_be53c775d3d8d021",
+      "homeScore": 3,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_a9bda46547e127ab",
+        "team_world_cup_2026_be53c775d3d8d021",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_095c625ba239e5fb",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-28T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_70e8bee0d44dd89f",
+      "awayTeamId": "team_world_cup_2026_32d81811434ce725",
+      "homeScore": 3,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_70e8bee0d44dd89f",
+        "team_world_cup_2026_32d81811434ce725",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_5c3bde5640c2eded",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-28T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4aeb9360242ad583",
+      "awayTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "homeScore": 1,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_4aeb9360242ad583",
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_4b5680731cf24426",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-28T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_731a7d62c5dee9a6",
+      "awayTeamId": "team_world_cup_2026_4dde497eb55d2d76",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_731a7d62c5dee9a6",
+        "team_world_cup_2026_4dde497eb55d2d76",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_b5f038e043012945",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-29T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8ccad866a7b7f299",
+      "awayTeamId": "team_world_cup_2026_ef0fd52229c36d48",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_8ccad866a7b7f299",
+        "team_world_cup_2026_ef0fd52229c36d48",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_7c829caffd2f2602",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-29T20:30:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_96ca669c9ad69d14",
+      "awayTeamId": "team_world_cup_2026_d29071a668347066",
+      "homeScore": 4,
+      "awayScore": 5,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_96ca669c9ad69d14",
+        "team_world_cup_2026_d29071a668347066",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_96e9628748512591",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-30T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_1780435303a3b2de",
+      "awayTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "homeScore": 3,
+      "awayScore": 4,
+      "placeId": "place_world_cup_2026_24bc89d075251da1",
+      "entityRefs": [
+        "team_world_cup_2026_1780435303a3b2de",
+        "team_world_cup_2026_56caf3558bb98f93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_24bc89d075251da1"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_008b46f31ef05bb7",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-30T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_948f7c29b4681e93",
+      "awayTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "homeScore": 1,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_948f7c29b4681e93",
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_ed79322e2752e7e2",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-06-30T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_417194a893d487bd",
+      "awayTeamId": "team_world_cup_2026_1528680e6126b11a",
+      "homeScore": 3,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_417194a893d487bd",
+        "team_world_cup_2026_1528680e6126b11a",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_6dfcc2d98819338e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-01T02:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5580eb5c1d1a8976",
+      "awayTeamId": "team_world_cup_2026_bb4bf0ca38d72066",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_868ef027c67bef6b",
+      "entityRefs": [
+        "team_world_cup_2026_5580eb5c1d1a8976",
+        "team_world_cup_2026_bb4bf0ca38d72066",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_868ef027c67bef6b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_25739b5f0baebf99",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-01T16:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "awayTeamId": "team_world_cup_2026_a9bda46547e127ab",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "team_world_cup_2026_a9bda46547e127ab",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_5cdf061b1022d010",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-01T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "awayTeamId": "team_world_cup_2026_76286d4c35bb77d6",
+      "homeScore": 3,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_fb2f365990f010ac",
+        "team_world_cup_2026_76286d4c35bb77d6",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_e08d7008e5ffcfb5",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-02T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6664543d670feef3",
+      "awayTeamId": "team_world_cup_2026_5f7c8aa5ef5b450b",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_6380d2e590c78d96",
+      "entityRefs": [
+        "team_world_cup_2026_6664543d670feef3",
+        "team_world_cup_2026_5f7c8aa5ef5b450b",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_6380d2e590c78d96"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_c536d9c8ecd8352e",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-02T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "awayTeamId": "team_world_cup_2026_32d81811434ce725",
+      "homeScore": 3,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_e49f5d016e04da76",
+        "team_world_cup_2026_32d81811434ce725",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_fac9e231cbf162af",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-02T23:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c01e767272f11f6e",
+      "awayTeamId": "team_world_cup_2026_e8a95af62d1d5077",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_b2c607e6368c6bfb",
+      "entityRefs": [
+        "team_world_cup_2026_c01e767272f11f6e",
+        "team_world_cup_2026_e8a95af62d1d5077",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_b2c607e6368c6bfb"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_2488f8ff61565efb",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-03T03:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "awayTeamId": "team_world_cup_2026_70e8bee0d44dd89f",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_8dc3f4be93345156",
+        "team_world_cup_2026_70e8bee0d44dd89f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_31587f84fbad2a72",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-03T18:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_cf8d7f277e097950",
+      "awayTeamId": "team_world_cup_2026_f826de0da37acb25",
+      "homeScore": 3,
+      "awayScore": 5,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_cf8d7f277e097950",
+        "team_world_cup_2026_f826de0da37acb25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_57b84caa1dbeae42",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-03T22:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "awayTeamId": "team_world_cup_2026_809c569905b50d1c",
+      "homeScore": 3,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "team_world_cup_2026_809c569905b50d1c",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_d35d60bdbc235741",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-04T01:30:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_099d5964a4782b25",
+      "awayTeamId": "team_world_cup_2026_e8e9ff2a7d90c8df",
+      "homeScore": 1,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_099d5964a4782b25",
+        "team_world_cup_2026_e8e9ff2a7d90c8df",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_9b12de7cd042150c",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-04T17:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_4dde497eb55d2d76",
+      "awayTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "homeScore": 0,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_25a1f3b477e8cc11",
+      "entityRefs": [
+        "team_world_cup_2026_4dde497eb55d2d76",
+        "team_world_cup_2026_56caf3558bb98f93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_25a1f3b477e8cc11"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_71bd05d0f4773878",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-04T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_d29071a668347066",
+      "awayTeamId": "team_world_cup_2026_417194a893d487bd",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_7f7edaa1838bd223",
+      "entityRefs": [
+        "team_world_cup_2026_d29071a668347066",
+        "team_world_cup_2026_417194a893d487bd",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7f7edaa1838bd223"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_07cfc1749aabc5c2",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-05T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8ccad866a7b7f299",
+      "awayTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "homeScore": 1,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_ce08827b852b4417",
+      "entityRefs": [
+        "team_world_cup_2026_8ccad866a7b7f299",
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ce08827b852b4417"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_81542d825e7372b0",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-06T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5580eb5c1d1a8976",
+      "awayTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "homeScore": 2,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_868ef027c67bef6b",
+      "entityRefs": [
+        "team_world_cup_2026_5580eb5c1d1a8976",
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_868ef027c67bef6b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_430ac2efc903ccad",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-06T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_c01e767272f11f6e",
+      "awayTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "homeScore": 0,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_a985fbac3645d56c",
+      "entityRefs": [
+        "team_world_cup_2026_c01e767272f11f6e",
+        "team_world_cup_2026_e49f5d016e04da76",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_a985fbac3645d56c"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_a068deef91f0343f",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-07T00:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_6664543d670feef3",
+      "awayTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "homeScore": 1,
+      "awayScore": 4,
+      "placeId": "place_world_cup_2026_33234c10bec7fb01",
+      "entityRefs": [
+        "team_world_cup_2026_6664543d670feef3",
+        "team_world_cup_2026_fb2f365990f010ac",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_33234c10bec7fb01"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_9f70d182917d2f40",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-07T16:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "awayTeamId": "team_world_cup_2026_f826de0da37acb25",
+      "homeScore": 3,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_ae19d20384e6d5c7",
+      "entityRefs": [
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "team_world_cup_2026_f826de0da37acb25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_ae19d20384e6d5c7"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_e65c464100524b77",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-07T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "awayTeamId": "team_world_cup_2026_099d5964a4782b25",
+      "homeScore": 4,
+      "awayScore": 3,
+      "placeId": "place_world_cup_2026_acfed35c3a907ffc",
+      "entityRefs": [
+        "team_world_cup_2026_8dc3f4be93345156",
+        "team_world_cup_2026_099d5964a4782b25",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_acfed35c3a907ffc"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_35b30d5c599254e6",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-09T20:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_417194a893d487bd",
+      "awayTeamId": "team_world_cup_2026_56caf3558bb98f93",
+      "homeScore": 2,
+      "awayScore": 0,
+      "placeId": "place_world_cup_2026_9a6d2d28c2daa504",
+      "entityRefs": [
+        "team_world_cup_2026_417194a893d487bd",
+        "team_world_cup_2026_56caf3558bb98f93",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_9a6d2d28c2daa504"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_d92d6be7033afc07",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-10T19:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_e49f5d016e04da76",
+      "awayTeamId": "team_world_cup_2026_fb2f365990f010ac",
+      "homeScore": 2,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_f5a4d250f62a1a3b",
+      "entityRefs": [
+        "team_world_cup_2026_e49f5d016e04da76",
+        "team_world_cup_2026_fb2f365990f010ac",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_f5a4d250f62a1a3b"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_7965ca62ea1a8c3f",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-11T21:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_337a1c21e17c4d98",
+      "awayTeamId": "team_world_cup_2026_a1ba16ab5f70fc2f",
+      "homeScore": 1,
+      "awayScore": 2,
+      "placeId": "place_world_cup_2026_965cf65190134664",
+      "entityRefs": [
+        "team_world_cup_2026_337a1c21e17c4d98",
+        "team_world_cup_2026_a1ba16ab5f70fc2f",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_965cf65190134664"
+      ]
+    },
+    {
+      "id": "event_world_cup_2026_7fcd3e12d37b96a1",
+      "kind": "Event",
+      "sport": "football",
+      "competitionId": "competition_fifa_world_cup_2026",
+      "startedAt": "2026-07-12T01:00:00.000Z",
+      "status": "finished",
+      "homeTeamId": "team_world_cup_2026_5112c967d08bf5d2",
+      "awayTeamId": "team_world_cup_2026_8dc3f4be93345156",
+      "homeScore": 3,
+      "awayScore": 1,
+      "placeId": "place_world_cup_2026_7771fcdadbe07eb0",
+      "entityRefs": [
+        "team_world_cup_2026_5112c967d08bf5d2",
+        "team_world_cup_2026_8dc3f4be93345156",
+        "competition_fifa_world_cup_2026",
+        "place_world_cup_2026_7771fcdadbe07eb0"
+      ]
+    }
+  ]
+}
