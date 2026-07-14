@@ -10,7 +10,7 @@
     "build": "node --experimental-strip-types pipeline/generate-static-site.mjs",
     "start": "node pipeline/static-server.mjs",
     "test": "npm run test:unit && npm run build && node --test tests/build-output.test.mjs",
-    "test:unit": "node --test tests/calculations.test.mjs tests/job-lifecycle.test.mjs tests/content-policy.test.mjs tests/collector-normalization.test.mjs",
+    "test:unit": "node --test tests/calculations.test.mjs tests/job-lifecycle.test.mjs tests/content-policy.test.mjs tests/collector-normalization.test.mjs tests/language-routing.test.mjs",
     "lint": "node --check pipeline/generate-static-site.mjs && node --check pipeline/static-server.mjs && node --check site/ad-slot.js && node --check site/static-worker.js",
     "pipeline:daily": "node pipeline/run-daily.mjs",
     "pipeline:weekly": "node pipeline/run-weekly.mjs",

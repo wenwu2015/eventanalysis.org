@@ -3,6 +3,7 @@ import { createReadStream } from "node:fs";
 import { access, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { chooseLocale } from "../site/static-worker.js";
 
 const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)));
 const port = Number(process.env.PORT || 3000);
@@ -10,7 +11,18 @@ const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=
 
 const server = (await import("node:http")).createServer(async (request, response) => {
   try {
-    const pathname = decodeURIComponent(new URL(request.url, `http://${request.headers.host || "localhost"}`).pathname);
+    const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+    const pathname = decodeURIComponent(url.pathname);
+    if (pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
+      const locale = chooseLocale(request.headers["accept-language"]);
+      response.writeHead(302, {
+        "cache-control": "private, no-store",
+        location: `/${locale}/${url.search}`,
+        vary: "Accept-Language",
+      });
+      response.end();
+      return;
+    }
     let path = resolve(root, `.${pathname}`);
     if (path !== root && !path.startsWith(root + sep)) throw new Error("Invalid path");
     try {

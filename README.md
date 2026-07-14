@@ -4,14 +4,14 @@ Event Analysis is a 21-language post-match football analysis publication. The fi
 
 ## Public site
 
-- `/` — Chinese content homepage with a compact header language switcher
+- `/` — redirects from the browser's `Accept-Language` preference; unsupported languages fall back to English
 - `/:locale/` — 21 independently translated edition homepages
 - `/:locale/articles/:slug/` — reviewed analysis
 - `/:locale/archive/` — published archive
 - `/:locale/methodology/` — editorial method
 - `/:locale/feed.xml`, `/sitemap.xml`, `/robots.txt` — generated static assets
 
-Every route is emitted as a standalone `dist/client/**/index.html` file and loads only `/assets/site.css`. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
+Every route is emitted as a standalone `dist/client/**/index.html` file and loads only `/assets/site.css`. The root redirect reads only the standard request header, sets no cookie and stores no user state. Every page has a native HTML language menu; it preserves the current section and, where a reviewed translation exists, the current article. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
 
 ### Sport expansion boundary
 
@@ -27,7 +27,7 @@ npm run dev
 npm test
 ```
 
-`npm run build` runs the local Node generator, recreates `dist/`, writes every HTML page plus RSS, Sitemap and Robots, and copies the single CSS asset. D1 and R2 stay disabled in `.openai/hosting.json`. `npm run start` is a tiny local file server used only for preview and tests; it is not deployed. Sites receives a seven-line static-asset pass-through Worker because its archive format requires an entrypoint; it has no rendering, API or application logic and is never loaded by the browser.
+`npm run build` runs the local Node generator, recreates `dist/`, writes every HTML page plus RSS, Sitemap and Robots, and copies the single CSS asset. D1 and R2 stay disabled in `.openai/hosting.json`. `npm run start` is a tiny local file server used only for preview and tests; it is not deployed. Sites receives a small static-asset Worker because its archive format requires an entrypoint; its only logic is the root `Accept-Language` redirect. It does not render content or expose an API and is never loaded by the browser.
 
 ## Local collection pipeline
 

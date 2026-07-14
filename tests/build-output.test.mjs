@@ -65,7 +65,6 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
   const server = await startServer(port);
   try {
     const paths = [
-      "/",
       "/zh/",
       "/en/",
       "/ja/",
@@ -89,10 +88,25 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
     assert.match(article, /hreflang="zh-CN"/);
     assert.match(article, /48\.1%/);
     assert.match(article, /Human reviewed/);
-    const rootPage = await (await fetch(`http://127.0.0.1:${port}/`)).text();
-    assert.match(rootPage, /终场之后/);
-    assert.match(rootPage, /class="locale-menu"/);
-    assert.doesNotMatch(rootPage, /class="language-grid"|Choose a language/);
+    for (const [acceptLanguage, expectedLocation] of [
+      ["zh-TW,zh;q=0.8,en;q=0.5", "/zh-hant/"],
+      ["ja-JP,ja;q=0.9", "/ja/"],
+      ["xx-YY", "/en/"],
+    ]) {
+      const response = await fetch(`http://127.0.0.1:${port}/`, { headers: { "accept-language": acceptLanguage }, redirect: "manual" });
+      assert.equal(response.status, 302);
+      assert.equal(response.headers.get("location"), expectedLocation);
+      assert.equal(response.headers.get("vary"), "Accept-Language");
+    }
+    const english = await (await fetch(`http://127.0.0.1:${port}/en/`)).text();
+    assert.match(english, /class="locale-menu"/);
+    assert.doesNotMatch(english, /class="language-grid"|Choose a language/);
+    const archive = await (await fetch(`http://127.0.0.1:${port}/zh/archive/`)).text();
+    assert.match(archive, /href="\/ja\/archive\/"/);
+    const methodology = await (await fetch(`http://127.0.0.1:${port}/en/methodology/`)).text();
+    assert.match(methodology, /href="\/ko\/methodology\/"/);
+    assert.match(article, /href="\/zh\/articles\/spain-england-euro-2024-final\/"/);
+    assert.match(article, /href="\/ja\/"/);
     const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/`)).text();
     assert.match(japanese, /日本語版を準備中です/);
     assert.doesNotMatch(japanese, /Spain 2–1 England/);
