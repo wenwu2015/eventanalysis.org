@@ -84,6 +84,7 @@ function documentPage({
   <link rel="canonical" href="${baseUrl}${canonical}">
   ${alternates}
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Event Analysis">
   <meta property="og:title" content="${safeTitle}">
@@ -218,6 +219,7 @@ await rm(output, { recursive: true, force: true });
 await mkdir(resolve(clientOutput, "assets"), { recursive: true });
 await cp(resolve(root, "site/site.css"), resolve(clientOutput, "assets/site.css"));
 await cp(resolve(root, "site/ad-slot.js"), resolve(clientOutput, "assets/ad-slot.js"));
+await cp(resolve(root, "site/favicon.svg"), resolve(clientOutput, "favicon.svg"));
 await writeRoute("/", rootPage());
 
 for (const { code } of localeDefinitions) {

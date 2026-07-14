@@ -9,6 +9,7 @@ cd "$ROOT"
 
 npm run lint
 npm test
+npm run verify:editorial
 
 aws s3 sync dist/client "s3://$BUCKET" \
   --delete \

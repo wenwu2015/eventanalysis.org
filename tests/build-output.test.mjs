@@ -27,6 +27,7 @@ async function startServer(port) {
 test("AWS publish directory is plain HTML and CSS", async () => {
   await access(resolve(root, "dist/client/index.html"));
   await access(resolve(root, "dist/client/assets/site.css"));
+  await access(resolve(root, "dist/client/favicon.svg"));
 });
 
 async function htmlFiles(directory) {
@@ -51,6 +52,7 @@ test("every public page is framework-free static HTML", async () => {
     const html = await readFile(path, "utf8");
     assert.match(html, /^<!doctype html>/i, path);
     assert.match(html, /<link rel="stylesheet" href="\/assets\/site\.css">/, path);
+    assert.match(html, /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml">/, path);
     assert.doesNotMatch(html, /(?:_next|__next|react-dom|react\.production|vinext|@vite\/client|tailwindcss|wrangler|webpack)/i, path);
     assert.doesNotMatch(html, /<script[^>]+src=/i, path);
     assert.doesNotMatch(html, /data-ea-ad|class="ad-slot"/i, path);
