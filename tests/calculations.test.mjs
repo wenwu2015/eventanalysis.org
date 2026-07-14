@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildHeadToHead, calculateHeadToHead, calculateLineupContinuity, scoreResult } from "../pipeline/lib/calculations.mjs";
+import { winnerTrailedFromScores } from "../pipeline/lib/world-cup-content.mjs";
 
 test("head-to-head rates use the complete pre-match sample", () => {
   assert.deepEqual(calculateHeadToHead({ homeWins: 10, draws: 4, awayWins: 13 }), {
@@ -36,4 +37,21 @@ test("result and historical winner are normalised from the score", () => {
 test("invalid numeric input is rejected instead of guessed", () => {
   assert.throws(() => calculateHeadToHead({ homeWins: -1, draws: 0, awayWins: 0 }), /non-negative/);
   assert.throws(() => scoreResult(Number.NaN, 0), /finite/);
+});
+
+test("a winner is marked as coming from behind only when the running score shows a deficit", () => {
+  assert.equal(winnerTrailedFromScores([
+    { homeScore: 1, awayScore: 0 },
+    { homeScore: 1, awayScore: 1 },
+    { homeScore: 2, awayScore: 1 },
+  ], true), false);
+  assert.equal(winnerTrailedFromScores([
+    { homeScore: 0, awayScore: 1 },
+    { homeScore: 1, awayScore: 1 },
+    { homeScore: 2, awayScore: 1 },
+  ], true), true);
+  assert.equal(winnerTrailedFromScores([
+    { homeScore: 1, awayScore: 0 },
+    { homeScore: 1, awayScore: 2 },
+  ], false), true);
 });

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from "node:fs/promises";
+import { winnerTrailedFromScores } from "./lib/world-cup-content.mjs";
 
 const entityPath = "content/data/entities/world-cup-2026.json";
 const factPath = "content/data/facts/world-cup-2026.json";
@@ -89,6 +90,21 @@ for (const item of items.records.filter(({ type }) => type === "match_analysis")
     }
     const result = edition.sections.find(({ id }) => id === "result");
     const keyEvents = (factsBySubject.get(eventId) || []).find(({ predicate }) => predicate === "key_events")?.value || [];
+    const finalResult = (factsBySubject.get(eventId) || []).find(({ predicate }) => predicate === "final_result")?.value || {};
+    const winnerIsHome = Number(finalResult.homeScore) > Number(finalResult.awayScore);
+    const hasWinner = Number(finalResult.homeScore) !== Number(finalResult.awayScore);
+    const winnerTrailed = hasWinner && winnerTrailedFromScores(keyEvents, winnerIsHome);
+    if (verdict && hasWinner && !winnerTrailed && /经历落后仍|recovered after falling behind/.test(verdict.text)) {
+      const winner = winnerIsHome ? edition.homeName : edition.awayName;
+      const loser = winnerIsHome ? edition.awayName : edition.homeName;
+      const storedScore = `${finalResult.homeScore}-${finalResult.awayScore}`;
+      const performance = (factsBySubject.get(eventId) || []).find(({ predicate }) => predicate === "player_stat_totals")?.value || {};
+      const shotEdge = Math.abs(Number(performance.home?.totalShots || 0) - Number(performance.away?.totalShots || 0));
+      const passEdge = Math.abs(Number(performance.home?.passAccuracy || 0) - Number(performance.away?.passAccuracy || 0)).toFixed(1);
+      verdict.text = locale === "zh"
+        ? `${marker}${winner}在对阵${loser}时把领先转化为 ${storedScore} 的最终结果。球员统计合计显示双方射门差为 ${shotEdge} 次、传球成功率差为 ${passEdge} 个百分点；关键不是单一控球数字，而是领先一方对后续阶段的处理。`
+        : `${marker}${winner} converted the lead against ${loser} into the ${storedScore} result. Aggregated player data shows a shot gap of ${shotEdge} and a pass-completion gap of ${passEdge} percentage points; game-state management mattered more than any single possession number.`;
+    }
     if (result) {
       const detail = locale === "zh"
         ? `${edition.homeName}对${edition.awayName}的复核索引固定为四项：${score} 的终场比分、${edition.competition}的赛事阶段、${edition.venue}的地点记录，以及 ${keyEvents.length} 个进球事件。四项同时指向这场比赛，避免与同轮其他赛果混写。`

@@ -206,6 +206,15 @@ function currentTournamentH2h(matches, targetIndex) {
   return { matches: prior.length, homeWins, awayWins, draws, scope: "2026 World Cup matches before kick-off" };
 }
 
+export function winnerTrailedFromScores(goals, winnerIsHome) {
+  return (goals || []).some((goal) => {
+    const homeScore = Number(goal.homeScore);
+    const awayScore = Number(goal.awayScore);
+    if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return false;
+    return winnerIsHome ? homeScore < awayScore : awayScore < homeScore;
+  });
+}
+
 function matchReading(match, locale) {
   const home = match.event.homeTeam;
   const away = match.event.awayTeam;
@@ -215,7 +224,7 @@ function matchReading(match, locale) {
   const winner = match.event.homeScore === match.event.awayScore ? null : (match.event.homeScore > match.event.awayScore ? home : away);
   const loser = winner === home ? away : home;
   const score = `${match.event.homeScore}-${match.event.awayScore}`;
-  const trailingWinner = winner && goals.some((goal) => goal.isHome !== (winner === home) && ((goal.isHome ? goal.homeScore : goal.awayScore) || 0) > 0);
+  const trailingWinner = winner && winnerTrailedFromScores(goals, winner === home);
   const shotEdge = (homeTotals.totalShots || 0) - (awayTotals.totalShots || 0);
   const passEdge = (homeTotals.passAccuracy || 0) - (awayTotals.passAccuracy || 0);
   if (locale === "zh") {

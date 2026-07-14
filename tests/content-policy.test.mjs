@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { winnerTrailedFromScores } from "../pipeline/lib/world-cup-content.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -51,4 +52,24 @@ test("version one exposes football only while future ball sports remain isolated
   }
   const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/policy.json"), "utf8"));
   assert.deepEqual(policy.activeSports, ["football"]);
+});
+
+test("published match verdicts claim a comeback only when the score ledger proves it", async () => {
+  const items = JSON.parse(await readFile(resolve(root, "content/data/items/world-cup-2026.json"), "utf8"));
+  const facts = JSON.parse(await readFile(resolve(root, "content/data/facts/world-cup-2026.json"), "utf8"));
+  const factsBySubject = new Map();
+  for (const fact of facts.records) factsBySubject.set(fact.subjectId, [...(factsBySubject.get(fact.subjectId) || []), fact]);
+  for (const item of items.records.filter(({ type }) => type === "match_analysis")) {
+    const eventFacts = factsBySubject.get(item.eventRefs[0]) || [];
+    const result = eventFacts.find(({ predicate }) => predicate === "final_result")?.value;
+    const events = eventFacts.find(({ predicate }) => predicate === "key_events")?.value || [];
+    if (!result || Number(result.homeScore) === Number(result.awayScore)) continue;
+    const winnerTrailed = winnerTrailedFromScores(events, Number(result.homeScore) > Number(result.awayScore));
+    for (const edition of Object.values(item.editions)) {
+      const verdict = edition.sections.find(({ id }) => id === "verdict")?.paragraphs?.map(({ text }) => text).join(" ") || "";
+      if (/经历落后仍|recovered after falling behind/.test(verdict)) {
+        assert.equal(winnerTrailed, true, `${item.id} describes a comeback without a verified deficit`);
+      }
+    }
+  }
 });
