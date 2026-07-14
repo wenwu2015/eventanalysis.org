@@ -1,88 +1,114 @@
 # EventAnalysis.org
 
-Event Analysis is a 21-language post-match football analysis publication. The first language matrix covers Chinese (simplified and traditional), English, Japanese, Korean, Russian, Spanish, Portuguese, French, German, Italian, Arabic, Swedish, Dutch, Turkish, Polish, Croatian, Serbian, Ukrainian, Persian and Indonesian. The public product is anonymous and static: no accounts, comments, submissions, database, public API, live scores, runtime content generation, or third-party match media.
+Event Analysis is a framework-free, static football publication. Public pages contain editorial text, semantic HTML tables and CSS only; there are no accounts, comments, public APIs, databases, third-party media or runtime rendering.
 
-## Public site
+## Public information architecture
 
-- `/` — redirects from the browser's `Accept-Language` preference; unsupported languages fall back to English
-- `/:locale/` — 21 independently translated edition homepages
-- `/:locale/articles/:slug/` — reviewed analysis
-- `/:locale/archive/` — published archive
-- `/:locale/feed.xml`, `/sitemap.xml`, `/robots.txt` — generated static assets
+All indexable pages use one URL builder and one contract:
 
-Every route is emitted as a standalone `dist/client/**/index.html` file and loads only `/assets/site.css`. The root redirect reads only the standard request header, sets no cookie and stores no user state. Every page has a native HTML language menu; it preserves the current section and, where a reviewed translation exists, the current article. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
+```text
+/{locale}/{sport}/{localized-section}/{localized-slug}/
+```
 
-### Sport expansion boundary
+Examples:
 
-Version one enables only `football`. `content/sports.json` is the single sport registry; basketball, volleyball and badminton are registered as `planned` and therefore produce no routes, navigation, feeds, sitemap entries or collection jobs. Every article and private fact bundle carries a `sport` code. Football keeps the short existing URL, while future sports already have isolated `/sports/:sport` base paths. Enabling another sport later requires its source adapter, deterministic rules and localized editorial vocabulary to pass review before changing its registry status to `active`.
+```text
+/en/football/
+/en/football/match-analysis/spain-england-euro-2024-final/
+/zh/football/比赛分析/西班牙-英格兰-2024欧洲杯决赛/
+```
 
-## Local development
+The root request redirects from `Accept-Language` to `/{locale}/football/`; unsupported languages use English. A language menu is present on every page. Missing editions link to that language's football homepage and never display English replacement text.
 
-Node.js 22.13 or newer is required.
+Twenty-one locale homes are built: simplified and traditional Chinese, English, Japanese, Korean, Russian, Spanish, Portuguese, French, German, Italian, Arabic, Swedish, Dutch, Turkish, Polish, Croatian, Serbian, Ukrainian, Persian and Indonesian. Arabic and Persian render RTL. Football is the only active sport; basketball, volleyball and badminton are registered but do not generate routes until enabled.
+
+## Structured content boundaries
+
+```text
+content/data/       versioned entities, events, facts, claims, content items and editions
+private-evidence/   ignored source URLs, rights snapshots, hashes and field-level evidence
+pipeline/runtime/   disposable SQLite index, similarity reports and release reports
+dist/client/        deployable static website
+```
+
+JSON is the source of truth. SQLite is a disposable local query index and can be deleted and rebuilt. Stable internal IDs are public-data references; provider identifiers remain in ignored private mappings.
+
+```bash
+npm run data:validate -- --require-private-evidence
+npm run data:index
+npm run data:audit -- --content content_euro_2024_final_analysis
+npm run content:revision -- --content content_euro_2024_final_analysis --revision 1 --freeze
+npm run content:revision -- --content content_euro_2024_final_analysis --revision 1 --build
+```
+
+Every published paragraph references a Claim, every Claim references deterministic Facts, and every Fact references private Evidence. Personnel and team relations include validity intervals.
+
+Before changing a ContentItem, freeze its current numbered revision. Snapshots are immutable JSON plus SHA-256 and can rebuild into an isolated `dist/revisions/` directory. Git remains the change history; the revision snapshot makes regeneration independent of the current item file.
+
+## Collection and resource lifecycle
+
+Each collection task has its own Playwright context and temporary directory. A source is checked before navigation for authorisation window, region, public-attribution conflict and retention conflict. Access challenges, 401/403/429 responses and expired sessions stop the task; no challenge or access control is bypassed.
+
+In `finally`, the job removes pages, response bodies, video, audio, subtitles, frames, transcripts and temporary outputs, clears the browser context and releases storage. Only a sanitised URL list and compact private Evidence record survive. Startup removes orphan directories older than one hour and the per-job disk cap aborts and cleans the task.
+
+## Editorial and duplication gate
+
+The versioned policy is `pipeline/config/quality-policy.json`. Publication checks execute in this order:
+
+1. duplicate search intent and angle;
+2. 12-token contiguous source overlap;
+3. exact title, deck, paragraph and body hashes;
+4. five-token shingles and Jaccard similarity;
+5. local multilingual vector similarity;
+6. Claim and Fact overlap;
+7. language/script and edition completeness;
+8. rendered-page value, links and technical SEO.
+
+BLOCK results cannot be overridden. REVIEW results need a second reviewer different from the author. A second article about one event needs at least three new analysis Claims.
+
+```bash
+npm run quality:calibrate
+npm run quality:index
+npm run quality:audit -- --content content_euro_2024_final_analysis
+npm run quality:release
+```
+
+The public editorial gate also blocks production-process attribution, placeholders and stock filler. It is an editorial specificity check, not a promise to defeat third-party authorship classifiers.
+
+## Static build and search
 
 ```bash
 npm install
-npm run dev
+npm run build:preview
+npm run build
 npm test
+npm run verify:editorial
+npm run verify:prepublish
 ```
 
-`npm run build` runs the local Node generator, recreates `dist/`, writes every HTML page plus RSS, Sitemap and Robots, and copies the single CSS asset. `npm run start` is a tiny local file server used only for preview and tests; it is not deployed. Production uses S3 static website hosting behind CloudFront. A small Viewer Request function handles only the root `Accept-Language` redirect and canonical host/path rules; it does not render content or expose an API and is never loaded by the browser. See `doc/AWS_Deployment_Guide.md` for the production topology and release workflow.
+The generator registry supports match analysis, moments, people, comparisons, teams, competitions, places, topics and roundups. It creates only non-empty collection pages. Published locale editions are independent.
 
-## Local collection pipeline
+Each supported language with published content receives a static search index and a first-party JavaScript filter. Results are also present in HTML, so links and content remain usable without JavaScript. Search pages are `noindex,follow`. The build emits self-canonical URLs, reciprocal hreflang, breadcrumbs, Article/SportsEvent JSON-LD, RSS, locale/sport/type sitemaps, a sitemap index, Robots and a real 404.
 
-The collector is deliberately separate from the public site. It uses a real Playwright Chromium session, reads visible DOM, embedded page data and network responses naturally initiated by page navigation, and closes the browser context after every job.
+Advertising is disabled in `site/ad-config.json`; disabled builds emit no advertising DOM, space, script or request. When enabled, the shared component uses structured HTTPS creatives, `AD`/`Advertisement`, a session-only close action and `<a target="_blank" rel="nofollow noopener noreferrer">`.
 
-1. Copy `pipeline/config/sources.example.json` to `pipeline/config/sources.local.json`.
-2. Enter the contracted authorisation window, regions, concurrency, delay, storage-state path and permitted uses for each provider.
-3. Copy `pipeline/config/ai.example.json` to `pipeline/config/ai.local.json` and configure local AI commands if desired.
-4. Keep provider sessions under `private-auth/`; both files and all sessions are ignored by Git.
-5. Run `npm run pipeline:daily` for the daily scan or `npm run pipeline:weekly` for the weekly gate.
+## Review and publication
 
-The example source registry is inactive and unauthorised on purpose. A source runs only when `active` and `license.authorised` are both true, its date window is current, and its contract does not require public attribution. Access challenges, 401/403/429 responses and expired sessions stop the job; the collector does not bypass them.
-
-If the installed Playwright package and an existing shared Chromium cache use different build numbers, set `browserExecutablePath` in the ignored local source entry. Never commit machine-specific browser paths.
-
-SofaScore has a dedicated normaliser. Other authorised browser portals use a local `matchUrlTemplate` plus an `eventMapping` of normalized fields to dotted JSON paths. This keeps portal-specific selectors and contracted URLs in the ignored local registry while allowing independent score confirmation without direct API calls.
-
-### AI command contract
-
-Commands are arrays, never shell strings. The configured writer receives:
-
-- `EA_PROMPT_PATH` — private JSON prompt and deterministic facts
-- `EA_OUTPUT_PATH` — destination for the multilingual Article JSON
-
-Video commands receive `EA_AUDIO_PATH` or `EA_FRAMES_PATH` plus `EA_OUTPUT_PATH`. Without configured AI commands, the pipeline creates a blocked review packet rather than inventing output.
-
-### Temporary media policy
-
-Each match uses a unique directory under `pipeline/jobs/`. Success, failure, cancellation and disk-limit exits all pass through the same `finally` cleanup. Video, audio, frames, HTML, JSON bodies, transcripts, model outputs and task logs are deleted. Only the article/review object and a plain URL list under ignored `private-sources/` may survive.
-
-Startup removes orphan job directories older than one hour. The default per-job disk limit is 2 GiB. Deletion is ordinary filesystem deletion, not secure erase.
-
-## Editorial and publication gate
-
-Deterministic code owns scores, head-to-head rates and line-up continuity. AI may explain the supplied facts but cannot publish. Fewer than two independent confirmations, unresolved data conflicts, missing personnel evidence, expired rights, or attribution conflicts produce `data_incomplete` and block publication.
-
-Draft statuses are `draft`, `needs_review`, `data_incomplete`, `approved` and `published`.
+Drafts are private review packets. An editor may approve one language independently; pending languages remain absent rather than blocking the approved edition.
 
 ```bash
 npm run review:pr
-npm run content:publish -- content/review-packets/<article>.json
-npm test
+npm run content:publish -- content/review-packets/<content>.json
+npm run release:aws
 ```
 
-`review:pr` opens a draft GitHub PR. A human verifies facts, wording, rights and numeric consistency across all required language editions, then changes the article to `approved`. A translation that is missing or still pending never falls back to English on the public route. The promotion command alone can turn an approved review file into a published manifest entry. Merging that reviewed change triggers the static-site release workflow.
+The AWS release repeats data, quality, test, editorial and prepublish gates, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. See `doc/AWS_Deployment_Guide.md`.
 
-## Advertising
+Search Console access stays local. Copy `pipeline/config/search-console.example.json` to the ignored `search-console.local.json`, set a short-lived `GOOGLE_SEARCH_CONSOLE_TOKEN`, then run:
 
-`site/ad-config.json` is the only ad switch and starts with `enabled: false`. Disabled ads render no DOM and load no JavaScript. Enabled creatives are structured HTTPS-only entries; arbitrary HTML and scripts are rejected. When enabled, the framework-free `site/ad-slot.js` component is the only executable browser script.
-
-Every active slot displays `AD`, exposes the full `Advertisement` tooltip, closes independently for the browser session, and uses:
-
-```html
-<a target="_blank" rel="nofollow noopener noreferrer">
+```bash
+npm run monitor:search -- --submit
+npm run monitor:search
 ```
 
-## Verification
-
-The test suite covers deterministic calculations, multilingual content policy, rights and evidence exclusions, successful/failed/cancelled/disk-limit cleanup, orphan cleanup, static assets, anonymous routes, disabled ad output, media prohibition, provider disclosure prohibition, structured metadata and the deployable Sites bundle. It also recursively scans every generated HTML file and fails if a framework name, framework asset, executable script source, ad placeholder or media element appears while ads are disabled.
+The report captures discovery, crawl, index state, Google-selected canonical, soft-404/coverage signals and a repair queue. Run it after 3, 7 and 14 days and weekly thereafter. Passing technical checks makes pages eligible for crawling and indexing; it does not guarantee inclusion in Google's index.

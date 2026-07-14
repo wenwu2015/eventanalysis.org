@@ -65,14 +65,9 @@ function handler(event) {
     return redirect(uri.replace(/index\.html$/, ''), true);
   }
 
-  var retiredMethodPage = uri.match(/^\/([a-z-]+)\/methodology\/?$/);
-  if (retiredMethodPage && SUPPORTED[retiredMethodPage[1]]) {
-    return redirect('/' + retiredMethodPage[1] + '/', true);
-  }
-
   if (uri === '/') {
     var acceptLanguage = (request.headers['accept-language'] || { value: '' }).value;
-    return redirect('/' + chooseLocale(acceptLanguage) + '/', false);
+    return redirect('/' + chooseLocale(acceptLanguage) + '/football/', false);
   }
 
   return request;

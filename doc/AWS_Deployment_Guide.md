@@ -36,10 +36,10 @@ ns-1862.awsdns-40.co.uk
 
 只有根路径 `/` 读取浏览器标准 `Accept-Language`：
 
-- `zh-TW` / `zh-HK` / `zh-MO` / `zh-Hant` -> `/zh-hant/`
-- 其他中文 -> `/zh/`
-- 支持的地区变体按基础语言匹配，例如 `pt-BR` -> `/pt/`
-- 不支持或缺失语言 -> `/en/`
+- `zh-TW` / `zh-HK` / `zh-MO` / `zh-Hant` -> `/zh-hant/football/`
+- 其他中文 -> `/zh/football/`
+- 支持的地区变体按基础语言匹配，例如 `pt-BR` -> `/pt/football/`
+- 不支持或缺失语言 -> `/en/football/`
 
 这是 CloudFront Viewer Request 的 302，不写 Cookie、不保存访客状态。进入显式语言 URL 后不再自动改写；每个页面的原生 HTML 语言菜单仍可手动切换。
 
@@ -50,7 +50,7 @@ cd /Users/a1111/Desktop/workspace/Five/project/eventanalysis.org
 npm run release:aws
 ```
 
-发布脚本会依次执行 lint、全部测试和静态构建，将 `dist/client` 增量同步到 S3，删除已下线文件，并创建 CloudFront 全站失效请求。共享 assets 使用一年 immutable 缓存；HTML、XML 和文本默认使用五分钟缓存。
+发布脚本会依次执行结构化数据、私有证据、重复内容、编辑措辞、技术 SEO、lint 和全部测试。全部通过后先上传新对象，再发布 CloudFront 根路径路由，最后删除已下线对象并创建全站失效请求。切换前 Git 提交和 S3 对象清单保存在忽略的 `pipeline/runtime/aws-release/`。
 
 底层命令：
 
@@ -65,11 +65,12 @@ aws cloudfront create-invalidation --distribution-id EPXANA1AARBLN --paths "/*"
 dig +short NS eventanalysis.org
 curl -sI -H 'Accept-Language: ja-JP' https://eventanalysis.org/
 curl -sI https://www.eventanalysis.org/
-curl -sI https://eventanalysis.org/en/
+curl -sI https://eventanalysis.org/en/football/
+curl -sI https://eventanalysis.org/en/archive/
 curl -sI https://eventanalysis.org/not-found
 ```
 
-预期：根路径日文请求 302 到 `/ja/`；`www` 301 到根域；显式语言页 200；不存在页面返回自定义 404。响应应包含 HSTS、`X-Frame-Options: DENY`、`X-Content-Type-Options: nosniff`、Referrer Policy 和 Permissions Policy。
+预期：根路径日文请求 302 到 `/ja/football/`；`www` 301 到根域；新规范 URL 返回 200；旧 `/archive`、`/methodology`、`/articles` URL 和不存在页面返回真实 404。响应应包含 HSTS、`X-Frame-Options: DENY`、`X-Content-Type-Options: nosniff`、Referrer Policy 和 Permissions Policy。
 
 ## 回滚
 

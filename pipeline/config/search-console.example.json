@@ -1,0 +1,10 @@
+{
+  "siteUrl": "sc-domain:eventanalysis.org",
+  "sitemapUrl": "https://eventanalysis.org/sitemap.xml",
+  "inspectionUrls": [
+    "https://eventanalysis.org/en/football/",
+    "https://eventanalysis.org/zh/football/",
+    "https://eventanalysis.org/en/football/match-analysis/spain-england-euro-2024-final/"
+  ],
+  "followUpDays": [3, 7, 14]
+}
