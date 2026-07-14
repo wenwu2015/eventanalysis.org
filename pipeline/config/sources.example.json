@@ -1,0 +1,29 @@
+{
+  "defaults": {
+    "kind": "browser",
+    "maxConcurrency": 1,
+    "minimumDelayMs": 3000,
+    "active": false,
+    "license": {
+      "authorised": false,
+      "validFrom": null,
+      "validThrough": null,
+      "regions": [],
+      "publicAttributionRequired": false,
+      "internalVideoAnalysis": false
+    }
+  },
+  "sources": [
+    { "id": "sofascore", "label": "SofaScore", "baseUrl": "https://www.sofascore.com", "coverage": ["global-football", "results", "events", "lineups", "head-to-head"], "priority": 100 },
+    { "id": "sportradar", "label": "Sportradar", "baseUrl": "https://www.sportradar.com", "coverage": ["results", "events", "lineups"], "priority": 95 },
+    { "id": "genius", "label": "Genius Sports", "baseUrl": "https://www.geniussports.com", "coverage": ["results", "events", "lineups"], "priority": 94 },
+    { "id": "opta", "label": "Stats Perform / Opta", "baseUrl": "https://www.statsperform.com", "coverage": ["advanced-events", "lineups", "personnel"], "priority": 90 },
+    { "id": "wyscout", "label": "Hudl Wyscout", "baseUrl": "https://platform.wyscout.com", "coverage": ["advanced-events", "personnel", "video"], "priority": 88 },
+    { "id": "statsbomb", "label": "StatsBomb", "baseUrl": "https://statsbomb.com", "coverage": ["advanced-events", "lineups"], "priority": 87 },
+    { "id": "transfermarkt", "label": "Transfermarkt", "baseUrl": "https://www.transfermarkt.com", "coverage": ["personnel", "transfers", "injuries", "coaches"], "priority": 80 },
+    { "id": "skillcorner", "label": "SkillCorner", "baseUrl": "https://skillcorner.com", "coverage": ["tracking", "physical"], "priority": 78 },
+    { "id": "fifa-archive", "label": "FIFA Archives", "baseUrl": "https://www.archives.fifa.com", "coverage": ["video", "historical-footage"], "priority": 72 },
+    { "id": "uefa-archive", "label": "UEFA Video Archive", "baseUrl": "https://www.uefa.com", "coverage": ["video", "historical-footage"], "priority": 72 },
+    { "id": "img-replay", "label": "IMG Replay", "baseUrl": "https://replay.img.com", "coverage": ["video", "historical-footage"], "priority": 70 }
+  ]
+}

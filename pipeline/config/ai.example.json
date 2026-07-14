@@ -1,0 +1,11 @@
+{
+  "writer": {
+    "command": [],
+    "timeoutMs": 600000
+  },
+  "video": {
+    "transcribeCommand": [],
+    "visionCommand": [],
+    "timeoutMs": 1200000
+  }
+}

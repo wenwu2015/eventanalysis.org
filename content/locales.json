@@ -1,0 +1,23 @@
+[
+  { "code": "zh", "htmlLang": "zh-CN", "nativeName": "简体中文", "englishName": "Simplified Chinese", "dir": "ltr" },
+  { "code": "zh-hant", "htmlLang": "zh-Hant", "nativeName": "繁體中文", "englishName": "Traditional Chinese", "dir": "ltr" },
+  { "code": "en", "htmlLang": "en", "nativeName": "English", "englishName": "English", "dir": "ltr" },
+  { "code": "ja", "htmlLang": "ja", "nativeName": "日本語", "englishName": "Japanese", "dir": "ltr" },
+  { "code": "ko", "htmlLang": "ko", "nativeName": "한국어", "englishName": "Korean", "dir": "ltr" },
+  { "code": "ru", "htmlLang": "ru", "nativeName": "Русский", "englishName": "Russian", "dir": "ltr" },
+  { "code": "es", "htmlLang": "es", "nativeName": "Español", "englishName": "Spanish", "dir": "ltr" },
+  { "code": "pt", "htmlLang": "pt", "nativeName": "Português", "englishName": "Portuguese", "dir": "ltr" },
+  { "code": "fr", "htmlLang": "fr", "nativeName": "Français", "englishName": "French", "dir": "ltr" },
+  { "code": "de", "htmlLang": "de", "nativeName": "Deutsch", "englishName": "German", "dir": "ltr" },
+  { "code": "it", "htmlLang": "it", "nativeName": "Italiano", "englishName": "Italian", "dir": "ltr" },
+  { "code": "ar", "htmlLang": "ar", "nativeName": "العربية", "englishName": "Arabic", "dir": "rtl" },
+  { "code": "sv", "htmlLang": "sv", "nativeName": "Svenska", "englishName": "Swedish", "dir": "ltr" },
+  { "code": "nl", "htmlLang": "nl", "nativeName": "Nederlands", "englishName": "Dutch", "dir": "ltr" },
+  { "code": "tr", "htmlLang": "tr", "nativeName": "Türkçe", "englishName": "Turkish", "dir": "ltr" },
+  { "code": "pl", "htmlLang": "pl", "nativeName": "Polski", "englishName": "Polish", "dir": "ltr" },
+  { "code": "hr", "htmlLang": "hr", "nativeName": "Hrvatski", "englishName": "Croatian", "dir": "ltr" },
+  { "code": "sr", "htmlLang": "sr", "nativeName": "Српски", "englishName": "Serbian", "dir": "ltr" },
+  { "code": "uk", "htmlLang": "uk", "nativeName": "Українська", "englishName": "Ukrainian", "dir": "ltr" },
+  { "code": "fa", "htmlLang": "fa", "nativeName": "فارسی", "englishName": "Persian", "dir": "rtl" },
+  { "code": "id", "htmlLang": "id", "nativeName": "Bahasa Indonesia", "englishName": "Indonesian", "dir": "ltr" }
+]

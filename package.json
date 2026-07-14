@@ -1,0 +1,25 @@
+{
+  "name": "eventanalysis-org",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "npm run build && node pipeline/static-server.mjs",
+    "build": "node --experimental-strip-types pipeline/generate-static-site.mjs",
+    "start": "node pipeline/static-server.mjs",
+    "test": "npm run test:unit && npm run build && node --test tests/build-output.test.mjs",
+    "test:unit": "node --test tests/calculations.test.mjs tests/job-lifecycle.test.mjs tests/content-policy.test.mjs tests/collector-normalization.test.mjs",
+    "lint": "node --check pipeline/generate-static-site.mjs && node --check pipeline/static-server.mjs && node --check site/ad-slot.js && node --check site/static-worker.js",
+    "pipeline:daily": "node pipeline/run-daily.mjs",
+    "pipeline:weekly": "node pipeline/run-weekly.mjs",
+    "review:pr": "node pipeline/create-review-pr.mjs",
+    "content:publish": "node pipeline/promote-approved.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "playwright": "1.57.0"
+  },
+  "type": "module"
+}

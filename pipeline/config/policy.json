@@ -1,0 +1,9 @@
+{
+  "lookbackHours": 48,
+  "maxCandidates": 20,
+  "maxDraftsPerRun": 3,
+  "orphanMaxAgeMinutes": 60,
+  "jobDiskLimitBytes": 2147483648,
+  "navigationTimeoutMs": 45000,
+  "minimumIndependentCoreSources": 2
+}
