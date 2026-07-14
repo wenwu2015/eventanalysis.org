@@ -3,7 +3,7 @@ import { createReadStream } from "node:fs";
 import { access, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chooseLocale } from "../lib/language-routing.mjs";
+import { chooseLocale, supportedLocales } from "../lib/language-routing.mjs";
 
 const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)));
 const port = Number(process.env.PORT || 3000);
@@ -19,6 +19,15 @@ const server = (await import("node:http")).createServer(async (request, response
         "cache-control": "private, no-store",
         location: `/${locale}/${url.search}`,
         vary: "Accept-Language",
+      });
+      response.end();
+      return;
+    }
+    const retiredMethodPage = pathname.match(/^\/([a-z-]+)\/methodology\/?$/);
+    if (retiredMethodPage && supportedLocales.includes(retiredMethodPage[1])) {
+      response.writeHead(301, {
+        "cache-control": "public, max-age=3600",
+        location: `/${retiredMethodPage[1]}/`,
       });
       response.end();
       return;

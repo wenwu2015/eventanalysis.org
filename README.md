@@ -8,7 +8,6 @@ Event Analysis is a 21-language post-match football analysis publication. The fi
 - `/:locale/` — 21 independently translated edition homepages
 - `/:locale/articles/:slug/` — reviewed analysis
 - `/:locale/archive/` — published archive
-- `/:locale/methodology/` — editorial method
 - `/:locale/feed.xml`, `/sitemap.xml`, `/robots.txt` — generated static assets
 
 Every route is emitted as a standalone `dist/client/**/index.html` file and loads only `/assets/site.css`. The root redirect reads only the standard request header, sets no cookie and stores no user state. Every page has a native HTML language menu; it preserves the current section and, where a reviewed translation exists, the current article. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.

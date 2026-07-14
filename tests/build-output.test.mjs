@@ -28,6 +28,7 @@ test("AWS publish directory is plain HTML and CSS", async () => {
   await access(resolve(root, "dist/client/index.html"));
   await access(resolve(root, "dist/client/assets/site.css"));
   await access(resolve(root, "dist/client/favicon.svg"));
+  await assert.rejects(access(resolve(root, "dist/client/zh/methodology/index.html")));
 });
 
 async function htmlFiles(directory) {
@@ -47,7 +48,7 @@ test("every public page is framework-free static HTML", async () => {
     assert.equal(packageJson.devDependencies?.[dependency], undefined, dependency);
   }
   const files = await htmlFiles(resolve(root, "dist/client"));
-  assert.ok(files.length >= 66, "all locale routes should be pre-generated");
+  assert.ok(files.length >= 45, "all public locale routes should be pre-generated");
   for (const path of files) {
     const html = await readFile(path, "utf8");
     assert.match(html, /^<!doctype html>/i, path);
@@ -68,9 +69,7 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
       "/en/",
       "/ja/",
       "/ru/archive/",
-      "/ar/methodology/",
       "/zh/archive/",
-      "/en/methodology/",
       "/en/articles/spain-england-euro-2024-final/",
     ];
     for (const path of paths) {
@@ -100,18 +99,20 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
     const english = await (await fetch(`http://127.0.0.1:${port}/en/`)).text();
     assert.match(english, /class="locale-menu"/);
     assert.doesNotMatch(english, /class="language-grid"|Choose a language/);
+    assert.doesNotMatch(english, /\/methodology/);
     const archive = await (await fetch(`http://127.0.0.1:${port}/zh/archive/`)).text();
     assert.match(archive, /href="\/ja\/archive\/"/);
-    const methodology = await (await fetch(`http://127.0.0.1:${port}/en/methodology/`)).text();
-    assert.match(methodology, /href="\/ko\/methodology\/"/);
+    const retiredMethodology = await fetch(`http://127.0.0.1:${port}/en/methodology/`, { redirect: "manual" });
+    assert.equal(retiredMethodology.status, 301);
+    assert.equal(retiredMethodology.headers.get("location"), "/en/");
     assert.match(article, /href="\/zh\/articles\/spain-england-euro-2024-final\/"/);
     assert.match(article, /href="\/ja\/"/);
     const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/`)).text();
     assert.match(japanese, /日本語版を準備中です/);
     assert.doesNotMatch(japanese, /Spain 2–1 England/);
-    const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/methodology/`)).text();
+    const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/`)).text();
     assert.match(arabic, /dir="rtl"/);
-    assert.match(arabic, /كيف نفسر مباراة/);
+    assert.match(arabic, /تنتهي المباراة/);
   } finally {
     server.kill("SIGTERM");
   }
@@ -123,4 +124,6 @@ test("RSS, sitemap and robots are static public assets", async () => {
   for (const path of [...locales.map(({ code }) => `dist/client/${code}/feed.xml`), "dist/client/sitemap.xml", "dist/client/robots.txt"]) {
     await access(resolve(root, path));
   }
+  const sitemap = await readFile(resolve(root, "dist/client/sitemap.xml"), "utf8");
+  assert.doesNotMatch(sitemap, /methodology/);
 });

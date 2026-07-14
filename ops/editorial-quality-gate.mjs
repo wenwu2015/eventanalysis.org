@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { readFile, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
-import { ui } from "../lib/ui-copy.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const publicRoot = resolve(root, "dist/client");
@@ -29,9 +28,6 @@ async function publicFiles(directory) {
 }
 
 const failures = [];
-for (const [locale, copy] of Object.entries(ui)) {
-  if (copy.method.steps.length !== 4) failures.push(`${locale}: methodology must contain exactly four editorial steps`);
-}
 
 for (const path of await publicFiles(publicRoot)) {
   const content = await readFile(path, "utf8");
@@ -45,4 +41,4 @@ if (failures.length) {
   throw new Error(`Editorial quality gate failed:\n${failures.join("\n")}`);
 }
 
-console.log("Editorial quality gate passed: four-step methods, no automation attribution, placeholders or stock filler in public output.");
+console.log("Editorial quality gate passed: no automation attribution, placeholders or stock filler in public output.");

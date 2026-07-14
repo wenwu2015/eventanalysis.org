@@ -115,13 +115,12 @@ function shell(locale, content, { homeHref = `/${locale}/`, linkForLocale } = {}
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="${homeHref}#latest">${escapeHtml(copy.nav.latest)}</a>
       <a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a>
-      <a href="/${locale}/methodology">${escapeHtml(copy.nav.methodology)}</a>
     </nav>
     ${languageMenu(locale, linkForLocale)}
   </header>
   ${adSlot("page-top")}
   <main id="main" class="page-main">${content}</main>
-  <footer class="site-footer"><div class="footer-grid"><div class="footer-mark">EA</div><div class="footer-copy"><div class="footer-links"><a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a><a href="/${locale}/methodology">${escapeHtml(copy.nav.methodology)}</a><a href="/${locale}/feed.xml">RSS</a></div><p>${escapeHtml(copy.footer)}</p><p>© 2026 EventAnalysis.org</p></div></div></footer>
+  <footer class="site-footer"><div class="footer-grid"><div class="footer-mark">EA</div><div class="footer-copy"><div class="footer-links"><a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a><a href="/${locale}/feed.xml">RSS</a></div><p>${escapeHtml(copy.footer)}</p><p>© 2026 EventAnalysis.org</p></div></div></footer>
 </div>`;
 }
 
@@ -148,7 +147,7 @@ function homePage(locale, { isRoot = false } = {}) {
     lead = `<div class="edition-empty"><span class="edition-empty-code">${escapeHtml(locale.toUpperCase())}</span><div><h3>${escapeHtml(copy.home.emptyTitle)}</h3><p>${escapeHtml(copy.home.emptyBody)}</p></div></div>`;
   }
   const cards = copy.home.cards.map(([title, body], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p></article>`).join("");
-  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${headline(copy.home.headline)}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="/${locale}/archive">${escapeHtml(copy.home.all)}</a></div>${lead}</section>${adSlot("content-mid")}${numbers}<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2><a href="/${locale}/methodology">${escapeHtml(copy.nav.methodology)}</a></div><div class="brief-grid">${cards}</div></section>`;
+  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${headline(copy.home.headline)}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="/${locale}/archive">${escapeHtml(copy.home.all)}</a></div>${lead}</section>${adSlot("content-mid")}${numbers}<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div><div class="brief-grid">${cards}</div></section>`;
   const alternates = `${alternateLinks()}<link rel="alternate" hreflang="x-default" href="${baseUrl}/">`;
   return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.pageTitle, description: copy.pageDescription, canonical: isRoot ? "/" : `/${locale}`, alternates, body: shell(locale, content, { homeHref: isRoot ? "/" : `/${locale}/` }) });
 }
@@ -163,13 +162,6 @@ function archivePage(locale) {
   }).join("") || `<p class="archive-empty">${escapeHtml(copy.archive.empty)}</p>`;
   const content = `<div class="page-width"><header class="page-hero"><p class="eyebrow">Event Analysis · Index</p><h1>${escapeHtml(copy.archive.title)}</h1><p>${escapeHtml(copy.archive.intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
   return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.archive.title, description: copy.archive.intro, canonical: `/${locale}/archive`, alternates: alternateLinks("/archive"), body: shell(locale, content, { linkForLocale: (code) => `/${code}/archive/` }) });
-}
-
-function methodologyPage(locale) {
-  const copy = ui[locale];
-  const steps = copy.method.steps.map(([title, body]) => `<section><h2>${escapeHtml(title)}</h2><p>${escapeHtml(body)}</p></section>`).join("");
-  const content = `<div class="page-width"><header class="page-hero"><p class="eyebrow">Editorial standard · v1.0</p><h1>${escapeHtml(copy.method.title)}</h1><p>${escapeHtml(copy.method.intro)}</p></header><section class="section method-grid"><aside class="method-aside">${escapeHtml(copy.method.flow)}</aside><div class="method-content">${steps}<p class="policy-note">${escapeHtml(copy.method.policy)}</p></div></section>${adSlot("content-mid")}</div>`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.method.title, description: copy.method.intro, canonical: `/${locale}/methodology`, alternates: alternateLinks("/methodology"), body: shell(locale, content, { linkForLocale: (code) => `/${code}/methodology/` }) });
 }
 
 function articlePage(locale, article) {
@@ -225,7 +217,6 @@ await writeRoute("/", rootPage());
 for (const { code } of localeDefinitions) {
   await writeRoute(`/${code}`, homePage(code));
   await writeRoute(`/${code}/archive`, archivePage(code));
-  await writeRoute(`/${code}/methodology`, methodologyPage(code));
   await writeFileEnsured(resolve(clientOutput, code, "feed.xml"), feed(code));
 }
 
@@ -235,7 +226,7 @@ for (const article of publicArticles) {
   }
 }
 
-const staticPaths = ["/", ...localeDefinitions.flatMap(({ code }) => [`/${code}`, `/${code}/archive`, `/${code}/methodology`])];
+const staticPaths = ["/", ...localeDefinitions.flatMap(({ code }) => [`/${code}`, `/${code}/archive`])];
 const articlePaths = publicArticles.flatMap((article) => Object.keys(article.translations).map((locale) => articlePath(locale, article.sport, article.slug)));
 const lastModified = new Date(publicArticles[0].publishedAt).toISOString();
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticPaths, ...articlePaths].map((path) => `<url><loc>${baseUrl}${path}</loc><lastmod>${lastModified}</lastmod></url>`).join("")}</urlset>\n`;
@@ -243,4 +234,4 @@ await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemap);
 await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
 await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ title: "Page not found", description: "The requested page does not exist.", canonical: "/404", body: shell("en", `<div class="not-found"><div><strong>404</strong><h1>Page not found</h1><a href="/en/">Event Analysis</a></div></div>`) }));
 
-console.log(`Generated ${1 + localeDefinitions.length * 3 + articlePaths.length} framework-free HTML pages in dist/.`);
+console.log(`Generated ${1 + localeDefinitions.length * 2 + articlePaths.length} framework-free HTML pages in dist/.`);

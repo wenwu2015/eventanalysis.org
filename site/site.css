@@ -142,12 +142,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .archive-row h2 { margin: 0; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 500; letter-spacing: -.035em; }
 .archive-score { font-family: var(--serif); font-size: 1.7rem; text-align: right; }
 
-.method-grid { display: grid; grid-template-columns: .65fr 1.35fr; gap: 4rem; }
-.method-aside { position: sticky; top: 2rem; align-self: start; font-family: var(--mono); font-size: .7rem; line-height: 1.7; text-transform: uppercase; }
-.method-content h2 { margin: 3rem 0 1rem; font-family: var(--serif); font-size: 2.3rem; font-weight: 500; letter-spacing: -.04em; }
-.method-content h2:first-child { margin-top: 0; }
-.method-content p, .method-content li { color: #3f413a; line-height: 1.75; }
-.method-content ol { padding-left: 1.2rem; }
 .policy-note { margin-top: 3rem; padding: 1.5rem; border: 1px solid var(--ink); background: var(--accent); color: var(--ink) !important; font-weight: 700; }
 
 .edition-empty { display: grid; grid-template-columns: minmax(100px, .35fr) 1fr; gap: 2rem; align-items: center; min-height: 300px; padding: 2rem 0; border-block: 1px solid var(--ink); }
@@ -215,7 +209,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .wordmark-name { display: none; }
   .site-nav { order: 3; grid-column: 1 / -1; justify-content: flex-start; gap: 1.2rem; padding: .7rem 0; overflow-x: auto; }
   .locale-menu-panel { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
-  .masthead-bottom, .lead-story, .method-grid, .article-layout { grid-template-columns: 1fr; }
+  .masthead-bottom, .lead-story, .article-layout { grid-template-columns: 1fr; }
   .edition-stamp { justify-self: start; text-align: left; }
   .lead-copy { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--ink); }
   .score-panel { padding-left: 0; }
@@ -223,7 +217,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .brief-grid { grid-template-columns: 1fr; }
   .archive-row { grid-template-columns: 80px 1fr auto; }
   .archive-meta { display: none; }
-  .method-aside { position: static; }
   .article-rail { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-copy { text-align: left; }

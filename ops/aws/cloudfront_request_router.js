@@ -3,7 +3,7 @@
 // immutable static files and are never redirected by language.
 
 var SUPPORTED = {
-  en: true, ja: true, ko: true, ru: true, es: true, pt: true, fr: true,
+  zh: true, 'zh-hant': true, en: true, ja: true, ko: true, ru: true, es: true, pt: true, fr: true,
   de: true, it: true, ar: true, sv: true, nl: true, tr: true, pl: true,
   hr: true, sr: true, uk: true, fa: true, id: true
 };
@@ -63,6 +63,11 @@ function handler(event) {
 
   if (uri === '/index.html' || uri.slice(-11) === '/index.html') {
     return redirect(uri.replace(/index\.html$/, ''), true);
+  }
+
+  var retiredMethodPage = uri.match(/^\/([a-z-]+)\/methodology\/?$/);
+  if (retiredMethodPage && SUPPORTED[retiredMethodPage[1]]) {
+    return redirect('/' + retiredMethodPage[1] + '/', true);
   }
 
   if (uri === '/') {
