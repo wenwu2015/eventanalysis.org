@@ -3,7 +3,7 @@ import { createReadStream } from "node:fs";
 import { access, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chooseLocale } from "../site/static-worker.js";
+import { chooseLocale } from "../lib/language-routing.mjs";
 
 const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)));
 const port = Number(process.env.PORT || 3000);

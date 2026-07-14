@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chooseLocale } from "../site/static-worker.js";
+import { chooseLocale } from "../lib/language-routing.mjs";
 
 test("browser language selection respects quality and regional variants", () => {
   assert.equal(chooseLocale("zh-TW,zh;q=0.8,en;q=0.5"), "zh-hant");

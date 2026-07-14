@@ -218,9 +218,6 @@ await rm(output, { recursive: true, force: true });
 await mkdir(resolve(clientOutput, "assets"), { recursive: true });
 await cp(resolve(root, "site/site.css"), resolve(clientOutput, "assets/site.css"));
 await cp(resolve(root, "site/ad-slot.js"), resolve(clientOutput, "assets/ad-slot.js"));
-await mkdir(resolve(output, "server"), { recursive: true });
-await cp(resolve(root, "site/static-worker.js"), resolve(output, "server/index.js"));
-await writeFileEnsured(resolve(output, ".openai/hosting.json"), `${JSON.stringify({ d1: null, r2: null }, null, 2)}\n`);
 await writeRoute("/", rootPage());
 
 for (const { code } of localeDefinitions) {

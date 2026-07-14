@@ -27,7 +27,7 @@ npm run dev
 npm test
 ```
 
-`npm run build` runs the local Node generator, recreates `dist/`, writes every HTML page plus RSS, Sitemap and Robots, and copies the single CSS asset. D1 and R2 stay disabled in `.openai/hosting.json`. `npm run start` is a tiny local file server used only for preview and tests; it is not deployed. Sites receives a small static-asset Worker because its archive format requires an entrypoint; its only logic is the root `Accept-Language` redirect. It does not render content or expose an API and is never loaded by the browser.
+`npm run build` runs the local Node generator, recreates `dist/`, writes every HTML page plus RSS, Sitemap and Robots, and copies the single CSS asset. `npm run start` is a tiny local file server used only for preview and tests; it is not deployed. Production uses S3 static website hosting behind CloudFront. A small Viewer Request function handles only the root `Accept-Language` redirect and canonical host/path rules; it does not render content or expose an API and is never loaded by the browser. See `doc/AWS_Deployment_Guide.md` for the production topology and release workflow.
 
 ## Local collection pipeline
 

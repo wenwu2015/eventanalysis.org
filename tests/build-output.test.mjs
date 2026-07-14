@@ -24,12 +24,9 @@ async function startServer(port) {
   return child;
 }
 
-test("Sites bundle is plain HTML and CSS with no persistence bindings", async () => {
+test("AWS publish directory is plain HTML and CSS", async () => {
   await access(resolve(root, "dist/client/index.html"));
   await access(resolve(root, "dist/client/assets/site.css"));
-  await access(resolve(root, "dist/server/index.js"));
-  const hosting = JSON.parse(await readFile(resolve(root, "dist/.openai/hosting.json"), "utf8"));
-  assert.deepEqual(hosting, { d1: null, r2: null });
 });
 
 async function htmlFiles(directory) {

@@ -1,0 +1,16 @@
+{
+  "domain": "eventanalysis.org",
+  "region": "us-east-1",
+  "bucket": "eventanalysis.org",
+  "hostedZoneId": "Z05859582Z4S2T5LQJGVP",
+  "nameServers": [
+    "ns-716.awsdns-25.net",
+    "ns-1118.awsdns-11.org",
+    "ns-73.awsdns-09.com",
+    "ns-1862.awsdns-40.co.uk"
+  ],
+  "cloudFrontDistributionId": "EPXANA1AARBLN",
+  "cloudFrontDomain": "d3j6lm0zu6uu8t.cloudfront.net",
+  "cloudFrontFunction": "eventanalysis-request-router",
+  "responseHeadersPolicyId": "ce6385ca-a3fd-4077-8e23-7fd8ea805537"
+}
