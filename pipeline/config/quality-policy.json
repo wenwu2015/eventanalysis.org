@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "sourceConsecutiveTokensBlock": 12,
+  "lexicalBlock": 0.72,
+  "lexicalReview": 0.55,
+  "semanticBlock": 0.93,
+  "semanticReview": 0.85,
+  "claimOverlapBlock": 0.70,
+  "claimOverlapReview": 0.50,
+  "minimumNewAnalysisClaimsForSameEvent": 3,
+  "semanticModel": "ea-multilingual-hash-v1",
+  "highRiskOverrideAllowed": false,
+  "mediumRiskRequiresIndependentReviewer": true
+}
