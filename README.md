@@ -11,7 +11,7 @@ Event Analysis is a 21-language post-match football analysis publication. The fi
 - `/:locale/methodology/` — editorial method
 - `/:locale/feed.xml`, `/sitemap.xml`, `/robots.txt` — generated static assets
 
-Every route is emitted as a standalone `dist/**/index.html` file and loads only `/assets/site.css`. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
+Every route is emitted as a standalone `dist/client/**/index.html` file and loads only `/assets/site.css`. The public build has no Next.js, React, Vinext, Vite, Tailwind, hydration payload, runtime content API or framework script. All public match content is text, semantic HTML tables and CSS decoration. Do not add match screenshots, photography, GIFs, video, player portraits, crests, AI cartoons, remote embeds, or generated social images.
 
 ### Sport expansion boundary
 

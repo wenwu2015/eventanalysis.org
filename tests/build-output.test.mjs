@@ -25,8 +25,9 @@ async function startServer(port) {
 }
 
 test("Sites bundle is plain HTML and CSS with no persistence bindings", async () => {
-  await access(resolve(root, "dist/index.html"));
-  await access(resolve(root, "dist/assets/site.css"));
+  await access(resolve(root, "dist/client/index.html"));
+  await access(resolve(root, "dist/client/assets/site.css"));
+  await access(resolve(root, "dist/server/index.js"));
   const hosting = JSON.parse(await readFile(resolve(root, "dist/.openai/hosting.json"), "utf8"));
   assert.deepEqual(hosting, { d1: null, r2: null });
 });
@@ -47,7 +48,7 @@ test("every public page is framework-free static HTML", async () => {
     assert.equal(packageJson.dependencies?.[dependency], undefined, dependency);
     assert.equal(packageJson.devDependencies?.[dependency], undefined, dependency);
   }
-  const files = await htmlFiles(resolve(root, "dist"));
+  const files = await htmlFiles(resolve(root, "dist/client"));
   assert.ok(files.length >= 66, "all locale routes should be pre-generated");
   for (const path of files) {
     const html = await readFile(path, "utf8");
@@ -102,7 +103,7 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
 test("RSS, sitemap and robots are static public assets", async () => {
   const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8"));
   assert.equal(locales.length, 21);
-  for (const path of [...locales.map(({ code }) => `dist/${code}/feed.xml`), "dist/sitemap.xml", "dist/robots.txt"]) {
+  for (const path of [...locales.map(({ code }) => `dist/client/${code}/feed.xml`), "dist/client/sitemap.xml", "dist/client/robots.txt"]) {
     await access(resolve(root, path));
   }
 });

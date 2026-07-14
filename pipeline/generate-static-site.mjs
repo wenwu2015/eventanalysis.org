@@ -8,6 +8,7 @@ import { activeSports, articlePath, sportByCode } from "../lib/sports.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
+const clientOutput = resolve(output, "client");
 const baseUrl = "https://eventanalysis.org";
 const adConfig = JSON.parse(await readFile(resolve(root, "site/ad-config.json"), "utf8"));
 const activeSportCodes = new Set(activeSports.map(({ code }) => code));
@@ -210,14 +211,14 @@ async function writeFileEnsured(path, content) {
 }
 
 async function writeRoute(route, html) {
-  const path = route === "/" ? resolve(output, "index.html") : resolve(output, route.slice(1), "index.html");
+  const path = route === "/" ? resolve(clientOutput, "index.html") : resolve(clientOutput, route.slice(1), "index.html");
   await writeFileEnsured(path, html);
 }
 
 await rm(output, { recursive: true, force: true });
-await mkdir(resolve(output, "assets"), { recursive: true });
-await cp(resolve(root, "site/site.css"), resolve(output, "assets/site.css"));
-await cp(resolve(root, "site/ad-slot.js"), resolve(output, "assets/ad-slot.js"));
+await mkdir(resolve(clientOutput, "assets"), { recursive: true });
+await cp(resolve(root, "site/site.css"), resolve(clientOutput, "assets/site.css"));
+await cp(resolve(root, "site/ad-slot.js"), resolve(clientOutput, "assets/ad-slot.js"));
 await mkdir(resolve(output, "server"), { recursive: true });
 await cp(resolve(root, "site/static-worker.js"), resolve(output, "server/index.js"));
 await writeFileEnsured(resolve(output, ".openai/hosting.json"), `${JSON.stringify({ d1: null, r2: null }, null, 2)}\n`);
@@ -227,7 +228,7 @@ for (const { code } of localeDefinitions) {
   await writeRoute(`/${code}`, homePage(code));
   await writeRoute(`/${code}/archive`, archivePage(code));
   await writeRoute(`/${code}/methodology`, methodologyPage(code));
-  await writeFileEnsured(resolve(output, code, "feed.xml"), feed(code));
+  await writeFileEnsured(resolve(clientOutput, code, "feed.xml"), feed(code));
 }
 
 for (const article of publicArticles) {
@@ -240,8 +241,8 @@ const staticPaths = ["/", ...localeDefinitions.flatMap(({ code }) => [`/${code}`
 const articlePaths = publicArticles.flatMap((article) => Object.keys(article.translations).map((locale) => articlePath(locale, article.sport, article.slug)));
 const lastModified = new Date(publicArticles[0].publishedAt).toISOString();
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticPaths, ...articlePaths].map((path) => `<url><loc>${baseUrl}${path}</loc><lastmod>${lastModified}</lastmod></url>`).join("")}</urlset>\n`;
-await writeFileEnsured(resolve(output, "sitemap.xml"), sitemap);
-await writeFileEnsured(resolve(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
-await writeFileEnsured(resolve(output, "404.html"), documentPage({ title: "Page not found", description: "The requested page does not exist.", canonical: "/404", body: `<main class="not-found"><div><strong>404</strong><h1>Page not found</h1><a href="/">Event Analysis</a></div></main>` }));
+await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemap);
+await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
+await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ title: "Page not found", description: "The requested page does not exist.", canonical: "/404", body: `<main class="not-found"><div><strong>404</strong><h1>Page not found</h1><a href="/">Event Analysis</a></div></main>` }));
 
 console.log(`Generated ${1 + localeDefinitions.length * 3 + articlePaths.length} framework-free HTML pages in dist/.`);
