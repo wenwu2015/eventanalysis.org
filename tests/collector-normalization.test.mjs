@@ -54,5 +54,7 @@ test("licence and attribution conflicts block collection before navigation", () 
   assert.equal(validateSourceForCollection({ ...base, active: false }).reason, "inactive");
   assert.equal(validateSourceForCollection({ ...base, license: { authorised: false } }).reason, "not_authorised");
   assert.equal(validateSourceForCollection({ ...base, license: { authorised: true, publicAttributionRequired: true } }).reason, "public_attribution_conflicts_with_site_policy");
+  assert.equal(validateSourceForCollection({ ...base, license: { authorised: true, retentionRequired: true } }).reason, "retention_conflicts_with_ephemeral_policy");
+  assert.equal(validateSourceForCollection({ ...base, license: { authorised: true, regions: ["EU"] } }, new Date(), "CN").reason, "region_not_licensed");
   assert.equal(validateSourceForCollection({ ...base, license: { authorised: true, validThrough: "2020-01-01" } }, new Date("2026-01-01")).reason, "licence_expired");
 });

@@ -24,6 +24,28 @@ test("success deletes every job artifact but retains a sanitised URL", async () 
   assert.equal(await readFile(resolve(root, "private-sources/article-one.txt"), "utf8"), "https://example.com/match/video?id=1\n");
 });
 
+test("private evidence survives while raw job files are removed", async () => {
+  const root = await fixtureRoot();
+  await withEphemeralJob({ root, articleId: "evidence-one", diskLimitBytes: 10_000 }, async (job) => {
+    await writeFile(resolve(job.jobDir, "response.json"), "temporary-response");
+    job.retainEvidence({
+      id: "evidence_one",
+      sourceId: "fixture",
+      url: "https://user:secret@example.com/match/1",
+      rightsSnapshotId: "contract-1",
+      capturedAt: "2026-07-14T00:00:00Z",
+      parserVersion: "fixture-v1",
+      rawHash: "abc123",
+      fieldLocations: ["event.score"],
+      excerpt: "short audit excerpt",
+    });
+  });
+  await assertJobsEmpty(root);
+  const packet = JSON.parse(await readFile(resolve(root, "private-evidence/evidence-one.json"), "utf8"));
+  assert.equal(packet.records[0].url, "https://example.com/match/1");
+  assert.equal(packet.records[0].rawHash, "abc123");
+});
+
 test("failure and cancellation still delete the complete job directory", async () => {
   for (const failure of [new Error("boom"), Object.assign(new Error("cancelled"), { name: "AbortError" })]) {
     const root = await fixtureRoot();

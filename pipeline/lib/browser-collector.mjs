@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { createHash } from "node:crypto";
 
 export class AccessControlError extends Error {
   constructor(message) {
@@ -21,6 +22,10 @@ async function pace(source) {
 
 function safeFilePart(value) {
   return String(value).replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 80);
+}
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000, interact }) {
@@ -62,7 +67,7 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
       const name = `${String(sequence++).padStart(4, "0")}-${safeFilePart(responseUrl.pathname)}.json`;
       const path = resolve(responseDirectory, name);
       await writeFile(path, body, { mode: 0o600 });
-      captured.push({ url: responseUrl.toString(), status: response.status(), path, body });
+      captured.push({ url: responseUrl.toString(), status: response.status(), path, body, hash: sha256(body) });
     })();
     pending.add(promise);
     promise.finally(() => pending.delete(promise));
@@ -93,9 +98,10 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
       throw new AccessControlError("An access-control challenge was detected; no bypass was attempted.");
     }
     const htmlPath = resolve(job.jobDir, "page.html");
-    await writeFile(htmlPath, await page.content(), { mode: 0o600 });
+    const html = await page.content();
+    await writeFile(htmlPath, html, { mode: 0o600 });
     await job.checkDisk();
-    return { title, visibleText, htmlPath, responses: captured };
+    return { title, visibleText, htmlPath, pageHash: sha256(html), responses: captured };
   } finally {
     await context.clearCookies().catch(() => {});
     await context.close().catch(() => {});

@@ -7,6 +7,8 @@ import { discoverFinishedMatches, collectMatchEvidence } from "./adapters/sofasc
 import { collectGenericMatchEvidence } from "./adapters/generic-provider.mjs";
 import { buildFactBundle } from "./lib/facts.mjs";
 import { createReviewArtifact } from "./lib/article-writer.mjs";
+import { createCandidate, partitionCandidates } from "./lib/content-candidates.mjs";
+import { loadContentData } from "./lib/data-store.mjs";
 
 const flags = new Set(process.argv.slice(2));
 const config = await loadPipelineConfig();
@@ -36,7 +38,18 @@ if (!sofa) {
   const ranked = rankCandidates(candidates.filter((event) =>
     allowedSports.has(String(event.sport || "football").toLowerCase())
   )).slice(0, config.policy.maxCandidates);
-  const selected = ranked.slice(0, config.policy.maxDraftsPerRun);
+  const existing = await loadContentData(config.root);
+  const enriched = ranked.map((event) => createCandidate({
+    ...event,
+    type: "match_analysis",
+    sport: String(event.sport || "football").toLowerCase(),
+    angle: "post-match-result-mechanism",
+    entityRefs: [`source-team:${event.homeTeamId}`, `source-team:${event.awayTeamId}`],
+    eventRefs: [`source-event:${event.id}`],
+  }));
+  const { create, update } = partitionCandidates(enriched, existing.items);
+  for (const candidate of update) console.log(JSON.stringify({ eventId: candidate.id, action: "update_existing_content" }));
+  const selected = create.slice(0, config.policy.maxDraftsPerRun);
   for (const event of selected) {
     const result = await withEphemeralJob({
       root: config.root,

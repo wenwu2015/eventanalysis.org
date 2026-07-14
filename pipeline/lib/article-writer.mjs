@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { runCommand } from "./command-runner.mjs";
+import { normalizeSlug } from "./data-store.mjs";
 
 const forbiddenPublicPatterns = [
   /https?:\/\//i,
@@ -8,42 +9,41 @@ const forbiddenPublicPatterns = [
   /<\/?(?:img|picture|video|iframe|canvas)\b/i,
 ];
 
-function assertPublicDraftSafe(article) {
-  const publicCopy = JSON.stringify(article.translations || {});
-  for (const pattern of forbiddenPublicPatterns) {
-    if (pattern.test(publicCopy)) throw new Error(`Public draft failed disclosure/media policy: ${pattern}`);
+function assertDraftShape(item) {
+  if (!item.id || !item.type || !item.sport || !item.primaryIntentKey || !item.angleKey || !item.originalContribution) throw new Error("Structured draft identity fields are incomplete");
+  if (!Array.isArray(item.claims) || !item.claims.length) throw new Error("Structured draft requires evidence-backed claims");
+  if (!item.editions || !Object.keys(item.editions).length) throw new Error("Structured draft has no language editions");
+  for (const [locale, edition] of Object.entries(item.editions)) {
+    if (!edition.title || !edition.deck || !edition.slug || !edition.sections?.length) throw new Error(`Edition ${locale} is incomplete`);
+    if (normalizeSlug(edition.slug) !== edition.slug) throw new Error(`Edition ${locale} slug is not canonical`);
+    edition.status = "needs_review";
   }
-  const requiredLocales = article.requiredLocales;
-  if (!Array.isArray(requiredLocales) || requiredLocales.length === 0) throw new Error("requiredLocales must be present on AI drafts");
-  const missingLocales = requiredLocales.filter((locale) => !article.translations?.[locale]);
-  if (missingLocales.length) throw new Error(`Missing required translations: ${missingLocales.join(", ")}`);
-  if (!article.slug || !article.id) throw new Error("Article id and slug are required");
-  if (!article.sport) throw new Error("Article sport is required");
-  if (!Number.isFinite(article.match?.homeScore) || !Number.isFinite(article.match?.awayScore)) throw new Error("Deterministic final score is required");
+  const publicCopy = JSON.stringify(item.editions);
+  for (const pattern of forbiddenPublicPatterns) if (pattern.test(publicCopy)) throw new Error(`Public draft failed disclosure/media policy: ${pattern}`);
 }
 
-function writingPrompt(facts, requiredLocales) {
+function writingPrompt(facts, requestedLocales) {
   return {
-    objective: "Write one multilingual post-match football analysis for EventAnalysis.org.",
-    requiredLocales,
+    objective: "Create structured post-match football analysis editions for editorial review.",
+    schemaVersion: 2,
+    requestedLocales,
     requirements: [
-      "Use the exact shared facts and deterministic numbers supplied.",
-      "Explain prior meetings, personnel changes, the final result and why it happened.",
-      "Keep fact and analysis visibly distinct.",
-      "Do not mention providers, URLs, videos, screenshots or private evidence.",
-      "Return JSON only, matching the existing Article structure in lib/content.ts.",
-      "Preserve the supplied sport code; do not infer or change the sport.",
-      "Use one shared fact object and preserve every number exactly across all language editions.",
-      "Do not publish an English placeholder when a requested translation is missing.",
-      "Set status to needs_review. Never set published or approved.",
+      "Return one ContentItem JSON object with stable entityRefs, eventRefs, Claim objects and independent Edition objects.",
+      "Use supplied deterministic scores, head-to-head calculations and evidence references without inventing missing values.",
+      "Separate fact, calculation and analysis claims; every paragraph must reference one or more claims.",
+      "State a specific reader question, angleKey and originalContribution before drafting.",
+      "Do not mention sources, URLs, production tools, videos, screenshots or private evidence in editions.",
+      "Each requested locale needs its own title, deck, section labels, slug and prose. Never use an English placeholder.",
+      "Set every edition to needs_review. Publication is an editorial action outside this task.",
     ],
     facts,
   };
 }
 
-export async function createReviewArtifact({ facts, aiConfig, job, root }) {
+export async function createReviewArtifact({ facts, aiConfig, job, root, requestedLocales }) {
   const reviewRoot = resolve(root, "content/review-packets");
   await mkdir(reviewRoot, { recursive: true });
+  const locales = requestedLocales || JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8")).map(({ code }) => code);
   if (facts.status === "data_incomplete") {
     const path = resolve(reviewRoot, `${facts.id}.json`);
     await writeFile(path, `${JSON.stringify({ ...facts, publicationBlocked: true }, null, 2)}\n`);
@@ -51,25 +51,18 @@ export async function createReviewArtifact({ facts, aiConfig, job, root }) {
   }
   if (!aiConfig.writer.command?.length) {
     const path = resolve(reviewRoot, `${facts.id}.json`);
-    await writeFile(path, `${JSON.stringify({ ...facts, publicationBlocked: true, missing: [...facts.missing, "ai_writer_configuration"] }, null, 2)}\n`);
+    await writeFile(path, `${JSON.stringify({ ...facts, publicationBlocked: true, missing: [...facts.missing, "writer_configuration"] }, null, 2)}\n`);
     return { kind: "blocked", path };
   }
-
-  const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8"));
-  const requiredLocales = locales.map(({ code }) => code);
   const promptPath = resolve(job.jobDir, "writer-prompt.json");
   const outputPath = resolve(job.jobDir, "writer-output.json");
-  await writeFile(promptPath, `${JSON.stringify(writingPrompt(facts, requiredLocales), null, 2)}\n`, { mode: 0o600 });
-  await runCommand(aiConfig.writer.command, {
-    cwd: root,
-    timeoutMs: aiConfig.writer.timeoutMs,
-    env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath },
-  });
-  const article = JSON.parse(await readFile(outputPath, "utf8"));
-  article.requiredLocales = requiredLocales;
-  assertPublicDraftSafe(article);
-  article.status = "needs_review";
-  const path = resolve(reviewRoot, `${article.id}.json`);
-  await writeFile(path, `${JSON.stringify(article, null, 2)}\n`);
+  await writeFile(promptPath, `${JSON.stringify(writingPrompt(facts, locales), null, 2)}\n`, { mode: 0o600 });
+  await runCommand(aiConfig.writer.command, { cwd: root, timeoutMs: aiConfig.writer.timeoutMs, env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath } });
+  const item = JSON.parse(await readFile(outputPath, "utf8"));
+  item.schemaVersion = 2;
+  item.revision ||= 1;
+  assertDraftShape(item);
+  const path = resolve(reviewRoot, `${item.id}.json`);
+  await writeFile(path, `${JSON.stringify(item, null, 2)}\n`);
   return { kind: "draft", path };
 }

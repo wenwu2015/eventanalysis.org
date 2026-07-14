@@ -36,11 +36,15 @@ export async function loadPipelineConfig() {
   return { root, policy, sources: normalizedSources, ai, sourcePath, aiPath };
 }
 
-export function validateSourceForCollection(source, now = new Date()) {
+export function validateSourceForCollection(source, now = new Date(), region = process.env.EA_COLLECTION_REGION || "") {
   if (!source.active) return { ok: false, reason: "inactive" };
   if (!source.license?.authorised) return { ok: false, reason: "not_authorised" };
   if (source.license.publicAttributionRequired) {
     return { ok: false, reason: "public_attribution_conflicts_with_site_policy" };
+  }
+  if (source.license.retentionRequired) return { ok: false, reason: "retention_conflicts_with_ephemeral_policy" };
+  if (region && source.license.regions?.length && !source.license.regions.includes(region)) {
+    return { ok: false, reason: "region_not_licensed" };
   }
   if (source.license.validFrom && now < new Date(source.license.validFrom)) {
     return { ok: false, reason: "licence_not_started" };

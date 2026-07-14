@@ -62,10 +62,44 @@ async function mergeUrlList(destination, urls) {
   await writeFile(destination, `${merged.join("\n")}\n`, { mode: 0o600 });
 }
 
+async function mergeEvidencePacket(destination, records) {
+  let existing = { schemaVersion: 2, records: [] };
+  try {
+    existing = JSON.parse(await readFile(destination, "utf8"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  const merged = new Map((existing.records || []).map((record) => [record.id, record]));
+  for (const record of records) merged.set(record.id, record);
+  await writeFile(destination, `${JSON.stringify({ schemaVersion: 2, records: [...merged.values()].sort((a, b) => a.id.localeCompare(b.id)) }, null, 2)}\n`, { mode: 0o600 });
+}
+
+function sanitiseEvidence(record) {
+  if (!record?.id || !record?.sourceId || !record?.url || !record?.capturedAt || !record?.parserVersion || !record?.rawHash) {
+    throw new Error("Evidence requires id, sourceId, url, capturedAt, parserVersion and rawHash");
+  }
+  const url = new URL(record.url);
+  if (!["https:", "http:"].includes(url.protocol)) throw new Error("Evidence URL must use HTTP(S)");
+  url.username = "";
+  url.password = "";
+  return {
+    id: String(record.id),
+    sourceId: String(record.sourceId),
+    url: url.toString(),
+    rightsSnapshotId: String(record.rightsSnapshotId || "unrecorded"),
+    capturedAt: new Date(record.capturedAt).toISOString(),
+    parserVersion: String(record.parserVersion),
+    rawHash: String(record.rawHash),
+    fieldLocations: (record.fieldLocations || []).map(String).slice(0, 100),
+    excerpt: String(record.excerpt || "").slice(0, 500),
+  };
+}
+
 export async function withEphemeralJob({ root, articleId = `job-${randomUUID()}`, diskLimitBytes }, task) {
   const jobsRoot = resolve(root, "pipeline/jobs");
   const jobDir = resolve(jobsRoot, `${Date.now()}-${basename(articleId)}-${randomUUID()}`);
   const retainedUrls = new Set();
+  const retainedEvidence = new Map();
   await mkdir(jobDir, { recursive: true, mode: 0o700 });
 
   const context = {
@@ -79,6 +113,11 @@ export async function withEphemeralJob({ root, articleId = `job-${randomUUID()}`
       url.password = "";
       retainedUrls.add(url.toString());
     },
+    retainEvidence(value) {
+      const record = sanitiseEvidence(value);
+      retainedEvidence.set(record.id, record);
+      retainedUrls.add(record.url);
+    },
     async checkDisk() {
       return assertWithinDiskBudget(jobDir, diskLimitBytes);
     },
@@ -91,6 +130,11 @@ export async function withEphemeralJob({ root, articleId = `job-${randomUUID()}`
       const privateRoot = resolve(root, "private-sources");
       await mkdir(privateRoot, { recursive: true, mode: 0o700 });
       await mergeUrlList(resolve(privateRoot, `${safeArticleId(articleId)}.txt`), retainedUrls);
+    }
+    if (retainedEvidence.size > 0) {
+      const evidenceRoot = resolve(root, "private-evidence");
+      await mkdir(evidenceRoot, { recursive: true, mode: 0o700 });
+      await mergeEvidencePacket(resolve(evidenceRoot, `${safeArticleId(articleId)}.json`), [...retainedEvidence.values()]);
     }
     await rm(jobDir, { recursive: true, force: true });
   }

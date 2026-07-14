@@ -66,11 +66,26 @@ export async function collectGenericMatchEvidence({ source, event, job, timeoutM
     && item.awayScore === event.awayScore
   );
   if (!confirmed) return null;
+  const evidenceId = `evidence_${source.id}_${event.id}_${result.pageHash.slice(0, 12)}`;
+  job.retainEvidence({
+    id: evidenceId,
+    sourceId: source.id,
+    url,
+    rightsSnapshotId: source.license?.snapshotId || `${source.id}-current-contract`,
+    capturedAt: new Date().toISOString(),
+    parserVersion: "generic-browser-v2",
+    rawHash: result.pageHash,
+    fieldLocations: ["browser DOM", `${result.responses.length} same-origin JSON responses`, "configured event mapping"],
+    excerpt: result.visibleText.slice(0, 500),
+  });
   return {
     sourceId: source.id,
+    evidenceId,
     originalUrl: url,
     event: { ...event, ...confirmed },
     h2hEvents: mapped,
     capturedResponseCount: result.responses.length,
+    personnelChanges: [],
+    keyEvents: [],
   };
 }

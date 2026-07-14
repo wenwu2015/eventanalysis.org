@@ -115,12 +115,27 @@ export async function collectMatchEvidence({ source, event, job, timeoutMs }) {
     ...item,
     status: ["finished", "afterpenalties", "afterextra"].some((status) => item.status.includes(status)) ? "finished" : item.status,
   }));
+  const evidenceId = `evidence_${source.id}_${event.id}_${result.pageHash.slice(0, 12)}`;
+  job.retainEvidence({
+    id: evidenceId,
+    sourceId: source.id,
+    url: sofaEventUrl(source, event),
+    rightsSnapshotId: source.license?.snapshotId || `${source.id}-current-contract`,
+    capturedAt: new Date().toISOString(),
+    parserVersion: "sofascore-browser-v2",
+    rawHash: result.pageHash,
+    fieldLocations: ["browser DOM", `${bodies.length} same-origin JSON responses`, "event", "head-to-head", "lineups"],
+    excerpt: result.visibleText.slice(0, 500),
+  });
   return {
     sourceId: source.id,
+    evidenceId,
     originalUrl: sofaEventUrl(source, event),
     event,
     h2hEvents,
     capturedResponseCount: bodies.length,
     visibleText: result.visibleText,
+    personnelChanges: [],
+    keyEvents: [],
   };
 }

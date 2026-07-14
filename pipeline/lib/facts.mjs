@@ -28,10 +28,13 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
     event.homeTeamId,
     event.awayTeamId,
   );
+  const personnelChanges = evidence.flatMap((item) => item.personnelChanges || []);
+  const keyEvents = evidence.flatMap((item) => item.keyEvents || []);
+  const evidenceRefs = [...new Set(evidence.map((item) => item.evidenceId).filter(Boolean))];
   const missing = [];
   if (coreSources.size < minimumIndependentCoreSources) missing.push("independent_core_source_confirmation");
   if (headToHead.matches === 0) missing.push("head_to_head_history");
-  missing.push("personnel_change_confirmation");
+  if (personnelChanges.length === 0) missing.push("personnel_change_confirmation");
   return {
     schemaVersion: 1,
     id: `match-${event.id}`,
@@ -51,10 +54,11 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
       result: scoreResult(event.homeScore, event.awayScore),
     },
     headToHeadBeforeMatch: headToHead,
-    personnelChanges: [],
-    keyEvents: [],
+    personnelChanges,
+    keyEvents,
     videoObservations: [],
     coreSourceConfirmations: coreSources.size,
+    evidenceRefs,
     missing,
   };
 }
