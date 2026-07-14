@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 2,
+  "records": [
+    {
+      "id": "team_spain_men",
+      "kind": "Team",
+      "sport": "football",
+      "canonicalName": "Spain",
+      "names": { "zh": "西班牙", "zh-hant": "西班牙", "en": "Spain", "ja": "スペイン", "ko": "스페인", "ru": "Испания", "es": "España", "pt": "Espanha", "fr": "Espagne", "de": "Spanien", "it": "Spagna", "ar": "إسبانيا", "sv": "Spanien", "nl": "Spanje", "tr": "İspanya", "pl": "Hiszpania", "hr": "Španjolska", "sr": "Шпанија", "uk": "Іспанія", "fa": "اسپانیا", "id": "Spanyol" }
+    },
+    {
+      "id": "team_england_men",
+      "kind": "Team",
+      "sport": "football",
+      "canonicalName": "England",
+      "names": { "zh": "英格兰", "zh-hant": "英格蘭", "en": "England", "ja": "イングランド", "ko": "잉글랜드", "ru": "Англия", "es": "Inglaterra", "pt": "Inglaterra", "fr": "Angleterre", "de": "England", "it": "Inghilterra", "ar": "إنجلترا", "sv": "England", "nl": "Engeland", "tr": "İngiltere", "pl": "Anglia", "hr": "Engleska", "sr": "Енглеска", "uk": "Англія", "fa": "انگلیس", "id": "Inggris" }
+    },
+    {
+      "id": "competition_uefa_euro_2024",
+      "kind": "Competition",
+      "sport": "football",
+      "canonicalName": "UEFA EURO 2024",
+      "names": { "zh": "2024 欧洲杯", "zh-hant": "2024 歐洲國家盃", "en": "UEFA EURO 2024", "ja": "UEFA EURO 2024", "ko": "UEFA 유로 2024", "ru": "Евро-2024", "es": "UEFA EURO 2024", "pt": "UEFA EURO 2024", "fr": "UEFA EURO 2024", "de": "UEFA EURO 2024", "it": "UEFA EURO 2024", "ar": "يورو 2024", "sv": "Fotbolls-EM 2024", "nl": "EK 2024", "tr": "EURO 2024", "pl": "EURO 2024", "hr": "EURO 2024", "sr": "ЕУРО 2024", "uk": "Євро-2024", "fa": "یورو ۲۰۲۴", "id": "EURO 2024" }
+    },
+    {
+      "id": "place_olympiastadion_berlin",
+      "kind": "Place",
+      "sport": "football",
+      "canonicalName": "Olympiastadion Berlin",
+      "names": { "zh": "柏林奥林匹克体育场", "zh-hant": "柏林奧林匹克體育場", "en": "Olympiastadion Berlin", "ja": "ベルリン・オリンピアシュタディオン", "ko": "베를린 올림피아슈타디온", "ru": "Олимпиаштадион, Берлин", "es": "Olympiastadion de Berlín", "pt": "Olympiastadion de Berlim", "fr": "Stade olympique de Berlin", "de": "Olympiastadion Berlin", "it": "Olympiastadion di Berlino", "ar": "الملعب الأولمبي في برلين", "sv": "Olympiastadion Berlin", "nl": "Olympiastadion Berlijn", "tr": "Berlin Olimpiyat Stadyumu", "pl": "Stadion Olimpijski w Berlinie", "hr": "Olimpijski stadion u Berlinu", "sr": "Олимпијски стадион у Берлину", "uk": "Олімпійський стадіон у Берліні", "fa": "ورزشگاه المپیک برلین", "id": "Olympiastadion Berlin" }
+    },
+    { "id": "person_rodri", "kind": "Person", "sport": "football", "canonicalName": "Rodri", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_martin_zubimendi", "kind": "Person", "sport": "football", "canonicalName": "Martín Zubimendi", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_lamine_yamal", "kind": "Person", "sport": "football", "canonicalName": "Lamine Yamal", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_nico_williams", "kind": "Person", "sport": "football", "canonicalName": "Nico Williams", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_mikel_oyarzabal", "kind": "Person", "sport": "football", "canonicalName": "Mikel Oyarzabal", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_marc_cucurella", "kind": "Person", "sport": "football", "canonicalName": "Marc Cucurella", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_alvaro_morata", "kind": "Person", "sport": "football", "canonicalName": "Álvaro Morata", "relations": [{ "predicate": "tournament_roster", "targetId": "team_spain_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_cole_palmer", "kind": "Person", "sport": "football", "canonicalName": "Cole Palmer", "relations": [{ "predicate": "tournament_roster", "targetId": "team_england_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_jude_bellingham", "kind": "Person", "sport": "football", "canonicalName": "Jude Bellingham", "relations": [{ "predicate": "tournament_roster", "targetId": "team_england_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_harry_kane", "kind": "Person", "sport": "football", "canonicalName": "Harry Kane", "relations": [{ "predicate": "tournament_roster", "targetId": "team_england_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_ollie_watkins", "kind": "Person", "sport": "football", "canonicalName": "Ollie Watkins", "relations": [{ "predicate": "tournament_roster", "targetId": "team_england_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] },
+    { "id": "person_kobbie_mainoo", "kind": "Person", "sport": "football", "canonicalName": "Kobbie Mainoo", "relations": [{ "predicate": "tournament_roster", "targetId": "team_england_men", "validFrom": "2024-06-14", "validTo": "2024-07-14" }] }
+  ]
+}

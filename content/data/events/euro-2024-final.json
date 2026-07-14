@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 2,
+  "id": "event_euro_2024_final_spain_england",
+  "kind": "Event",
+  "sport": "football",
+  "competitionId": "competition_uefa_euro_2024",
+  "startedAt": "2024-07-14T21:00:00+02:00",
+  "status": "finished",
+  "homeTeamId": "team_spain_men",
+  "awayTeamId": "team_england_men",
+  "homeScore": 2,
+  "awayScore": 1,
+  "placeId": "place_olympiastadion_berlin",
+  "entityRefs": [
+    "team_spain_men",
+    "team_england_men",
+    "competition_uefa_euro_2024",
+    "place_olympiastadion_berlin",
+    "person_rodri",
+    "person_martin_zubimendi",
+    "person_lamine_yamal",
+    "person_nico_williams",
+    "person_mikel_oyarzabal",
+    "person_marc_cucurella",
+    "person_alvaro_morata",
+    "person_cole_palmer",
+    "person_jude_bellingham",
+    "person_harry_kane",
+    "person_ollie_watkins",
+    "person_kobbie_mainoo"
+  ]
+}

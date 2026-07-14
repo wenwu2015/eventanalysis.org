@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 2,
+  "id": "content_euro_2024_final_analysis",
+  "revision": 1,
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "euro-2024-final-spain-england-result-explained",
+  "angleKey": "width-substitutions-and-late-winner",
+  "originalContribution": "Connects the forced midfield change, both benches and Spain's maintained width to explain why the late winner followed the same attacking mechanism as the opening goal.",
+  "readerQuestion": "Why did Spain beat England despite England's stronger historical head-to-head record?",
+  "author": "Event Analysis Editorial Desk",
+  "publishedAt": "2026-07-14T08:00:00+08:00",
+  "reviewedAt": "2026-07-14T07:30:00+08:00",
+  "confidence": 94,
+  "entityRefs": [
+    "team_spain_men", "team_england_men", "competition_uefa_euro_2024", "place_olympiastadion_berlin",
+    "person_rodri", "person_martin_zubimendi", "person_lamine_yamal", "person_nico_williams",
+    "person_mikel_oyarzabal", "person_marc_cucurella", "person_alvaro_morata", "person_cole_palmer",
+    "person_jude_bellingham", "person_kobbie_mainoo"
+  ],
+  "eventRefs": ["event_euro_2024_final_spain_england"],
+  "claims": [
+    { "id": "claim_h2h_context", "kind": "calculation", "factRefs": ["fact_euro_final_h2h"], "summary": "England held the better all-time pre-match record, but that sample is context rather than a match forecast." },
+    { "id": "claim_result", "kind": "fact", "factRefs": ["fact_euro_final_result"], "summary": "Spain won the final 2-1." },
+    { "id": "claim_midfield_change", "kind": "fact", "factRefs": ["fact_euro_final_zubimendi_sub"], "summary": "Zubimendi replaced Rodri at half-time." },
+    { "id": "claim_width_first_goal", "kind": "analysis", "factRefs": ["fact_euro_final_nico_goal"], "summary": "Spain's preserved width created the cross-pitch movement behind the first goal." },
+    { "id": "claim_england_substitution", "kind": "fact", "factRefs": ["fact_euro_final_palmer_sub"], "summary": "Palmer replaced Mainoo after 70 minutes." },
+    { "id": "claim_england_response", "kind": "analysis", "factRefs": ["fact_euro_final_palmer_sub", "fact_euro_final_palmer_goal"], "summary": "England's substitution accelerated play and produced an equaliser without establishing sustained pressure." },
+    { "id": "claim_spain_forward_change", "kind": "fact", "factRefs": ["fact_euro_final_oyarzabal_sub"], "summary": "Oyarzabal replaced Morata after 68 minutes." },
+    { "id": "claim_late_winner", "kind": "analysis", "factRefs": ["fact_euro_final_oyarzabal_sub", "fact_euro_final_oyarzabal_goal"], "summary": "Oyarzabal's movement and Cucurella's advanced position expressed Spain's preserved attacking structure." },
+    { "id": "claim_verdict", "kind": "analysis", "factRefs": ["fact_euro_final_nico_goal", "fact_euro_final_palmer_goal", "fact_euro_final_oyarzabal_goal"], "summary": "England's changes altered a phase; Spain's changes protected the mechanism that won the match." }
+  ],
+  "editions": {
+    "zh": {
+      "status": "published",
+      "slug": "西班牙-英格兰-2024欧洲杯决赛",
+      "slugFrozenAt": "2026-07-14T07:30:00+08:00",
+      "title": "西班牙 2–1 英格兰：决赛为何属于始终拉开宽度的一方",
+      "deck": "历史交锋并不偏向西班牙，但人员调整、边路宽度和替补时机共同改写了决赛。比分直到第 86 分钟才确定，比赛方向却更早形成。",
+      "competition": "2024 欧洲杯 · 决赛",
+      "venue": "柏林奥林匹克体育场",
+      "homeName": "西班牙",
+      "awayName": "英格兰",
+      "resultLabel": "全场",
+      "reviewer": "Event Analysis Editorial Desk",
+      "sections": [
+        {
+          "id": "history",
+          "title": "过去交锋：历史优势不在最终赢家一侧",
+          "paragraphs": [
+            { "claimRefs": ["claim_h2h_context"], "text": "决赛前双方共交手 27 次。英格兰 13 胜、西班牙 10 胜，另有 4 场平局。按全部历史比赛计算，英格兰胜率 48.1%，西班牙胜率 37.0%，平局占 14.8%。这组数据描述过去，并不直接等于本场胜率。" }
+          ]
+        },
+        {
+          "id": "personnel",
+          "title": "人员变化：两套换人都奏效，但持续时间不同",
+          "paragraphs": [
+            { "claimRefs": ["claim_midfield_change"], "text": "西班牙中场在半场出现被动变化：罗德里无法继续比赛，祖比门迪第 46 分钟登场。变化没有让球队退回低位；祖比门迪继续进入接应线路，西班牙仍把两名边锋留在足够宽的位置。" },
+            { "claimRefs": ["claim_england_substitution", "claim_england_response"], "text": "英格兰第 70 分钟用帕尔默换下梅努。帕尔默三分钟后扳平，说明调整确实提高了禁区前沿的出球速度；但英格兰没有把这段优势延长为持续压迫，随后又把场地宽度交还给对手。" },
+            { "claimRefs": ["claim_spain_forward_change", "claim_late_winner"], "text": "西班牙第 68 分钟让奥亚萨瓦尔替下莫拉塔。球队减少了固定支点，却增加了前锋横向移动和突然攻击中卫身后的可能；第 86 分钟的制胜球正是这种交换的结果。" }
+          ]
+        },
+        {
+          "id": "result",
+          "title": "赛后结果：2–1，以及三个改变比赛的节点",
+          "paragraphs": [
+            { "claimRefs": ["claim_width_first_goal"], "text": "第 47 分钟，亚马尔从右侧向内吸引防守后横传，尼科·威廉斯从另一侧进入禁区得分。进球不是孤立的个人突破，而是两侧宽度同时存在后形成的横向拉扯。" },
+            { "claimRefs": ["claim_england_response"], "text": "第 73 分钟，贝林厄姆回做，帕尔默在禁区外迅速低射得分。英格兰最好的进攻来自提前处理，而非等待阵地完全成形；进球验证了换人，却没有改变球队随后回收的选择。" },
+            { "claimRefs": ["claim_late_winner", "claim_result"], "text": "第 86 分钟，库库雷利亚从左路低传，奥亚萨瓦尔抢在防线回收前触球。西班牙到最后阶段仍把边后卫送到高位，并让替补前锋攻击中卫之间的空隙，因此制胜球虽晚，却不偶然。" }
+          ]
+        },
+        {
+          "id": "verdict",
+          "title": "为什么会是这个结果",
+          "paragraphs": [
+            { "claimRefs": ["claim_verdict"], "text": "事实是，西班牙把握了两个由边路宽度生成的机会，英格兰的扳平来自替补球员提高进攻速度。更重要的差异不是控球总量，而是谁能在比分改变后继续维持自己的进攻结构。" },
+            { "claimRefs": ["claim_h2h_context", "claim_verdict"], "text": "英格兰的调整短暂改变了比赛，西班牙的调整则保住了比赛方式。前者得到一个进球，后者最终得到结果。历史交锋中的英格兰优势仍然成立，但一场决赛更受当下人员连接方式支配。" }
+          ]
+        }
+      ],
+      "timeline": [
+        { "minute": "46′", "title": "祖比门迪换下罗德里", "detail": "被动换人后，西班牙维持中场结构。", "claimRefs": ["claim_midfield_change"] },
+        { "minute": "47′", "title": "尼科·威廉斯进球", "detail": "亚马尔助攻，西班牙领先。", "claimRefs": ["claim_width_first_goal"] },
+        { "minute": "70′", "title": "帕尔默登场", "detail": "英格兰加快禁区前沿处理速度。", "claimRefs": ["claim_england_substitution"] },
+        { "minute": "73′", "title": "帕尔默扳平", "detail": "贝林厄姆回做，比分变为 1–1。", "claimRefs": ["claim_england_response"] },
+        { "minute": "86′", "title": "奥亚萨瓦尔制胜", "detail": "库库雷利亚左路低传，西班牙 2–1。", "claimRefs": ["claim_late_winner"] }
+      ]
+    },
+    "en": {
+      "status": "published",
+      "slug": "spain-england-euro-2024-final",
+      "slugFrozenAt": "2026-07-14T07:30:00+08:00",
+      "title": "Spain 2–1 England: Why the final belonged to the side that kept its width",
+      "deck": "The historical record favoured England. The final did not. Personnel changes, width and substitution timing explain how Spain turned a tight game into a deserved late win.",
+      "competition": "UEFA EURO 2024 · Final",
+      "venue": "Olympiastadion Berlin",
+      "homeName": "Spain",
+      "awayName": "England",
+      "resultLabel": "Full time",
+      "reviewer": "Event Analysis Editorial Desk",
+      "sections": [
+        {
+          "id": "history",
+          "title": "Previous meetings: the historical edge sat with the losing side",
+          "paragraphs": [
+            { "claimRefs": ["claim_h2h_context"], "text": "The teams had met 27 times before the final: 13 England wins, 10 Spain wins and four draws. Across that sample, England's win rate was 48.1%, Spain's 37.0%, with draws at 14.8%. The record describes the past; it is not a model of this match by itself." }
+          ]
+        },
+        {
+          "id": "personnel",
+          "title": "Personnel changes: both benches worked, but for different lengths of time",
+          "paragraphs": [
+            { "claimRefs": ["claim_midfield_change"], "text": "Spain were forced into a midfield change when Rodri could not continue. Martín Zubimendi entered in the 46th minute, but the team did not retreat. He kept presenting in passing lanes while Spain preserved the width of both wingers." },
+            { "claimRefs": ["claim_england_substitution", "claim_england_response"], "text": "England introduced Cole Palmer for Kobbie Mainoo after 70 minutes. Palmer levelled three minutes later, evidence that the change accelerated play around the box. England did not extend the spell into sustained pressure and gradually surrendered territory again." },
+            { "claimRefs": ["claim_spain_forward_change", "claim_late_winner"], "text": "Mikel Oyarzabal replaced Álvaro Morata after 68 minutes. Spain lost a fixed reference but gained lateral movement and a runner willing to attack behind the centre-backs. The 86th-minute winner was the direct expression of that trade." }
+          ]
+        },
+        {
+          "id": "result",
+          "title": "The result: 2–1, shaped by three decisive moments",
+          "paragraphs": [
+            { "claimRefs": ["claim_width_first_goal"], "text": "In the 47th minute, Lamine Yamal drew attention infield from the right and released Nico Williams arriving from the opposite side. The goal was not an isolated dribble; it came from stretching the defence across the full width of the pitch." },
+            { "claimRefs": ["claim_england_response"], "text": "In the 73rd minute, Jude Bellingham set the ball back and Palmer finished early from outside the box. England's best attack came from speeding up the move rather than waiting for a settled structure. The goal validated the substitution, but not the decision to withdraw afterwards." },
+            { "claimRefs": ["claim_late_winner", "claim_result"], "text": "In the 86th minute, Marc Cucurella crossed low from the left and Oyarzabal reached the space before the defensive line recovered. Spain still advanced a full-back late and still had a substitute striker attacking between defenders. The winner was late without being accidental." }
+          ]
+        },
+        {
+          "id": "verdict",
+          "title": "Why this result made sense",
+          "paragraphs": [
+            { "claimRefs": ["claim_verdict"], "text": "Spain converted two moves born from width; England's equaliser came from a substitute increasing the speed of attack. The decisive difference was less about total possession than which team could preserve its attacking structure after the score changed." },
+            { "claimRefs": ["claim_h2h_context", "claim_verdict"], "text": "England's changes altered the game briefly. Spain's changes protected the way they wanted to play. One produced an equaliser; the other produced the result. England's historical advantage remained true, but the current connections between players explained more than the all-time record." }
+          ]
+        }
+      ],
+      "timeline": [
+        { "minute": "46′", "title": "Zubimendi replaces Rodri", "detail": "Spain preserve their midfield structure after a forced change.", "claimRefs": ["claim_midfield_change"] },
+        { "minute": "47′", "title": "Nico Williams scores", "detail": "Yamal assists as Spain take the lead.", "claimRefs": ["claim_width_first_goal"] },
+        { "minute": "70′", "title": "Palmer enters", "detail": "England add speed around the edge of the box.", "claimRefs": ["claim_england_substitution"] },
+        { "minute": "73′", "title": "Palmer equalises", "detail": "Bellingham's set-back creates the 1–1 goal.", "claimRefs": ["claim_england_response"] },
+        { "minute": "86′", "title": "Oyarzabal wins it", "detail": "Cucurella crosses low and Spain lead 2–1.", "claimRefs": ["claim_late_winner"] }
+      ]
+    }
+  }
+}

@@ -7,11 +7,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 
 async function startServer(port) {
-  const child = spawn("npm", ["run", "start"], {
-    cwd: root,
-    env: { ...process.env, PORT: String(port) },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawn("npm", ["run", "start"], { cwd: root, env: { ...process.env, PORT: String(port) }, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   child.stdout.on("data", (chunk) => { output += chunk; });
   child.stderr.on("data", (chunk) => { output += chunk; });
@@ -24,13 +20,6 @@ async function startServer(port) {
   return child;
 }
 
-test("AWS publish directory is plain HTML and CSS", async () => {
-  await access(resolve(root, "dist/client/index.html"));
-  await access(resolve(root, "dist/client/assets/site.css"));
-  await access(resolve(root, "dist/client/favicon.svg"));
-  await assert.rejects(access(resolve(root, "dist/client/zh/methodology/index.html")));
-});
-
 async function htmlFiles(directory) {
   const files = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -41,89 +30,87 @@ async function htmlFiles(directory) {
   return files;
 }
 
-test("every public page is framework-free static HTML", async () => {
+test("AWS publish directory contains framework-free static output", async () => {
   const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
   for (const dependency of ["next", "react", "react-dom", "vinext", "vite", "tailwindcss", "wrangler"]) {
     assert.equal(packageJson.dependencies?.[dependency], undefined, dependency);
     assert.equal(packageJson.devDependencies?.[dependency], undefined, dependency);
   }
-  const files = await htmlFiles(resolve(root, "dist/client"));
-  assert.ok(files.length >= 45, "all public locale routes should be pre-generated");
-  for (const path of files) {
+  await access(resolve(root, "dist/client/assets/site.css"));
+  await access(resolve(root, "dist/client/assets/search.js"));
+  await access(resolve(root, "dist/client/favicon.svg"));
+  await assert.rejects(access(resolve(root, "dist/client/assets/ad-slot.js")));
+  const pages = await htmlFiles(resolve(root, "dist/client"));
+  assert.ok(pages.length >= 29, "21 locale homes and editorial routes should be pre-generated");
+  for (const path of pages) {
     const html = await readFile(path, "utf8");
     assert.match(html, /^<!doctype html>/i, path);
     assert.match(html, /<link rel="stylesheet" href="\/assets\/site\.css">/, path);
     assert.match(html, /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml">/, path);
     assert.doesNotMatch(html, /(?:_next|__next|react-dom|react\.production|vinext|@vite\/client|tailwindcss|wrangler|webpack)/i, path);
-    assert.doesNotMatch(html, /<script[^>]+src=/i, path);
     assert.doesNotMatch(html, /data-ea-ad|class="ad-slot"/i, path);
   }
 });
 
-test("rendered public pages are anonymous, media-free and disclosure-free", async () => {
+test("new localized URL contract works and retired URLs are real 404s", async () => {
   const port = 43173;
   const server = await startServer(port);
   try {
-    const paths = [
-      "/zh/",
-      "/en/",
-      "/ja/",
-      "/ru/archive/",
-      "/zh/archive/",
-      "/en/articles/spain-england-euro-2024-final/",
+    const publicPaths = [
+      "/zh/football/",
+      "/en/football/",
+      "/ja/football/",
+      "/ar/football/",
+      "/en/football/all-content/",
+      "/en/football/match-analysis/",
+      "/en/football/match-analysis/spain-england-euro-2024-final/",
+      "/zh/football/%E6%AF%94%E8%B5%9B%E5%88%86%E6%9E%90/%E8%A5%BF%E7%8F%AD%E7%89%99-%E8%8B%B1%E6%A0%BC%E5%85%B0-2024%E6%AC%A7%E6%B4%B2%E6%9D%AF%E5%86%B3%E8%B5%9B/",
     ];
-    for (const path of paths) {
+    for (const path of publicPaths) {
       const response = await fetch(`http://127.0.0.1:${port}${path}`);
       assert.equal(response.status, 200, path);
       const html = await response.text();
-      assert.doesNotMatch(html, /<(?:img|picture|video|iframe|canvas|form)\b/i, path);
+      assert.doesNotMatch(html, /<(?:img|picture|video|iframe|canvas)\b/i, path);
       assert.doesNotMatch(html, /sofascore|sportradar|genius sports|wyscout|statsbomb|transfermarkt|skillcorner/i, path);
-      assert.doesNotMatch(html, /signin-with-chatgpt|signout-with-chatgpt|oai-authenticated-user/i, path);
-      assert.doesNotMatch(html, /class="ad-slot"/i, path);
+      assert.doesNotMatch(html, /\b(?:AI|ChatGPT|OpenAI)\b|人工智能/i, path);
     }
-    const article = await (await fetch(`http://127.0.0.1:${port}/en/articles/spain-england-euro-2024-final/`)).text();
-    assert.match(article, /application\/ld\+json/);
-    assert.match(article, /hreflang="zh-CN"/);
-    assert.match(article, /48\.1%/);
-    assert.match(article, /Human reviewed/);
+    for (const path of ["/en/", "/zh/", "/en/archive/", "/zh/archive/", "/en/methodology/", "/zh/methodology/", "/en/articles/spain-england-euro-2024-final/"]) {
+      assert.equal((await fetch(`http://127.0.0.1:${port}${path}`, { redirect: "manual" })).status, 404, path);
+    }
     for (const [acceptLanguage, expectedLocation] of [
-      ["zh-TW,zh;q=0.8,en;q=0.5", "/zh-hant/"],
-      ["ja-JP,ja;q=0.9", "/ja/"],
-      ["xx-YY", "/en/"],
+      ["zh-TW,zh;q=0.8,en;q=0.5", "/zh-hant/football/"],
+      ["ja-JP,ja;q=0.9", "/ja/football/"],
+      ["xx-YY", "/en/football/"],
     ]) {
       const response = await fetch(`http://127.0.0.1:${port}/`, { headers: { "accept-language": acceptLanguage }, redirect: "manual" });
       assert.equal(response.status, 302);
       assert.equal(response.headers.get("location"), expectedLocation);
       assert.equal(response.headers.get("vary"), "Accept-Language");
     }
-    const english = await (await fetch(`http://127.0.0.1:${port}/en/`)).text();
-    assert.match(english, /class="locale-menu"/);
-    assert.doesNotMatch(english, /class="language-grid"|Choose a language/);
-    assert.doesNotMatch(english, /\/methodology/);
-    const archive = await (await fetch(`http://127.0.0.1:${port}/zh/archive/`)).text();
-    assert.match(archive, /href="\/ja\/archive\/"/);
-    const retiredMethodology = await fetch(`http://127.0.0.1:${port}/en/methodology/`, { redirect: "manual" });
-    assert.equal(retiredMethodology.status, 301);
-    assert.equal(retiredMethodology.headers.get("location"), "/en/");
-    assert.match(article, /href="\/zh\/articles\/spain-england-euro-2024-final\/"/);
-    assert.match(article, /href="\/ja\/"/);
-    const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/`)).text();
-    assert.match(japanese, /日本語版を準備中です/);
-    assert.doesNotMatch(japanese, /Spain 2–1 England/);
-    const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/`)).text();
+    const article = await (await fetch(`http://127.0.0.1:${port}/en/football/match-analysis/spain-england-euro-2024-final/`)).text();
+    assert.match(article, /application\/ld\+json/);
+    assert.match(article, /hreflang="zh-CN"/);
+    assert.match(article, /48\.1%/);
+    assert.match(article, /href="\/zh\/football\/%E6%AF%94%E8%B5%9B%E5%88%86%E6%9E%90\//);
+    const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/football/`)).text();
+    assert.match(japanese, /分析の枠組み/);
+    assert.doesNotMatch(japanese, /Spain 2–1 England|準備中/);
+    const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/football/`)).text();
     assert.match(arabic, /dir="rtl"/);
     assert.match(arabic, /تنتهي المباراة/);
+    const search = await (await fetch(`http://127.0.0.1:${port}/en/football/search/?q=Spain`)).text();
+    assert.match(search, /name="robots" content="noindex,follow"/);
+    assert.match(search, /data-search-result/);
   } finally {
     server.kill("SIGTERM");
   }
 });
 
-test("RSS, sitemap and robots are static public assets", async () => {
-  const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8"));
-  assert.equal(locales.length, 21);
-  for (const path of [...locales.map(({ code }) => `dist/client/${code}/feed.xml`), "dist/client/sitemap.xml", "dist/client/robots.txt"]) {
-    await access(resolve(root, path));
-  }
+test("RSS and nested sitemap index are static assets", async () => {
+  await access(resolve(root, "dist/client/en/football/feed.xml"));
+  await access(resolve(root, "dist/client/zh/football/feed.xml"));
   const sitemap = await readFile(resolve(root, "dist/client/sitemap.xml"), "utf8");
-  assert.doesNotMatch(sitemap, /methodology/);
+  assert.match(sitemap, /<sitemapindex/);
+  assert.match(sitemap, /sitemaps\/en-football-match-analysis\.xml/);
+  assert.doesNotMatch(sitemap, /methodology|archive|\/search/);
 });

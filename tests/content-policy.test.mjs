@@ -17,13 +17,13 @@ test("ads default to disabled and enabled links carry the required attributes", 
 
 test("local evidence and credentials are excluded from source control", async () => {
   const ignore = await readFile(resolve(root, ".gitignore"), "utf8");
-  for (const path of ["/private-sources/", "/private-auth/", "/pipeline/jobs/", "/pipeline/config/sources.local.json"]) {
+  for (const path of ["/private-sources/", "/private-evidence/", "/private-auth/", "/pipeline/jobs/", "/pipeline/config/sources.local.json"]) {
     assert.ok(ignore.includes(path), `${path} must be ignored`);
   }
 });
 
-test("public editorial copy contains no provider disclosure, remote media or embedded media markup", async () => {
-  const content = await readFile(resolve(root, "lib/content.ts"), "utf8");
+test("public editorial data contains no provider disclosure, remote media or embedded media markup", async () => {
+  const content = await readFile(resolve(root, "content/data/items/euro-2024-final-analysis.json"), "utf8");
   assert.doesNotMatch(content, /sofascore|sportradar|genius sports|wyscout|statsbomb|transfermarkt|skillcorner/i);
   assert.doesNotMatch(content, /https?:\/\//i);
   assert.doesNotMatch(content, /<(?:img|picture|video|iframe|canvas)\b/i);
@@ -37,8 +37,8 @@ test("the football language matrix is complete and never requires English fallba
   }
   assert.equal(new Set(codes).size, codes.length);
   const writer = await readFile(resolve(root, "pipeline/lib/article-writer.mjs"), "utf8");
-  assert.match(writer, /Missing required translations/);
-  assert.match(writer, /Do not publish an English placeholder/);
+  assert.match(writer, /Never use an English placeholder/);
+  assert.match(writer, /needs_review/);
 });
 
 test("version one exposes football only while future ball sports remain isolated", async () => {
@@ -47,7 +47,7 @@ test("version one exposes football only while future ball sports remain isolated
   for (const planned of ["basketball", "volleyball", "badminton"]) {
     const sport = sports.find(({ code }) => code === planned);
     assert.equal(sport?.status, "planned");
-    assert.equal(sport?.publicBasePath, `/sports/${planned}`);
+    assert.equal(sport?.routeSegment, planned);
   }
   const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/policy.json"), "utf8"));
   assert.deepEqual(policy.activeSports, ["football"]);
