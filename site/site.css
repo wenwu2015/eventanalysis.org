@@ -120,6 +120,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .number-card span { color: var(--muted); font-size: .78rem; line-height: 1.45; }
 
 .brief-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
+.editorial-principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
 .brief-card { min-height: 250px; padding: 1.75rem; background: var(--paper); }
 .brief-card-index { font-family: var(--mono); font-size: .65rem; }
 .brief-card h3 { margin: 4rem 0 .9rem; font-family: var(--serif); font-size: 1.8rem; font-weight: 500; line-height: 1.05; letter-spacing: -.04em; }
@@ -135,12 +136,26 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .page-hero h1 { max-width: 900px; margin: 0; font-family: var(--serif); font-size: clamp(3.2rem, 8vw, 7rem); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
 .page-hero p { max-width: 700px; margin: 2rem 0 0; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
 
+.breadcrumbs { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: 1.5rem; color: var(--muted); font-family: var(--mono); font-size: .68rem; }
+.breadcrumbs a { color: var(--ink); text-decoration: underline; text-underline-offset: .2rem; }
+
 .archive-list { border-top: 1px solid var(--ink); }
 .archive-empty { padding: 2rem 0; color: var(--muted); }
 .archive-row { display: grid; grid-template-columns: 110px 1fr 180px 70px; gap: 1.5rem; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
 .archive-row time, .archive-meta { font-family: var(--mono); color: var(--muted); font-size: .68rem; text-transform: uppercase; }
 .archive-row h2 { margin: 0; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 500; letter-spacing: -.035em; }
 .archive-score { font-family: var(--serif); font-size: 1.7rem; text-align: right; }
+
+.search-controls { display: grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap: 1rem; padding: 2rem 0; border-bottom: 1px solid var(--ink); }
+.search-controls label:first-child { grid-column: span 2; }
+.search-controls label { display: grid; gap: .55rem; font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+.search-controls input, .search-controls select { width: 100%; min-height: 48px; padding: .7rem .8rem; border: 1px solid var(--ink); border-radius: 0; background: var(--paper); color: var(--ink); font: inherit; }
+.search-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: 2rem; border: 1px solid var(--ink); background: var(--ink); }
+.search-result { min-height: 220px; padding: 1.5rem; background: var(--paper); }
+.search-result h2 { margin: .5rem 0 1rem; font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.6rem); font-weight: 500; line-height: 1.05; }
+.search-result p:last-child { color: var(--muted); line-height: 1.6; }
+.search-empty { padding: 2rem 0; color: var(--muted); }
+.editorial-layout { grid-template-columns: minmax(180px, .4fr) minmax(0, 1.6fr); }
 
 .policy-note { margin-top: 3rem; padding: 1.5rem; border: 1px solid var(--ink); background: var(--accent); color: var(--ink) !important; font-weight: 700; }
 
@@ -151,6 +166,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 [dir="rtl"] .edition-stamp, [dir="rtl"] .footer-copy { text-align: left; }
 [dir="rtl"] .locale-menu-panel { right: auto; left: 0; }
+[dir="rtl"] .masthead h1 { line-height: 1.05; letter-spacing: -.02em; }
 
 .article-header { padding: 4rem 0 3rem; border-bottom: 1px solid var(--ink); }
 .article-header h1 { max-width: 1050px; margin: .5rem 0 2rem; font-family: var(--serif); font-size: clamp(3rem, 7.5vw, 7.5rem); font-weight: 500; line-height: .9; letter-spacing: -.065em; }
@@ -214,13 +230,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .lead-copy { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--ink); }
   .score-panel { padding-left: 0; }
   .numbers-grid { grid-template-columns: repeat(2, 1fr); }
-  .brief-grid { grid-template-columns: 1fr; }
+  .brief-grid, .editorial-principles { grid-template-columns: 1fr; }
   .archive-row { grid-template-columns: 80px 1fr auto; }
   .archive-meta { display: none; }
   .article-rail { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-copy { text-align: left; }
   .footer-links { justify-content: flex-start; }
+  .search-controls, .search-results { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 520px) {

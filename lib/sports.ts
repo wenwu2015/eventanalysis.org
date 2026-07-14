@@ -7,7 +7,7 @@ export type SportDefinition = {
   code: SportCode;
   name: string;
   status: SportStatus;
-  publicBasePath: string;
+  routeSegment: string;
   eventSchema: "sports-event-v1";
 };
 
@@ -16,7 +16,3 @@ export const sportByCode = Object.fromEntries(
   sportDefinitions.map((sport) => [sport.code, sport]),
 ) as Record<SportCode, SportDefinition>;
 export const activeSports = sportDefinitions.filter((sport) => sport.status === "active");
-
-export function articlePath(locale: string, sport: SportCode, slug: string) {
-  return `/${locale}${sportByCode[sport].publicBasePath}/articles/${slug}`;
-}

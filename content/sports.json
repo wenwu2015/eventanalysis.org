@@ -3,28 +3,28 @@
     "code": "football",
     "name": "Football",
     "status": "active",
-    "publicBasePath": "",
+    "routeSegment": "football",
     "eventSchema": "sports-event-v1"
   },
   {
     "code": "basketball",
     "name": "Basketball",
     "status": "planned",
-    "publicBasePath": "/sports/basketball",
+    "routeSegment": "basketball",
     "eventSchema": "sports-event-v1"
   },
   {
     "code": "volleyball",
     "name": "Volleyball",
     "status": "planned",
-    "publicBasePath": "/sports/volleyball",
+    "routeSegment": "volleyball",
     "eventSchema": "sports-event-v1"
   },
   {
     "code": "badminton",
     "name": "Badminton",
     "status": "planned",
-    "publicBasePath": "/sports/badminton",
+    "routeSegment": "badminton",
     "eventSchema": "sports-event-v1"
   }
 ]

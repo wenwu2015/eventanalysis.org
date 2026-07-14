@@ -3,11 +3,11 @@ import { createReadStream } from "node:fs";
 import { access, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chooseLocale, supportedLocales } from "../lib/language-routing.mjs";
+import { chooseLocale } from "../lib/language-routing.mjs";
 
 const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)));
 const port = Number(process.env.PORT || 3000);
-const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".txt": "text/plain; charset=utf-8" };
+const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml" };
 
 const server = (await import("node:http")).createServer(async (request, response) => {
   try {
@@ -17,17 +17,8 @@ const server = (await import("node:http")).createServer(async (request, response
       const locale = chooseLocale(request.headers["accept-language"]);
       response.writeHead(302, {
         "cache-control": "private, no-store",
-        location: `/${locale}/${url.search}`,
+        location: `/${locale}/football/${url.search}`,
         vary: "Accept-Language",
-      });
-      response.end();
-      return;
-    }
-    const retiredMethodPage = pathname.match(/^\/([a-z-]+)\/methodology\/?$/);
-    if (retiredMethodPage && supportedLocales.includes(retiredMethodPage[1])) {
-      response.writeHead(301, {
-        "cache-control": "public, max-age=3600",
-        location: `/${retiredMethodPage[1]}/`,
       });
       response.end();
       return;

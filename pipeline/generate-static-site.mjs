@@ -2,199 +2,254 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { publishedArticles, ui, winRate } from "../lib/content.ts";
-import { localeByCode, localeDefinitions } from "../lib/locales.ts";
-import { activeSports, articlePath, sportByCode } from "../lib/sports.ts";
+import { ui } from "../lib/ui-copy.ts";
+import { validateContentData, routeKeyForType, routePath, absoluteUrl } from "./lib/data-store.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const output = resolve(root, "dist");
-const clientOutput = resolve(output, "client");
+const outputArgument = process.argv.find((value) => value.startsWith("--output="))?.split("=")[1];
+const clientOutput = outputArgument ? resolve(root, outputArgument) : resolve(root, "dist/client");
 const baseUrl = "https://eventanalysis.org";
-const adConfig = JSON.parse(await readFile(resolve(root, "site/ad-config.json"), "utf8"));
-const activeSportCodes = new Set(activeSports.map(({ code }) => code));
-const publicArticles = publishedArticles.filter((article) => activeSportCodes.has(article.sport));
+const [data, locales, sports, adConfig] = await Promise.all([
+  validateContentData(root),
+  readJson("content/locales.json"),
+  readJson("content/sports.json"),
+  readJson("site/ad-config.json"),
+]);
+const localeMap = new Map(locales.map((locale) => [locale.code, locale]));
+const entityMap = new Map(data.entities.map((entity) => [entity.id, entity]));
+const eventMap = new Map(data.events.map((event) => [event.id, event]));
+const factMap = new Map(data.facts.map((fact) => [fact.id, fact]));
+const activeSports = sports.filter(({ status }) => status === "active");
+
+async function readJson(path) {
+  return JSON.parse(await readFile(resolve(root, path), "utf8"));
+}
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+  return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 }
 
 function escapeXml(value) {
   return escapeHtml(value).replaceAll("&#39;", "&apos;");
 }
 
-function validateAds(config) {
-  if (typeof config.enabled !== "boolean" || typeof config.placements !== "object" || !config.placements) {
-    throw new Error("Ad config must contain enabled and placements");
-  }
-  for (const [placement, creative] of Object.entries(config.placements)) {
-    if (!['page-top', 'content-mid'].includes(placement)) throw new Error(`Unknown ad placement: ${placement}`);
-    if (![creative.headline, creative.body, creative.href].every((value) => typeof value === "string" && !/[<>]/.test(value))) {
-      throw new Error(`Ad placement ${placement} must contain structured plain text`);
-    }
-    const url = new URL(creative.href);
-    if (url.protocol !== "https:") throw new Error(`Ad placement ${placement} must use HTTPS`);
-  }
+function encodedPath(path) {
+  return path.split("/").map((part) => encodeURIComponent(part)).join("/");
 }
 
+function titleCaseSegment(value) {
+  const text = String(value).replaceAll("-", " ");
+  return text ? text[0].toLocaleUpperCase() + text.slice(1) : text;
+}
+
+function route(locale, sport, routeKey, slug) {
+  return routePath({ locale, sport, routeKey, slug, routes: data.routes });
+}
+
+function homeRoute(locale, sport = "football") {
+  return `/${locale}/${sport}/`;
+}
+
+function publishedEntries(locale, sport = "football") {
+  return data.items
+    .filter((item) => item.sport === sport && item.editions?.[locale]?.status === "published")
+    .map((item) => ({ item, edition: item.editions[locale], path: route(locale, sport, routeKeyForType(item.type), item.editions[locale].slug) }))
+    .sort((a, b) => new Date(b.item.publishedAt) - new Date(a.item.publishedAt));
+}
+
+function validateAds(config) {
+  if (typeof config.enabled !== "boolean" || !config.placements || typeof config.placements !== "object") throw new Error("Ad config must contain enabled and placements");
+  for (const [placement, creative] of Object.entries(config.placements)) {
+    if (!["page-top", "content-mid"].includes(placement)) throw new Error(`Unknown ad placement: ${placement}`);
+    if (![creative.headline, creative.body, creative.href].every((value) => typeof value === "string" && !/[<>]/.test(value))) throw new Error(`Ad placement ${placement} must use structured plain text`);
+    if (new URL(creative.href).protocol !== "https:") throw new Error(`Ad placement ${placement} must use HTTPS`);
+  }
+}
 validateAds(adConfig);
 
-function alternateLinks(path = "", onlyLocales = localeDefinitions.map(({ code }) => code)) {
-  return onlyLocales.map((code) => {
-    const locale = localeByCode[code];
-    return `<link rel="alternate" hreflang="${escapeHtml(locale.htmlLang)}" href="${baseUrl}/${code}${path}">`;
-  }).join("");
-}
-
 function adSlot(placement) {
-  if (!adConfig.enabled || !adConfig.placements[placement]) return "";
-  return `<div data-ea-ad data-placement="${placement}"></div>`;
+  return adConfig.enabled && adConfig.placements[placement] ? `<div data-ea-ad data-placement="${placement}"></div>` : "";
 }
 
 function adRuntime() {
   if (!adConfig.enabled) return "";
-  const safeJson = JSON.stringify(adConfig).replaceAll("<", "\\u003c");
-  return `<script id="ea-ad-config" type="application/json">${safeJson}</script><script src="/assets/ad-slot.js" defer></script>`;
+  return `<script id="ea-ad-config" type="application/json">${JSON.stringify(adConfig).replaceAll("<", "\\u003c")}</script><script src="/assets/ad-slot.js" defer></script>`;
 }
 
-function documentPage({
-  lang = "en",
-  dir = "ltr",
-  title,
-  description,
-  canonical,
-  alternates = "",
-  body,
-  jsonLd = "",
-}) {
-  const safeTitle = escapeHtml(title);
-  const safeDescription = escapeHtml(description);
+function alternateLinks(alternates, xDefault) {
+  const links = alternates.map(({ locale, path }) => `<link rel="alternate" hreflang="${escapeHtml(localeMap.get(locale).htmlLang)}" href="${absoluteUrl(path)}">`);
+  if (xDefault) links.push(`<link rel="alternate" hreflang="x-default" href="${absoluteUrl(xDefault)}">`);
+  return links.join("\n  ");
+}
+
+function documentPage({ locale = "en", title, description, canonical, alternates = [], xDefault, body, jsonLd = [], robots = "index,follow", scripts = [] }) {
+  const definition = localeMap.get(locale) || localeMap.get("en");
+  const structured = jsonLd.length ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": jsonLd }).replaceAll("<", "\\u003c")}</script>` : "";
   return `<!doctype html>
-<html lang="${escapeHtml(lang)}" dir="${dir}">
+<html lang="${escapeHtml(definition.htmlLang)}" dir="${definition.dir}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="${safeDescription}">
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta name="robots" content="${robots}">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>${safeTitle} · Event Analysis</title>
-  <link rel="canonical" href="${baseUrl}${canonical}">
-  ${alternates}
+  <title>${escapeHtml(title)} · Event Analysis</title>
+  <link rel="canonical" href="${absoluteUrl(canonical)}">
+  ${alternateLinks(alternates, xDefault)}
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Event Analysis">
-  <meta property="og:title" content="${safeTitle}">
-  <meta property="og:description" content="${safeDescription}">
-  ${jsonLd}
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  ${structured}
 </head>
-<body>${body}${adRuntime()}</body>
+<body>${body}${scripts.map((src) => `<script src="${src}" defer></script>`).join("")}${adRuntime()}</body>
 </html>
 `;
 }
 
-function languageMenu(locale, linkForLocale = (code) => `/${code}/`) {
-  const copy = ui[locale];
-  const current = localeByCode[locale];
-  const links = localeDefinitions.map((item) => `
-    <a href="${escapeHtml(linkForLocale(item.code))}" hreflang="${escapeHtml(item.htmlLang)}" lang="${escapeHtml(item.htmlLang)}" dir="${item.dir}"${item.code === locale ? ' aria-current="page"' : ""}>
-      <span>${escapeHtml(item.nativeName)}</span><small>${escapeHtml(item.code.toUpperCase())}</small>
-    </a>`).join("");
-  return `<details class="locale-menu"><summary class="locale-switch" aria-label="${escapeHtml(copy.nav.languages)}">${escapeHtml(current.nativeName)} · ${localeDefinitions.length}</summary><div class="locale-menu-panel">${links}</div></details>`;
+function languageMenu(locale, linkForLocale) {
+  const links = locales.map((entry) => {
+    const href = linkForLocale(entry.code);
+    return `<a href="${encodedPath(href)}" hreflang="${escapeHtml(entry.htmlLang)}" lang="${escapeHtml(entry.htmlLang)}" dir="${entry.dir}"${entry.code === locale ? ' aria-current="page"' : ""}><span>${escapeHtml(entry.nativeName)}</span><small>${escapeHtml(entry.code.toUpperCase())}</small></a>`;
+  }).join("");
+  return `<details class="locale-menu"><summary class="locale-switch" aria-label="${escapeHtml(ui[locale].nav.languages)}">${escapeHtml(localeMap.get(locale).nativeName)} · ${locales.length}</summary><div class="locale-menu-panel">${links}</div></details>`;
 }
 
-function shell(locale, content, { homeHref = `/${locale}/`, linkForLocale } = {}) {
+function shell(locale, sport, content, { linkForLocale = (code) => homeRoute(code, sport) } = {}) {
   const copy = ui[locale];
+  const entries = publishedEntries(locale, sport);
+  const allPath = route(locale, sport, "all-content");
+  const searchPath = route(locale, sport, "search");
+  const nav = [`<a href="${encodedPath(homeRoute(locale, sport))}#latest">${escapeHtml(copy.nav.latest)}</a>`];
+  if (entries.length) {
+    nav.push(`<a href="${encodedPath(allPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale]["all-content"]))}</a>`);
+    nav.push(`<a href="${encodedPath(searchPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale].search))}</a>`);
+  }
+  const footerLinks = entries.length ? `<a href="${encodedPath(allPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale]["all-content"]))}</a><a href="${encodedPath(homeRoute(locale, sport))}feed.xml">RSS</a>` : "";
   return `<div class="site-shell">
   <a class="skip-link" href="#main">${escapeHtml(copy.skip)}</a>
   <header class="site-header">
-    <a href="${homeHref}" class="wordmark" aria-label="Event Analysis home"><span class="wordmark-ea">EA</span><span class="wordmark-name">Event Analysis</span></a>
-    <nav class="site-nav" aria-label="Primary navigation">
-      <a href="${homeHref}#latest">${escapeHtml(copy.nav.latest)}</a>
-      <a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a>
-    </nav>
+    <a href="${encodedPath(homeRoute(locale, sport))}" class="wordmark" aria-label="Event Analysis home"><span class="wordmark-ea">EA</span><span class="wordmark-name">Event Analysis</span></a>
+    <nav class="site-nav" aria-label="Primary navigation">${nav.join("")}</nav>
     ${languageMenu(locale, linkForLocale)}
   </header>
   ${adSlot("page-top")}
   <main id="main" class="page-main">${content}</main>
-  <footer class="site-footer"><div class="footer-grid"><div class="footer-mark">EA</div><div class="footer-copy"><div class="footer-links"><a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a><a href="/${locale}/feed.xml">RSS</a></div><p>${escapeHtml(copy.footer)}</p><p>© 2026 EventAnalysis.org</p></div></div></footer>
+  <footer class="site-footer"><div class="footer-grid"><div class="footer-mark">EA</div><div class="footer-copy"><div class="footer-links">${footerLinks}</div><p>${escapeHtml(copy.footer)}</p><p>© 2026 EventAnalysis.org</p></div></div></footer>
 </div>`;
 }
 
-function rootPage() {
-  return homePage("en", { isRoot: true });
-}
-
-function headline(value) {
-  return value.split("\n").map((line) => `${escapeHtml(line)}<br>`).join("");
-}
-
-function homePage(locale, { isRoot = false } = {}) {
+function homePage(locale, sport) {
   const copy = ui[locale];
-  const article = publicArticles.find((item) => item.translations[locale]);
-  const translation = article?.translations[locale];
-  let lead;
-  let numbers = "";
-  if (article && translation) {
-    const h2h = article.headToHeadBeforeMatch;
-    const path = articlePath(locale, article.sport, article.slug);
-    lead = `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span class="story-status">${escapeHtml(copy.home.reviewed)}</span><span>${escapeHtml(translation.competition)}</span></div><h2><a href="${path}">${escapeHtml(translation.title)}</a></h2><p>${escapeHtml(translation.deck)}</p><a class="story-link" href="${path}">${escapeHtml(copy.home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(translation.resultLabel)}</span><div><div class="scoreline"><span>${escapeHtml(translation.homeName)}</span><strong>${article.match.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(translation.awayName)}</span><strong>${article.match.awayScore}</strong></div></div><span class="score-date">${escapeHtml(translation.venue)} · 14.07.2024</span></div></article>`;
-    numbers = `<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.numbers)}</h2><span class="eyebrow">H2H · PRE-MATCH</span></div><div class="numbers-grid"><div class="number-card"><strong>${h2h.matches}</strong><span>${escapeHtml(copy.home.meetings)}</span></div><div class="number-card"><strong>${winRate(h2h.homeWins, h2h.matches)}</strong><span>${escapeHtml(translation.homeName)} · ${escapeHtml(copy.home.winRate)}</span></div><div class="number-card"><strong>${winRate(h2h.awayWins, h2h.matches)}</strong><span>${escapeHtml(translation.awayName)} · ${escapeHtml(copy.home.winRate)}</span></div><div class="number-card"><strong>86′</strong><span>${escapeHtml(copy.home.winnerMinute)}</span></div></div></section>`;
-  } else {
-    lead = `<div class="edition-empty"><span class="edition-empty-code">${escapeHtml(locale.toUpperCase())}</span><div><h3>${escapeHtml(copy.home.emptyTitle)}</h3><p>${escapeHtml(copy.home.emptyBody)}</p></div></div>`;
-  }
-  const cards = copy.home.cards.map(([title, body], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p></article>`).join("");
-  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${headline(copy.home.headline)}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="/${locale}/archive">${escapeHtml(copy.home.all)}</a></div>${lead}</section>${adSlot("content-mid")}${numbers}<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div><div class="brief-grid">${cards}</div></section>`;
-  const alternates = `${alternateLinks()}<link rel="alternate" hreflang="x-default" href="${baseUrl}/">`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.pageTitle, description: copy.pageDescription, canonical: isRoot ? "/" : `/${locale}`, alternates, body: shell(locale, content, { homeHref: isRoot ? "/" : `/${locale}/` }) });
+  const entries = publishedEntries(locale, sport);
+  const leadEntry = entries[0];
+  const lead = leadEntry ? leadStory(locale, leadEntry) : `<div class="editorial-principles">${copy.home.cards.map(([title, text], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></article>`).join("")}</div>`;
+  const latestHeading = entries.length ? `<div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="${encodedPath(route(locale, sport, "all-content"))}">${escapeHtml(titleCaseSegment(data.routes.locales[locale]["all-content"]))}</a></div>` : `<div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div>`;
+  const additional = entries.length ? `<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div><div class="brief-grid">${copy.home.cards.map(([title, text], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></article>`).join("")}</div></section>` : "";
+  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${copy.home.headline.split("\n").map(escapeHtml).join("<br>")}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width">${latestHeading}${lead}</section>${adSlot("content-mid")}${additional}`;
+  const canonical = homeRoute(locale, sport);
+  const alternates = locales.map(({ code }) => ({ locale: code, path: homeRoute(code, sport) }));
+  return documentPage({ locale, title: copy.pageTitle, description: copy.pageDescription, canonical, alternates, xDefault: homeRoute("en", sport), body: shell(locale, sport, content), jsonLd: [{ "@type": "CollectionPage", name: copy.pageTitle, description: copy.pageDescription, inLanguage: localeMap.get(locale).htmlLang, url: absoluteUrl(canonical) }] });
 }
 
-function archivePage(locale) {
+function leadStory(locale, { item, edition, path }) {
+  const event = eventMap.get(item.eventRefs[0]);
+  return `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span class="story-status">${escapeHtml(ui[locale].home.reviewed)}</span><span>${escapeHtml(edition.competition)}</span></div><h2><a href="${encodedPath(path)}">${escapeHtml(edition.title)}</a></h2><p>${escapeHtml(edition.deck)}</p><a class="story-link" href="${encodedPath(path)}">${escapeHtml(ui[locale].home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(edition.resultLabel)}</span><div><div class="scoreline"><span>${escapeHtml(edition.homeName)}</span><strong>${event.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(edition.awayName)}</span><strong>${event.awayScore}</strong></div></div><span class="score-date">${escapeHtml(edition.venue)} · ${event.startedAt.slice(0, 10)}</span></div></article>`;
+}
+
+function collectionPage(locale, sport, routeKey, entries) {
   const copy = ui[locale];
-  const articles = publicArticles.filter((article) => article.translations[locale]);
-  const rows = articles.map((article) => {
-    const translation = article.translations[locale];
-    const date = new Intl.DateTimeFormat(localeByCode[locale].htmlLang).format(new Date(article.publishedAt));
-    return `<a class="archive-row" href="${articlePath(locale, article.sport, article.slug)}"><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(date)}</time><h2>${escapeHtml(translation.title)}</h2><span class="archive-meta">${escapeHtml(translation.competition)}</span><strong class="archive-score">${article.match.homeScore}–${article.match.awayScore}</strong></a>`;
-  }).join("") || `<p class="archive-empty">${escapeHtml(copy.archive.empty)}</p>`;
-  const content = `<div class="page-width"><header class="page-hero"><p class="eyebrow">Event Analysis · Index</p><h1>${escapeHtml(copy.archive.title)}</h1><p>${escapeHtml(copy.archive.intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.archive.title, description: copy.archive.intro, canonical: `/${locale}/archive`, alternates: alternateLinks("/archive"), body: shell(locale, content, { linkForLocale: (code) => `/${code}/archive/` }) });
-}
-
-function articlePage(locale, article) {
-  const t = article.translations[locale];
-  const labels = ui[locale].article;
-  const h2h = article.headToHeadBeforeMatch;
-  const published = new Intl.DateTimeFormat(localeByCode[locale].htmlLang, { dateStyle: "long" }).format(new Date(article.publishedAt));
-  const rows = [
-    [t.homeName + " " + labels.wins, h2h.homeWins, winRate(h2h.homeWins, h2h.matches)],
-    [labels.draws, h2h.draws, winRate(h2h.draws, h2h.matches)],
-    [t.awayName + " " + labels.wins, h2h.awayWins, winRate(h2h.awayWins, h2h.matches)],
-  ].map(([name, count, rate]) => `<tr><td>${escapeHtml(name)}</td><td>${count}</td><td>${rate}</td></tr>`).join("");
-  const personnel = t.personnelParagraphs.map((paragraph, index) => `<p><span class="${index === 0 ? "fact-label" : "analysis-label"}">${escapeHtml(index === 0 ? labels.change : labels.analysis)}</span>${escapeHtml(paragraph)}</p>`).join("");
-  const timeline = t.events.map((event) => `<div class="timeline-row"><span class="timeline-minute">${escapeHtml(event.minute)}</span><div class="timeline-event"><strong>${escapeHtml(event.title)}</strong><span>${escapeHtml(event.detail)}</span></div></div>`).join("");
-  const results = t.resultParagraphs.map((paragraph) => `<p><span class="fact-label">${escapeHtml(labels.fact)}</span>${escapeHtml(paragraph)}</p>`).join("");
-  const verdict = t.verdictParagraphs.map((paragraph) => `<p><span class="analysis-label">${escapeHtml(labels.reading)}</span>${escapeHtml(paragraph)}</p>`).join("");
-  const content = `<article class="page-width"><header class="article-header"><p class="eyebrow">${escapeHtml(t.competition)}</p><h1>${escapeHtml(t.title)}</h1><p class="article-deck">${escapeHtml(t.deck)}</p><div class="article-byline"><span>${escapeHtml(article.author)}</span><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(published)}</time><span>${escapeHtml(labels.reviewed)}</span></div></header><div class="matchboard" aria-label="${escapeHtml(`${t.homeName} ${article.match.homeScore}, ${t.awayName} ${article.match.awayScore}`)}"><div class="matchboard-team"><strong>${escapeHtml(t.homeName)}</strong><span>${escapeHtml(t.venue)}</span></div><div class="matchboard-score">${article.match.homeScore}–${article.match.awayScore}</div><div class="matchboard-team"><strong>${escapeHtml(t.awayName)}</strong><span>${escapeHtml(t.resultLabel)}</span></div></div><div class="article-layout"><aside class="article-rail" aria-label="Article facts"><div class="rail-box"><strong>${escapeHtml(labels.confidence)}</strong><span>${article.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(labels.historicalSample)}</strong><span>${h2h.matches} ${escapeHtml(labels.matches)}</span></div><div class="rail-box"><strong>${escapeHtml(labels.contentType)}</strong><span>${escapeHtml(labels.postMatch)}</span></div></aside><div class="article-body"><section><h2>${escapeHtml(t.h2hTitle)}</h2><p><span class="fact-label">${escapeHtml(labels.fact)}</span>${escapeHtml(t.h2hIntro)}</p><div class="data-table-wrap"><table class="data-table"><thead><tr><th>${escapeHtml(labels.outcome)}</th><th>${escapeHtml(labels.matches)}</th><th>${escapeHtml(labels.share)}</th></tr></thead><tbody>${rows}</tbody></table></div></section><section><h2>${escapeHtml(t.personnelTitle)}</h2>${personnel}</section>${adSlot("content-mid")}<section><h2>${escapeHtml(t.resultTitle)}</h2><div class="timeline">${timeline}</div>${results}</section><section><h2>${escapeHtml(t.verdictTitle)}</h2>${verdict}<div class="confidence"><div class="confidence-head"><span>${escapeHtml(labels.evidence)}</span><strong>${article.confidence}%</strong></div><div class="confidence-track"><div class="confidence-fill" style="width:${article.confidence}%"></div></div></div></section></div></div></article>`;
-  const translatedLocales = Object.keys(article.translations);
-  const sportBase = sportByCode[article.sport].publicBasePath;
-  const canonicalPath = articlePath(locale, article.sport, article.slug);
-  const jsonLd = `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": [{ "@type": "Article", headline: t.title, description: t.deck, datePublished: article.publishedAt, dateModified: article.reviewedAt, inLanguage: localeByCode[locale].htmlLang, author: { "@type": "Organization", name: article.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: `${baseUrl}${canonicalPath}` }, { "@type": "SportsEvent", name: `${t.homeName} ${article.match.homeScore}–${article.match.awayScore} ${t.awayName}`, sport: sportByCode[article.sport].name, startDate: article.match.startedAt, location: { "@type": "Place", name: t.venue }, homeTeam: { "@type": "SportsTeam", name: t.homeName }, awayTeam: { "@type": "SportsTeam", name: t.awayName } }] }).replaceAll("<", "\\u003c")}</script>`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: t.title, description: t.deck, canonical: canonicalPath, alternates: alternateLinks(`${sportBase}/articles/${article.slug}`, translatedLocales), body: shell(locale, content, { linkForLocale: (code) => article.translations[code] ? `${articlePath(code, article.sport, article.slug)}/` : `/${code}/` }), jsonLd });
-}
-
-function feed(locale) {
-  const definition = localeByCode[locale];
-  const articles = publicArticles.filter((article) => article.translations[locale]);
-  const items = articles.map((article) => {
-    const t = article.translations[locale];
-    const url = `${baseUrl}${articlePath(locale, article.sport, article.slug)}`;
-    return `<item><title>${escapeXml(t.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(article.publishedAt).toUTCString()}</pubDate><description>${escapeXml(t.deck)}</description></item>`;
+  const title = titleCaseSegment(data.routes.locales[locale][routeKey]);
+  const intro = routeKey === "all-content" ? copy.archive.intro : copy.pageDescription;
+  const canonical = route(locale, sport, routeKey);
+  const rows = entries.map(({ item, edition, path }) => {
+    const event = eventMap.get(item.eventRefs[0]);
+    const date = new Intl.DateTimeFormat(localeMap.get(locale).htmlLang).format(new Date(item.publishedAt));
+    return `<a class="archive-row" href="${encodedPath(path)}"><time datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(date)}</time><h2>${escapeHtml(edition.title)}</h2><span class="archive-meta">${escapeHtml(edition.competition || title)}</span><strong class="archive-score">${event ? `${event.homeScore}–${event.awayScore}` : "EA"}</strong></a>`;
   }).join("");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(definition.nativeName)}</title><link>${baseUrl}/${locale}</link><description>${escapeXml(definition.nativeName)} · Event Analysis</description><language>${definition.htmlLang}</language><lastBuildDate>${new Date(articles[0]?.publishedAt || publicArticles[0].publishedAt).toUTCString()}</lastBuildDate>${items}</channel></rss>\n`;
+  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">Event Analysis · ${escapeHtml(sport)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
+  const alternateLocales = locales.filter(({ code }) => {
+    const candidates = publishedEntries(code, sport);
+    return routeKey === "all-content" ? candidates.length : candidates.some(({ item }) => routeKeyForType(item.type) === routeKey);
+  }).map(({ code }) => ({ locale: code, path: route(code, sport, routeKey) }));
+  return documentPage({ locale, title, description: intro, canonical, alternates: alternateLocales, xDefault: alternateLocales.find(({ locale: code }) => code === "en")?.path, body: shell(locale, sport, content, { linkForLocale: (code) => publishedEntries(code, sport).length ? route(code, sport, routeKey) : homeRoute(code, sport) }), jsonLd: [{ "@type": "CollectionPage", name: title, description: intro, inLanguage: localeMap.get(locale).htmlLang, url: absoluteUrl(canonical) }, breadcrumbJson(locale, sport, [{ name: title, path: canonical }])] });
+}
+
+function searchPage(locale, sport, entries) {
+  const title = titleCaseSegment(data.routes.locales[locale].search);
+  const canonical = route(locale, sport, "search");
+  const labels = locale === "zh" ? { query: "关键词", type: "内容类型", person: "人物", team: "球队", competition: "赛事", place: "地点", year: "年份", all: "全部", noResults: "没有匹配内容。" } : { query: "Keywords", type: "Content type", person: "Person", team: "Team", competition: "Competition", place: "Place", year: "Year", all: "All", noResults: "No matching content." };
+  const cards = entries.map(({ item, edition, path }) => `<article class="search-result" data-search-result data-text="${escapeHtml([edition.title, edition.deck, ...item.entityRefs.map((id) => entityMap.get(id)?.names?.[locale] || entityMap.get(id)?.canonicalName || id), ...item.eventRefs].join(" ").toLocaleLowerCase())}" data-type="${escapeHtml(item.type)}" data-year="${escapeHtml(new Date(item.publishedAt).getFullYear())}" data-entities="${escapeHtml(item.entityRefs.join(" "))}"><p class="eyebrow">${escapeHtml(edition.competition || item.type)}</p><h2><a href="${encodedPath(path)}">${escapeHtml(edition.title)}</a></h2><p>${escapeHtml(edition.deck)}</p></article>`).join("");
+  const types = [...new Set(entries.map(({ item }) => item.type))].map((type) => `<option value="${type}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(type)]))}</option>`).join("");
+  const years = [...new Set(entries.map(({ item }) => String(new Date(item.publishedAt).getFullYear())))].sort().reverse().map((year) => `<option value="${year}">${year}</option>`).join("");
+  const facet = (kind, label) => {
+    const ids = [...new Set(entries.flatMap(({ item }) => item.entityRefs).filter((id) => entityMap.get(id)?.kind === kind))];
+    if (!ids.length) return "";
+    const options = ids.map((id) => `<option value="${escapeHtml(id)}">${escapeHtml(entityMap.get(id).names?.[locale] || entityMap.get(id).canonicalName)}</option>`).join("");
+    return `<label>${escapeHtml(label)}<select data-search-facet="entities"><option value="">${escapeHtml(labels.all)}</option>${options}</select></label>`;
+  };
+  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">Event Analysis · Search</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(ui[locale].pageDescription)}</p></header><div class="search-controls"><label>${escapeHtml(labels.query)}<input type="search" data-search-query autocomplete="off"></label><label>${escapeHtml(labels.type)}<select data-search-facet="type"><option value="">${escapeHtml(labels.all)}</option>${types}</select></label>${facet("Person", labels.person)}${facet("Team", labels.team)}${facet("Competition", labels.competition)}${facet("Place", labels.place)}<label>${escapeHtml(labels.year)}<select data-search-facet="year"><option value="">${escapeHtml(labels.all)}</option>${years}</select></label></div><p class="search-empty" data-search-empty hidden>${escapeHtml(labels.noResults)}</p><section class="search-results">${cards}</section></div>`;
+  return documentPage({ locale, title, description: ui[locale].pageDescription, canonical, robots: "noindex,follow", body: shell(locale, sport, content, { linkForLocale: (code) => publishedEntries(code, sport).length ? route(code, sport, "search") : homeRoute(code, sport) }), scripts: ["/assets/search.js"] });
+}
+
+function breadcrumbJson(locale, sport, tail) {
+  return { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Event Analysis", item: absoluteUrl(homeRoute(locale, sport)) }, ...tail.map((entry, index) => ({ "@type": "ListItem", position: index + 2, name: entry.name, item: absoluteUrl(entry.path) }))] };
+}
+
+function articlePage(locale, item, edition) {
+  const event = eventMap.get(item.eventRefs[0]);
+  if (!event) throw new Error(`Article ${item.id} has no event`);
+  const labels = ui[locale].article;
+  const h2h = [...factMap.values()].find((fact) => fact.subjectId === event.id && fact.predicate === "head_to_head_before_match")?.value;
+  const path = route(locale, item.sport, routeKeyForType(item.type), edition.slug);
+  const sectionPath = route(locale, item.sport, routeKeyForType(item.type));
+  const claims = new Map(item.claims.map((claim) => [claim.id, claim]));
+  const sections = edition.sections.map((section) => `<section><h2>${escapeHtml(section.title)}</h2>${section.id === "history" && h2h ? h2hTable(locale, edition, h2h) : ""}${section.id === "result" && edition.timeline?.length ? timeline(edition.timeline) : ""}${section.paragraphs.map((paragraph) => { const analysis = paragraph.claimRefs.some((id) => claims.get(id)?.kind === "analysis"); return `<p><span class="${analysis ? "analysis-label" : "fact-label"}">${escapeHtml(analysis ? labels.analysis : labels.fact)}</span>${escapeHtml(paragraph.text)}</p>`; }).join("")}</section>`).join("");
+  const published = new Intl.DateTimeFormat(localeMap.get(locale).htmlLang, { dateStyle: "long" }).format(new Date(item.publishedAt));
+  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.homeName)} – ${escapeHtml(edition.awayName)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.competition)}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(published)}</time><span>${escapeHtml(labels.reviewed)}</span></div></header><div class="matchboard" aria-label="${escapeHtml(`${edition.homeName} ${event.homeScore}, ${edition.awayName} ${event.awayScore}`)}"><div class="matchboard-team"><strong>${escapeHtml(edition.homeName)}</strong><span>${escapeHtml(edition.venue)}</span></div><div class="matchboard-score">${event.homeScore}–${event.awayScore}</div><div class="matchboard-team"><strong>${escapeHtml(edition.awayName)}</strong><span>${escapeHtml(edition.resultLabel)}</span></div></div><div class="article-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(labels.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(labels.historicalSample)}</strong><span>${h2h?.matches || 0} ${escapeHtml(labels.matches)}</span></div><div class="rail-box"><strong>${escapeHtml(labels.contentType)}</strong><span>${escapeHtml(labels.postMatch)}</span></div></aside><div class="article-body">${sections}<div class="confidence"><div class="confidence-head"><span>${escapeHtml(labels.evidence)}</span><strong>${item.confidence}%</strong></div><div class="confidence-track"><div class="confidence-fill" style="width:${item.confidence}%"></div></div></div></div></div>${adSlot("content-mid")}</article>`;
+  const translations = Object.entries(item.editions).filter(([, candidate]) => candidate.status === "published").map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
+  const graph = [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: item.publishedAt, dateModified: item.reviewedAt, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: absoluteUrl(path) }, { "@type": "SportsEvent", name: `${edition.homeName} ${event.homeScore}–${event.awayScore} ${edition.awayName}`, sport: "Football", startDate: event.startedAt, location: { "@type": "Place", name: edition.venue }, homeTeam: { "@type": "SportsTeam", name: edition.homeName }, awayTeam: { "@type": "SportsTeam", name: edition.awayName } }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])];
+  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => item.editions[code]?.status === "published" ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: graph });
+}
+
+function editorialPage(locale, item, edition) {
+  const path = route(locale, item.sport, routeKeyForType(item.type), edition.slug);
+  const sectionPath = route(locale, item.sport, routeKeyForType(item.type));
+  const claims = new Map(item.claims.map((claim) => [claim.id, claim]));
+  const sections = edition.sections.map((section) => `<section><h2>${escapeHtml(section.title)}</h2>${section.paragraphs.map((paragraph) => { const analysis = paragraph.claimRefs.some((id) => claims.get(id)?.kind === "analysis"); return `<p><span class="${analysis ? "analysis-label" : "fact-label"}">${escapeHtml(analysis ? ui[locale].article.analysis : ui[locale].article.fact)}</span>${escapeHtml(paragraph.text)}</p>`; }).join("")}</section>`).join("");
+  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.title)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.kicker || titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(new Intl.DateTimeFormat(localeMap.get(locale).htmlLang, { dateStyle: "long" }).format(new Date(item.publishedAt)))}</time><span>${escapeHtml(ui[locale].article.reviewed)}</span></div></header><div class="article-layout editorial-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(ui[locale].article.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(ui[locale].article.contentType)}</strong><span>${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</span></div></aside><div class="article-body">${sections}</div></div>${adSlot("content-mid")}</article>`;
+  const translations = Object.entries(item.editions).filter(([, candidate]) => candidate.status === "published").map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
+  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => item.editions[code]?.status === "published" ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: item.publishedAt, dateModified: item.reviewedAt, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: absoluteUrl(path) }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])] });
+}
+
+function h2hTable(locale, edition, value) {
+  const labels = ui[locale].article;
+  const rate = (wins) => `${((wins / value.matches) * 100).toFixed(1)}%`;
+  const homeWins = value.homeWins ?? value.spainWins;
+  const awayWins = value.awayWins ?? value.englandWins;
+  const rows = [[`${edition.homeName} ${labels.wins}`, homeWins, rate(homeWins)], [labels.draws, value.draws, rate(value.draws)], [`${edition.awayName} ${labels.wins}`, awayWins, rate(awayWins)]].map(([name, count, share]) => `<tr><td>${escapeHtml(name)}</td><td>${count}</td><td>${share}</td></tr>`).join("");
+  return `<div class="data-table-wrap"><table class="data-table"><thead><tr><th>${escapeHtml(labels.outcome)}</th><th>${escapeHtml(labels.matches)}</th><th>${escapeHtml(labels.share)}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function timeline(events) {
+  return `<div class="timeline">${events.map((event) => `<div class="timeline-row"><span class="timeline-minute">${escapeHtml(event.minute)}</span><div class="timeline-event"><strong>${escapeHtml(event.title)}</strong><span>${escapeHtml(event.detail)}</span></div></div>`).join("")}</div>`;
+}
+
+export const templateRegistry = Object.freeze({
+  match_analysis: articlePage, moment_analysis: articlePage, person_profile: editorialPage, person_comparison: editorialPage,
+  team_profile: editorialPage, competition_story: editorialPage, place_story: editorialPage, topic_story: editorialPage, roundup: editorialPage,
+});
+
+function feed(locale, sport, entries) {
+  const items = entries.map(({ item, edition, path }) => { const url = absoluteUrl(path); return `<item><title>${escapeXml(edition.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(item.publishedAt).toUTCString()}</pubDate><description>${escapeXml(edition.deck)}</description></item>`; }).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(localeMap.get(locale).nativeName)}</title><link>${absoluteUrl(homeRoute(locale, sport))}</link><description>${escapeXml(ui[locale].pageDescription)}</description><language>${localeMap.get(locale).htmlLang}</language>${items}</channel></rss>\n`;
+}
+
+function rootPage() {
+  const paths = Object.fromEntries(locales.map(({ code }) => [code, homeRoute(code)]));
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>Event Analysis</title><link rel="canonical" href="${baseUrl}/"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script>!function(){var s=${JSON.stringify(paths)},l=(navigator.languages||[navigator.language||"en"]).map(function(x){return x.toLowerCase().replace("_","-")}),c="en";for(var i=0;i<l.length;i++){var x=l[i];if(/^zh-(hant|tw|hk|mo)/.test(x)){c="zh-hant";break}if(x==="zh"||x.indexOf("zh-")===0){c="zh";break}if(s[x]){c=x;break}var b=x.split("-")[0];if(s[b]){c=b;break}}location.replace(s[c])}();</script></head><body><noscript><p><a href="/en/football/">Event Analysis</a></p></noscript></body></html>\n`;
 }
 
 async function writeFileEnsured(path, content) {
@@ -202,36 +257,55 @@ async function writeFileEnsured(path, content) {
   await writeFile(path, content);
 }
 
-async function writeRoute(route, html) {
-  const path = route === "/" ? resolve(clientOutput, "index.html") : resolve(clientOutput, route.slice(1), "index.html");
-  await writeFileEnsured(path, html);
+async function writeRoute(path, html) {
+  await writeFileEnsured(path === "/" ? resolve(clientOutput, "index.html") : resolve(clientOutput, path.slice(1), "index.html"), html);
 }
 
-await rm(output, { recursive: true, force: true });
+await rm(clientOutput, { recursive: true, force: true });
 await mkdir(resolve(clientOutput, "assets"), { recursive: true });
-await cp(resolve(root, "site/site.css"), resolve(clientOutput, "assets/site.css"));
-await cp(resolve(root, "site/ad-slot.js"), resolve(clientOutput, "assets/ad-slot.js"));
-await cp(resolve(root, "site/favicon.svg"), resolve(clientOutput, "favicon.svg"));
+await Promise.all([
+  cp(resolve(root, "site/site.css"), resolve(clientOutput, "assets/site.css")),
+  cp(resolve(root, "site/search.js"), resolve(clientOutput, "assets/search.js")),
+  cp(resolve(root, "site/favicon.svg"), resolve(clientOutput, "favicon.svg")),
+  adConfig.enabled ? cp(resolve(root, "site/ad-slot.js"), resolve(clientOutput, "assets/ad-slot.js")) : Promise.resolve(),
+]);
 await writeRoute("/", rootPage());
 
-for (const { code } of localeDefinitions) {
-  await writeRoute(`/${code}`, homePage(code));
-  await writeRoute(`/${code}/archive`, archivePage(code));
-  await writeFileEnsured(resolve(clientOutput, code, "feed.xml"), feed(code));
-}
-
-for (const article of publicArticles) {
-  for (const locale of Object.keys(article.translations)) {
-    await writeRoute(articlePath(locale, article.sport, article.slug), articlePage(locale, article));
+const sitemapGroups = [];
+for (const sport of activeSports) for (const locale of locales.map(({ code }) => code)) {
+  const entries = publishedEntries(locale, sport.code);
+  const staticPaths = [homeRoute(locale, sport.code)];
+  await writeRoute(homeRoute(locale, sport.code), homePage(locale, sport.code));
+  if (entries.length) {
+    const allPath = route(locale, sport.code, "all-content");
+    const searchPath = route(locale, sport.code, "search");
+    await writeRoute(allPath, collectionPage(locale, sport.code, "all-content", entries));
+    await writeRoute(searchPath, searchPage(locale, sport.code, entries));
+    await writeFileEnsured(resolve(clientOutput, locale, sport.code, "search-index.json"), `${JSON.stringify(entries.map(({ item, edition, path }) => ({ id: item.id, type: item.type, year: new Date(item.publishedAt).getFullYear(), title: edition.title, deck: edition.deck, path: encodedPath(path), entityRefs: item.entityRefs, eventRefs: item.eventRefs })), null, 2)}\n`);
+    await writeFileEnsured(resolve(clientOutput, locale, sport.code, "feed.xml"), feed(locale, sport.code, entries));
+    staticPaths.push(allPath);
+    const grouped = Map.groupBy(entries, ({ item }) => item.type);
+    for (const [type, typeEntries] of grouped) {
+      const sectionPath = route(locale, sport.code, routeKeyForType(type));
+      await writeRoute(sectionPath, collectionPage(locale, sport.code, routeKeyForType(type), typeEntries));
+      const articlePaths = [];
+      for (const { item, edition, path } of typeEntries) {
+        await writeRoute(path, templateRegistry[item.type](locale, item, edition));
+        articlePaths.push(path);
+      }
+      sitemapGroups.push({ name: `${locale}-${sport.code}-${routeKeyForType(type)}`, paths: [sectionPath, ...articlePaths], lastModified: typeEntries[0].item.reviewedAt });
+    }
   }
+  sitemapGroups.push({ name: `${locale}-${sport.code}`, paths: staticPaths, lastModified: entries[0]?.item.reviewedAt || "2026-07-14T00:00:00Z" });
 }
 
-const staticPaths = ["/", ...localeDefinitions.flatMap(({ code }) => [`/${code}`, `/${code}/archive`])];
-const articlePaths = publicArticles.flatMap((article) => Object.keys(article.translations).map((locale) => articlePath(locale, article.sport, article.slug)));
-const lastModified = new Date(publicArticles[0].publishedAt).toISOString();
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticPaths, ...articlePaths].map((path) => `<url><loc>${baseUrl}${path}</loc><lastmod>${lastModified}</lastmod></url>`).join("")}</urlset>\n`;
-await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemap);
+for (const group of sitemapGroups) {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${group.paths.map((path) => `<url><loc>${absoluteUrl(path)}</loc><lastmod>${new Date(group.lastModified).toISOString()}</lastmod></url>`).join("")}</urlset>\n`;
+  await writeFileEnsured(resolve(clientOutput, "sitemaps", `${group.name}.xml`), xml);
+}
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapGroups.map(({ name, lastModified }) => `<sitemap><loc>${baseUrl}/sitemaps/${name}.xml</loc><lastmod>${new Date(lastModified).toISOString()}</lastmod></sitemap>`).join("")}</sitemapindex>\n`;
+await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemapIndex);
 await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
-await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ title: "Page not found", description: "The requested page does not exist.", canonical: "/404", body: shell("en", `<div class="not-found"><div><strong>404</strong><h1>Page not found</h1><a href="/en/">Event Analysis</a></div></div>`) }));
+await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ locale: "en", title: "Page not found", description: "The requested page does not exist.", canonical: "/404.html", robots: "noindex,follow", body: shell("en", "football", `<div class="not-found"><div><strong>404</strong><h1>Page not found</h1><a href="/en/football/">Event Analysis</a></div></div>`) }));
 
-console.log(`Generated ${1 + localeDefinitions.length * 2 + articlePaths.length} framework-free HTML pages in dist/.`);
+console.log(`Generated ${sitemapGroups.reduce((sum, group) => sum + group.paths.length, 1)} framework-free HTML routes in ${clientOutput}.`);
