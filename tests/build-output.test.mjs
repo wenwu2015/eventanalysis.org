@@ -89,6 +89,10 @@ test("rendered public pages are anonymous, media-free and disclosure-free", asyn
     assert.match(article, /hreflang="zh-CN"/);
     assert.match(article, /48\.1%/);
     assert.match(article, /Human reviewed/);
+    const rootPage = await (await fetch(`http://127.0.0.1:${port}/`)).text();
+    assert.match(rootPage, /终场之后/);
+    assert.match(rootPage, /class="locale-menu"/);
+    assert.doesNotMatch(rootPage, /class="language-grid"|Choose a language/);
     const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/`)).text();
     assert.match(japanese, /日本語版を準備中です/);
     assert.doesNotMatch(japanese, /Spain 2–1 England/);

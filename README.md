@@ -4,7 +4,7 @@ Event Analysis is a 21-language post-match football analysis publication. The fi
 
 ## Public site
 
-- `/` — language entry
+- `/` — Chinese content homepage with a compact header language switcher
 - `/:locale/` — 21 independently translated edition homepages
 - `/:locale/articles/:slug/` — reviewed analysis
 - `/:locale/archive/` — published archive

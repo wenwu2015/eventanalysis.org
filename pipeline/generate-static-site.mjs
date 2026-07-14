@@ -105,14 +105,14 @@ function languageMenu(locale) {
   return `<details class="locale-menu"><summary class="locale-switch" aria-label="${escapeHtml(copy.nav.languages)}">${escapeHtml(current.nativeName)} · ${localeDefinitions.length}</summary><div class="locale-menu-panel">${links}</div></details>`;
 }
 
-function shell(locale, content) {
+function shell(locale, content, homeHref = `/${locale}`) {
   const copy = ui[locale];
   return `<div class="site-shell">
   <a class="skip-link" href="#main">${escapeHtml(copy.skip)}</a>
   <header class="site-header">
-    <a href="/${locale}" class="wordmark" aria-label="Event Analysis home"><span class="wordmark-ea">EA</span><span class="wordmark-name">Event Analysis</span></a>
+    <a href="${homeHref}" class="wordmark" aria-label="Event Analysis home"><span class="wordmark-ea">EA</span><span class="wordmark-name">Event Analysis</span></a>
     <nav class="site-nav" aria-label="Primary navigation">
-      <a href="/${locale}#latest">${escapeHtml(copy.nav.latest)}</a>
+      <a href="${homeHref}#latest">${escapeHtml(copy.nav.latest)}</a>
       <a href="/${locale}/archive">${escapeHtml(copy.nav.archive)}</a>
       <a href="/${locale}/methodology">${escapeHtml(copy.nav.methodology)}</a>
     </nav>
@@ -125,16 +125,14 @@ function shell(locale, content) {
 }
 
 function rootPage() {
-  const languages = localeDefinitions.map((locale, index) => `<a href="/${locale.code}" hreflang="${escapeHtml(locale.htmlLang)}" lang="${escapeHtml(locale.htmlLang)}" dir="${locale.dir}" class="language-card"><span class="language-index">${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtml(locale.nativeName)}</strong><span>${escapeHtml(locale.englishName)}</span></a>`).join("");
-  const body = `<main class="gateway">${adSlot("page-top")}<div class="gateway-mark" aria-label="Event Analysis">EA</div><div class="gateway-copy"><p class="eyebrow">EventAnalysis.org · EST. 2026</p><h1>The match is over.<br>The analysis starts.</h1><p class="gateway-intro">Evidence-led football writing about what changed, what decided the result, and why the score made sense.</p><div class="language-grid" aria-label="Choose a language">${languages}</div></div>${adSlot("content-mid")}<p class="gateway-note">Static HTML. Independent. Reviewed by humans.</p></main>`;
-  return documentPage({ title: "Football, explained after the final whistle", description: "Evidence-led post-match football analysis in 21 language editions.", canonical: "/", alternates: alternateLinks(), body });
+  return homePage("zh", { isRoot: true });
 }
 
 function headline(value) {
   return value.split("\n").map((line) => `${escapeHtml(line)}<br>`).join("");
 }
 
-function homePage(locale) {
+function homePage(locale, { isRoot = false } = {}) {
   const copy = ui[locale];
   const article = publicArticles.find((item) => item.translations[locale]);
   const translation = article?.translations[locale];
@@ -150,7 +148,8 @@ function homePage(locale) {
   }
   const cards = copy.home.cards.map(([title, body], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p></article>`).join("");
   const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${headline(copy.home.headline)}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="/${locale}/archive">${escapeHtml(copy.home.all)}</a></div>${lead}</section>${adSlot("content-mid")}${numbers}<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2><a href="/${locale}/methodology">${escapeHtml(copy.nav.methodology)}</a></div><div class="brief-grid">${cards}</div></section>`;
-  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.pageTitle, description: copy.pageDescription, canonical: `/${locale}`, alternates: alternateLinks(), body: shell(locale, content) });
+  const alternates = `${alternateLinks()}<link rel="alternate" hreflang="x-default" href="${baseUrl}/">`;
+  return documentPage({ lang: localeByCode[locale].htmlLang, dir: localeByCode[locale].dir, title: copy.pageTitle, description: copy.pageDescription, canonical: isRoot ? "/" : `/${locale}`, alternates, body: shell(locale, content, isRoot ? "/" : `/${locale}`) });
 }
 
 function archivePage(locale) {
