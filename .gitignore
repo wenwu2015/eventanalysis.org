@@ -43,9 +43,13 @@ next-env.d.ts
 
 # Event Analysis local-only production evidence
 /private-sources/
+/private-evidence/
 /private-auth/
 /pipeline/jobs/
 /pipeline/runtime/
 /pipeline/config/sources.local.json
 /pipeline/config/videos.local.json
 /pipeline/config/ai.local.json
+/pipeline/config/search-console.local.json
+/output/
+/.playwright-cli/

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eventanalysis.org/internal/content-data-v2.schema.json",
+  "title": "Event Analysis structured content data",
+  "schemaVersion": 2,
+  "objectKinds": [
+    "Person",
+    "Team",
+    "Competition",
+    "Season",
+    "Event",
+    "Place",
+    "Topic",
+    "Fact",
+    "Claim",
+    "ContentItem",
+    "Edition"
+  ],
+  "contentTypes": [
+    "match_analysis",
+    "moment_analysis",
+    "person_profile",
+    "person_comparison",
+    "team_profile",
+    "competition_story",
+    "place_story",
+    "topic_story",
+    "roundup"
+  ],
+  "statuses": [
+    "draft",
+    "needs_review",
+    "data_incomplete",
+    "approved",
+    "published",
+    "withdrawn"
+  ],
+  "factStatuses": ["observed", "confirmed", "conflicted", "superseded"],
+  "claimKinds": ["fact", "calculation", "analysis"]
+}
