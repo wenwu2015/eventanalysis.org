@@ -5,16 +5,26 @@ import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chooseLocale } from "../lib/language-routing.mjs";
 
-const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)));
+const projectRoot = resolve(fileURLToPath(new URL("../", import.meta.url)));
+const root = resolve(projectRoot, process.env.EA_STATIC_ROOT || "dist/client");
+const availableLocales = process.env.EA_STATIC_LOCALES ? process.env.EA_STATIC_LOCALES.split(",").filter(Boolean) : null;
 const port = Number(process.env.PORT || 3000);
 const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml" };
+
+function chooseAvailableLocale(acceptLanguage) {
+  const chosen = chooseLocale(acceptLanguage);
+  if (!availableLocales?.length || availableLocales.includes(chosen)) return chosen;
+  if (chosen === "zh-hant" && availableLocales.includes("zh")) return "zh";
+  if (availableLocales.includes("en")) return "en";
+  return availableLocales[0];
+}
 
 const server = (await import("node:http")).createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
     const pathname = decodeURIComponent(url.pathname);
     if (pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
-      const locale = chooseLocale(request.headers["accept-language"]);
+      const locale = chooseAvailableLocale(request.headers["accept-language"]);
       response.writeHead(302, {
         "cache-control": "private, no-store",
         location: `/${locale}/football/${url.search}`,

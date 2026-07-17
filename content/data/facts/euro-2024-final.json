@@ -1,71 +1,130 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "records": [
     {
       "id": "fact_euro_final_result",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "final_result",
-      "value": { "homeScore": 2, "awayScore": 1, "winnerId": "team_spain_men" },
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "winnerId": "team_spain_men"
+      },
       "status": "confirmed",
       "observedAt": "2024-07-14T23:00:00+02:00",
-      "evidenceRefs": ["evidence_euro_final_facts", "evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_facts",
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_h2h",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "head_to_head_before_match",
-      "value": { "matches": 27, "spainWins": 10, "draws": 4, "englandWins": 13, "spainWinRate": 37.0, "drawRate": 14.8, "englandWinRate": 48.1 },
+      "value": {
+        "matches": 27,
+        "spainWins": 10,
+        "draws": 4,
+        "englandWins": 13,
+        "spainWinRate": 37,
+        "drawRate": 14.8,
+        "englandWinRate": 48.1
+      },
       "status": "confirmed",
       "validTo": "2024-07-14T20:59:59+02:00",
-      "evidenceRefs": ["evidence_euro_final_facts"]
+      "evidenceRefs": [
+        "evidence_euro_final_facts"
+      ]
     },
     {
       "id": "fact_euro_final_zubimendi_sub",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "personnel_change",
-      "value": { "minute": 46, "inId": "person_martin_zubimendi", "outId": "person_rodri", "teamId": "team_spain_men" },
+      "value": {
+        "minute": 46,
+        "inId": "person_martin_zubimendi",
+        "outId": "person_rodri",
+        "teamId": "team_spain_men"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_nico_goal",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "goal",
-      "value": { "minute": 47, "scorerId": "person_nico_williams", "assistId": "person_lamine_yamal", "score": "1-0" },
+      "value": {
+        "minute": 47,
+        "scorerId": "person_nico_williams",
+        "assistId": "person_lamine_yamal",
+        "score": "1-0"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_palmer_sub",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "personnel_change",
-      "value": { "minute": 70, "inId": "person_cole_palmer", "outId": "person_kobbie_mainoo", "teamId": "team_england_men" },
+      "value": {
+        "minute": 70,
+        "inId": "person_cole_palmer",
+        "outId": "person_kobbie_mainoo",
+        "teamId": "team_england_men"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_palmer_goal",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "goal",
-      "value": { "minute": 73, "scorerId": "person_cole_palmer", "assistId": "person_jude_bellingham", "score": "1-1" },
+      "value": {
+        "minute": 73,
+        "scorerId": "person_cole_palmer",
+        "assistId": "person_jude_bellingham",
+        "score": "1-1"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_oyarzabal_sub",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "personnel_change",
-      "value": { "minute": 68, "inId": "person_mikel_oyarzabal", "outId": "person_alvaro_morata", "teamId": "team_spain_men" },
+      "value": {
+        "minute": 68,
+        "inId": "person_mikel_oyarzabal",
+        "outId": "person_alvaro_morata",
+        "teamId": "team_spain_men"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     },
     {
       "id": "fact_euro_final_oyarzabal_goal",
       "subjectId": "event_euro_2024_final_spain_england",
       "predicate": "goal",
-      "value": { "minute": 86, "scorerId": "person_mikel_oyarzabal", "assistId": "person_marc_cucurella", "score": "2-1" },
+      "value": {
+        "minute": 86,
+        "scorerId": "person_mikel_oyarzabal",
+        "assistId": "person_marc_cucurella",
+        "score": "2-1"
+      },
       "status": "confirmed",
-      "evidenceRefs": ["evidence_euro_final_report"]
+      "evidenceRefs": [
+        "evidence_euro_final_report"
+      ]
     }
   ]
 }

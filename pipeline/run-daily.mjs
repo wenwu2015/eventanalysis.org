@@ -5,10 +5,12 @@ import { cleanupOrphanJobs, withEphemeralJob } from "./lib/job-lifecycle.mjs";
 import { rankCandidates } from "./lib/candidate-ranking.mjs";
 import { discoverFinishedMatches, collectMatchEvidence } from "./adapters/sofascore.mjs";
 import { collectGenericMatchEvidence } from "./adapters/generic-provider.mjs";
+import { collectFifaMatchEvidence } from "./adapters/fifa.mjs";
 import { buildFactBundle } from "./lib/facts.mjs";
 import { createReviewArtifact } from "./lib/article-writer.mjs";
 import { createCandidate, partitionCandidates } from "./lib/content-candidates.mjs";
 import { loadContentData } from "./lib/data-store.mjs";
+import { sourceCanCorroborateEvent } from "./lib/source-capabilities.mjs";
 
 const flags = new Set(process.argv.slice(2));
 const config = await loadPipelineConfig();
@@ -30,13 +32,16 @@ if (!sofa) {
       source: sofa,
       job,
       lookbackHours: config.policy.lookbackHours,
+      stabilityMinutes: config.policy.postMatchStabilityMinutes || 20,
       timeoutMs: config.policy.navigationTimeoutMs,
     });
   });
 
   const allowedSports = new Set(config.policy.activeSports || ["football"]);
+  const corroborators = sources.filter((source) => source.id !== sofa.id);
   const ranked = rankCandidates(candidates.filter((event) =>
     allowedSports.has(String(event.sport || "football").toLowerCase())
+    && corroborators.some((source) => sourceCanCorroborateEvent(source, event))
   )).slice(0, config.policy.maxCandidates);
   const existing = await loadContentData(config.root);
   const enriched = ranked.map((event) => createCandidate({
@@ -59,10 +64,11 @@ if (!sofa) {
       const evidence = [];
       const collectionErrors = [];
       evidence.push(await collectMatchEvidence({ source: sofa, event, job, timeoutMs: config.policy.navigationTimeoutMs }));
-      for (const source of sources.filter((candidate) => candidate.id !== sofa.id)) {
-        if (!source.matchUrlTemplate || !source.eventMapping) continue;
+      for (const source of corroborators.filter((candidate) => sourceCanCorroborateEvent(candidate, event))) {
         try {
-          const corroboration = await collectGenericMatchEvidence({ source, event, job, timeoutMs: config.policy.navigationTimeoutMs });
+          const corroboration = source.id === "fifa"
+            ? await collectFifaMatchEvidence({ source, event, job, timeoutMs: config.policy.navigationTimeoutMs })
+            : await collectGenericMatchEvidence({ source, event, job, timeoutMs: config.policy.navigationTimeoutMs });
           if (corroboration) evidence.push(corroboration);
           else collectionErrors.push({ sourceId: source.id, code: "core_event_not_confirmed" });
         } catch (error) {

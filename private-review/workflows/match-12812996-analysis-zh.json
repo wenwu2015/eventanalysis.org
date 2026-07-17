@@ -1,0 +1,66 @@
+{
+  "contentId": "match-12812996-analysis-zh",
+  "status": "release_blocked",
+  "summary": "发布申请已被阻断，需先补齐 legal pack、辖区或事实证据。",
+  "updatedAt": "2026-07-16T11:19:35.687Z",
+  "preview": {
+    "dynamicRoute": "/review-preview/match-12812996-analysis-zh",
+    "reviewHtmlRoute": "/private-review/match-12812996-analysis-zh/",
+    "reviewHtmlPath": "private-review/html/match-12812996-analysis-zh/index.html",
+    "reviewBuiltAt": "2026-07-16T11:03:55.276Z"
+  },
+  "release": {
+    "requestedAt": "2026-07-16T11:17:24.336Z",
+    "decisionAt": "2026-07-16T11:19:35.685Z",
+    "requestedLocales": [
+      "zh"
+    ],
+    "decision": "BLOCK",
+    "riskClass": "A",
+    "findings": [
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "GB",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      },
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "AR",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      },
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "ZZ",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      }
+    ],
+    "reportPath": "private-compliance/reports/match-12812996-analysis-zh-r1.json",
+    "destination": null,
+    "previewPath": "/zh/football/比赛分析/england-argentina-1-2-late-comeback-analysis/",
+    "commandError": null
+  }
+}

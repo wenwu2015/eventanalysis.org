@@ -52,6 +52,28 @@ test("version one exposes football only while future ball sports remain isolated
   }
   const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/policy.json"), "utf8"));
   assert.deepEqual(policy.activeSports, ["football"]);
+  assert.equal(policy.awsPublicationMode, "manual");
+});
+
+test("content automation prepares local previews but cannot publish to AWS", async () => {
+  const automaticPublisher = await readFile(resolve(root, "pipeline/publish-automatic.mjs"), "utf8");
+  const postmatch = await readFile(resolve(root, "pipeline/postmatch.mjs"), "utf8");
+  const release = await readFile(resolve(root, "ops/aws/release.sh"), "utf8");
+  const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
+  assert.doesNotMatch(automaticPublisher, /\["npm", "run", "release:aws"\]/);
+  assert.doesNotMatch(postmatch, /\["npm", "run", "release:aws"\]/);
+  assert.doesNotMatch(postmatch, /\["npm", "run", "content:translate"\]/);
+  assert.match(postmatch, /--locales=zh/);
+  assert.doesNotMatch(automaticPublisher, /edition\.status = "published"/);
+  assert.match(automaticPublisher, /edition\.status = "approved"/);
+  assert.match(automaticPublisher, /publicationMode: "local_preview"/);
+  assert.match(packageJson.scripts["build:zh"], /--include-approved/);
+  assert.match(packageJson.scripts["build:zh"], /--locales=zh/);
+  assert.equal(packageJson.scripts["build:preview"], "npm run build:zh");
+  assert.match(packageJson.scripts["build:preview:all"], /--include-approved/);
+  assert.match(packageJson.scripts["release:prepare-locales"], /prepare-release-locales/);
+  assert.match(release, /release:prepare-locales/);
+  assert.match(release, /--confirm-production/);
 });
 
 test("published match verdicts claim a comeback only when the score ledger proves it", async () => {

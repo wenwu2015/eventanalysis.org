@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "match-16343055",
+  "sport": "football",
+  "collectedAt": "2026-07-16T00:05:11.049Z",
+  "status": "data_incomplete",
+  "match": {
+    "id": "16343055",
+    "competition": "UEFA Champions League, Qualification",
+    "startedAt": "2026-07-14T17:00:00.000Z",
+    "homeTeamId": "162368",
+    "awayTeamId": "262229",
+    "homeTeam": "Riga FC",
+    "awayTeam": "FC Ararat-Armenia",
+    "homeJurisdiction": "LV",
+    "awayJurisdiction": "AM",
+    "homeScore": 3,
+    "awayScore": 2,
+    "result": "home_win"
+  },
+  "headToHeadBeforeMatch": {
+    "homeWins": 0,
+    "draws": 0,
+    "awayWins": 1,
+    "matches": 1,
+    "homeWinRate": 0,
+    "drawRate": 0,
+    "awayWinRate": 100
+  },
+  "personnelChanges": [],
+  "keyEvents": [],
+  "videoObservations": [],
+  "coreSourceConfirmations": 1,
+  "evidenceRefs": [
+    "evidence_sofascore_16343055_ba4210b811c6"
+  ],
+  "missing": [
+    "independent_core_source_confirmation",
+    "personnel_change_confirmation"
+  ],
+  "collectionErrors": [],
+  "publicationBlocked": true
+}

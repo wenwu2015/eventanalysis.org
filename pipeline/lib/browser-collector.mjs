@@ -28,9 +28,16 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function transientNavigationError(error) {
+  return /ERR_(?:CONNECTION_RESET|CONNECTION_CLOSED|TIMED_OUT|NETWORK_CHANGED)|Timeout/i.test(String(error));
+}
+
 export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000, interact }) {
   const target = new URL(url);
   const sourceOrigin = new URL(source.baseUrl).origin;
+  const allowedOrigins = new Set([sourceOrigin, ...((source.responseOrigins || []).map((value) => {
+    try { return new URL(value).origin; } catch { return null; }
+  }).filter(Boolean))]);
   if (target.origin !== sourceOrigin) throw new Error(`URL origin is outside source boundary: ${target.origin}`);
 
   const { chromium } = await import("playwright");
@@ -54,7 +61,7 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
   page.on("response", (response) => {
     const promise = (async () => {
       const responseUrl = new URL(response.url());
-      if (responseUrl.origin !== sourceOrigin) return;
+      if (!allowedOrigins.has(responseUrl.origin)) return;
       const type = response.headers()["content-type"] || "";
       if (!type.includes("json")) return;
       let body;
@@ -76,7 +83,20 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
   try {
     await pace(source);
     job.retainUrl(target.toString());
-    const response = await page.goto(target.toString(), { waitUntil: "domcontentloaded", timeout: timeoutMs });
+    let response;
+    let lastError;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        response = await page.goto(target.toString(), { waitUntil: "domcontentloaded", timeout: timeoutMs });
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+        if (!transientNavigationError(error) || attempt === 2) throw error;
+        await page.waitForTimeout(1_500 * (attempt + 1));
+      }
+    }
+    if (lastError) throw lastError;
     if (response && [401, 403, 429].includes(response.status())) {
       throw new AccessControlError(`Provider returned ${response.status()}; use the contracted whitelist or refresh the authorised session.`);
     }

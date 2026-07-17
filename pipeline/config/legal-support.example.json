@@ -1,0 +1,22 @@
+{
+  "jurisdiction": "GB",
+  "status": "active",
+  "operatorJurisdiction": true,
+  "reviewedAt": "2026-07-16T00:00:00Z",
+  "expiresAt": "2026-08-15T00:00:00Z",
+  "counsel": {
+    "name": "Local Counsel Name",
+    "barJurisdiction": "GB",
+    "signatureHash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  },
+  "officialSources": [
+    {
+      "url": "https://example.gov.uk/regulation",
+      "checkedAt": "2026-07-16T00:00:00Z",
+      "contentHash": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
+    }
+  ],
+  "notes": [
+    "Replace every field with real counsel-approved material before relying on this file."
+  ]
+}

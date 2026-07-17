@@ -1,4 +1,6 @@
 import { normalizeSlug } from "./data-store.mjs";
+import { prepareChineseMaster } from "./compliance.mjs";
+import { teamCountryCode, venueCountryCode } from "./jurisdictions.mjs";
 
 const COMPETITION_ID = "competition_fifa_world_cup_2026";
 const CHINESE_TEAMS = new Map(Object.entries({
@@ -143,7 +145,7 @@ function aggregatePlayers(snapshot) {
       if (!player) {
         player = {
           id, raw, sourceTeamId, position: record.position || raw.position || "", positions: new Set(), evidenceIds: new Set(),
-          registeredMatches: 0, missingMatches: 0, appearances: 0, starts: 0, substituteAppearances: 0, ratings: [], stats: {}, eventIds: [], bestRating: null, bestEventId: null,
+          registeredMatches: 0, missingMatches: 0, appearances: 0, starts: 0, substituteAppearances: 0, stats: {}, eventIds: [],
         };
         players.set(id, player);
       }
@@ -161,20 +163,12 @@ function aggregatePlayers(snapshot) {
         player.starts += record.substitute ? 0 : 1;
         player.substituteAppearances += record.substitute ? 1 : 0;
         player.eventIds.push(String(match.event.id));
-        if (Number.isFinite(statistics.rating)) {
-          player.ratings.push(Number(statistics.rating));
-          if (player.bestRating === null || Number(statistics.rating) > player.bestRating) {
-            player.bestRating = Number(statistics.rating);
-            player.bestEventId = String(match.event.id);
-          }
-        }
         sum(player.stats, statistics, statKeys);
       }
     }
   }
   for (const player of players.values()) {
     player.stats.minutesPlayed = Math.round(player.stats.minutesPlayed || 0);
-    player.averageRating = player.ratings.length ? round(player.ratings.reduce((a, b) => a + b, 0) / player.ratings.length, 2) : null;
     player.positionGroup = positionGroup(player.position);
     player.age = ageAt(player.raw.dateOfBirthTimestamp);
   }
@@ -292,7 +286,8 @@ function matchEdition(match, locale, teamsBySourceId, venue) {
     ? `${home}的本场地点键是${venue || "比赛场地"}，${away}共享同一地点键；${home}的 ${match.event.homeScore} 球与${away}的 ${match.event.awayScore} 球只归入这一个地点、这一个开球事件。`
     : `${home}'s location key for this match is ${venue || "match venue"}, shared by ${away}; ${home}'s ${match.event.homeScore} goals and ${away}'s ${match.event.awayScore} goals belong only to this venue and kick-off record.`;
   return {
-    status: "published",
+    status: "needs_review",
+    complianceStatus: "unreviewed",
     slug: normalizeSlug(locale === "zh" ? `${home}-${away}-2026世界杯-${match.event.startTimestamp}` : `${match.event.homeTeamSlug}-${match.event.awayTeamSlug}-world-cup-2026-${match.event.startTimestamp}`),
     slugFrozenAt: match.capturedAt,
     title: locale === "zh" ? `${home} ${score} ${away}：比分如何在${stage}形成` : `${home} ${score} ${away}: How the ${stage} result took shape`,
@@ -320,8 +315,8 @@ function playerRoleText(player, teamRecord, locale) {
     ? `${player.raw.name}进入了${team}的赛事名单记录，但截至本次快照没有可确认的出场分钟。这个页面因此只评价其名单位置，不把“未出场”写成能力结论；后续若有正式出场，统计对象会在新版本中更新。`
     : `${player.raw.name} appears in ${team}'s tournament roster evidence but has no confirmed playing minutes in this snapshot. The page therefore describes roster status rather than treating non-selection as a judgement of ability.`;
   if (player.positionGroup === "goalkeeper") return locale === "zh"
-    ? `${player.raw.name}在 ${s.minutesPlayed} 分钟内完成 ${s.saves || 0} 次扑救，场均评分 ${player.averageRating ?? "暂无"}。门将评价优先看扑救、处理球与出场样本，不能用球队失球数直接替代个人表现。`
-    : `${player.raw.name} recorded ${s.saves || 0} saves in ${s.minutesPlayed} minutes with an average rating of ${player.averageRating ?? "n/a"}. Goalkeeping is read through saves, distribution and sample size rather than team goals conceded alone.`;
+    ? `${player.raw.name}在 ${s.minutesPlayed} 分钟内完成 ${s.saves || 0} 次扑救。门将记录只呈现可核验的扑救与出场样本，不使用供应商主观评分。`
+    : `${player.raw.name} recorded ${s.saves || 0} saves in ${s.minutesPlayed} minutes. The record uses verified saves and playing time, not a provider's subjective rating.`;
   if (player.positionGroup === "defender") return locale === "zh"
     ? `${player.raw.name}累计 ${s.totalTackle || 0} 次抢断、${s.interceptionWon || 0} 次拦截和 ${s.totalClearance || 0} 次解围。防守贡献要与球队所处比赛状态一起读：领先后的解围增加，并不自动等于防线失控。`
     : `${player.raw.name} accumulated ${s.totalTackle || 0} tackles, ${s.interceptionWon || 0} interceptions and ${s.totalClearance || 0} clearances. Defensive volume is interpreted with game state; more clearances while protecting a lead do not automatically mean loss of control.`;
@@ -340,8 +335,8 @@ function playerEdition(player, teamRecord, locale) {
   const age = player.age ?? (locale === "zh" ? "未知" : "unknown");
   const height = player.raw.height ? `${player.raw.height} cm` : (locale === "zh" ? "未记录" : "not recorded");
   const footprint = locale === "zh"
-    ? `${name}在已完成比赛中出场 ${player.appearances} 次、首发 ${player.starts} 次，累计 ${player.stats.minutesPlayed || 0} 分钟，进球 ${player.stats.goals || 0} 个、助攻 ${player.stats.goalAssist || 0} 次${player.averageRating ? `，平均评分 ${player.averageRating}` : ""}。所有数字都来自逐场名单与球员统计的合并，不用推测补齐。`
-    : `${name} has ${player.appearances} appearances, ${player.starts} starts and ${player.stats.minutesPlayed || 0} minutes in completed matches, with ${player.stats.goals || 0} goals and ${player.stats.goalAssist || 0} assists${player.averageRating ? ` at an average rating of ${player.averageRating}` : ""}. The totals are merged from match-by-match line-ups without inferred values.`;
+    ? `${name}在已完成比赛中出场 ${player.appearances} 次、首发 ${player.starts} 次，累计 ${player.stats.minutesPlayed || 0} 分钟，进球 ${player.stats.goals || 0} 个、助攻 ${player.stats.goalAssist || 0} 次。所有数字都来自逐场名单与球员统计的合并，不用推测补齐。`
+    : `${name} has ${player.appearances} appearances, ${player.starts} starts and ${player.stats.minutesPlayed || 0} minutes in completed matches, with ${player.stats.goals || 0} goals and ${player.stats.goalAssist || 0} assists. The totals are merged from match-by-match line-ups without inferred values.`;
   const context = locale === "zh"
     ? `${name}所在的${team}截至快照已赛 ${teamRecord.played} 场，${teamRecord.wins} 胜 ${teamRecord.draws} 平 ${teamRecord.losses} 负，进 ${teamRecord.goalsFor} 球、失 ${teamRecord.goalsAgainst} 球。${name}的个人统计必须放回这一团队样本中理解；球队${teamRecord.active ? "仍在本届赛事中" : "本届赛程已经结束"}。`
     : `${name}'s team, ${team}, had played ${teamRecord.played} matches at the snapshot: ${teamRecord.wins} wins, ${teamRecord.draws} draws and ${teamRecord.losses} losses, with ${teamRecord.goalsFor} scored and ${teamRecord.goalsAgainst} conceded. That team record defines the available sample for ${name}; the side ${teamRecord.active ? "remained in the tournament" : "had completed its campaign"}.`;
@@ -365,7 +360,8 @@ function playerEdition(player, teamRecord, locale) {
   ];
   const usageDetail = variants[Number(player.id) % variants.length];
   return {
-    status: "published",
+    status: "needs_review",
+    complianceStatus: "unreviewed",
     slug: normalizeSlug(locale === "zh" ? `${team}-${player.raw.slug || name}-2026世界杯球员` : `${player.raw.slug || name}-${teamRecord.team.slug}-world-cup-2026`),
     slugFrozenAt: player.capturedAt,
     title: locale === "zh" ? `${name}（${team}）：2026 世界杯角色、数据与点评` : `${name} (${team}): 2026 World Cup role, numbers and assessment`,
@@ -391,17 +387,19 @@ export function buildWorldCup2026Content(snapshot) {
   const entities = [{
     id: COMPETITION_ID, kind: "Competition", sport: "football", canonicalName: "2026 FIFA World Cup",
     names: { zh: "2026 世界杯", en: "2026 FIFA World Cup" },
+    attributes: { organizerJurisdiction: "CH" },
   }];
   for (const team of snapshot.teams) entities.push({
     id: teamId(team.id), kind: "Team", sport: "football", canonicalName: team.name,
     names: { zh: teamName(team, "zh"), en: team.name },
+    attributes: { countryCode: teamCountryCode(team.name) },
     relations: [{ predicate: "competition_entry", targetId: COMPETITION_ID, validFrom: "2026-06-11", validTo: "2026-07-19" }],
   });
   const places = new Map();
   for (const match of snapshot.matches) {
     const venue = match.event.raw?.venue;
     if (venue?.id && !places.has(String(venue.id))) {
-      const entity = { id: placeId(venue.id), kind: "Place", sport: "football", canonicalName: venue.name, names: { zh: venue.name, en: venue.name } };
+      const entity = { id: placeId(venue.id), kind: "Place", sport: "football", canonicalName: venue.name, names: { zh: venue.name, en: venue.name }, attributes: { countryCode: venueCountryCode(venue.name) } };
       places.set(String(venue.id), entity);
       entities.push(entity);
     }
@@ -461,7 +459,7 @@ export function buildWorldCup2026Content(snapshot) {
     );
     const venue = match.event.raw?.venue?.name || "Match venue";
     items.push({
-      schemaVersion: 2, id: `content_wc2026_match_${id}`, revision: 1, type: "match_analysis", sport: "football",
+      schemaVersion: 3, id: `content_wc2026_match_${id}`, revision: 1, type: "match_analysis", sport: "football",
       primaryIntentKey: `world-cup-2026-match-${id}-result-explained`, angleKey: "lineup-continuity-score-sequence-and-game-state",
       originalContribution: `Explains ${match.event.homeTeam} ${match.event.homeScore}-${match.event.awayScore} ${match.event.awayTeam} through its verified score sequence, starting-XI continuity and aggregated player statistics.`,
       readerQuestion: `Why did ${match.event.homeTeam} vs ${match.event.awayTeam} finish ${match.event.homeScore}-${match.event.awayScore}?`,
@@ -488,12 +486,12 @@ export function buildWorldCup2026Content(snapshot) {
     const evidenceRefs = [...player.evidenceIds];
     facts.push(
       { id: profileFact, subjectId: personId(player.id), predicate: "tournament_roster_profile", status: "confirmed", observedAt: capturedAt, value: { teamId: teamId(player.sourceTeamId), position: player.position, heightCm: player.raw.height || null, dateOfBirthTimestamp: player.raw.dateOfBirthTimestamp || null, ageAtOpening: player.age }, evidenceRefs },
-      { id: performanceFact, subjectId: personId(player.id), predicate: "world_cup_2026_player_aggregate", status: "confirmed", observedAt: capturedAt, value: { appearances: player.appearances, starts: player.starts, substituteAppearances: player.substituteAppearances, registeredMatches: player.registeredMatches, missingMatches: player.missingMatches, averageRating: player.averageRating, ...player.stats }, evidenceRefs },
+      { id: performanceFact, subjectId: personId(player.id), predicate: "world_cup_2026_player_aggregate", status: "confirmed", observedAt: capturedAt, value: { appearances: player.appearances, starts: player.starts, substituteAppearances: player.substituteAppearances, registeredMatches: player.registeredMatches, missingMatches: player.missingMatches, ...player.stats }, evidenceRefs },
     );
     const teamRecord = teamRecords.get(player.sourceTeamId);
     const contentId = `content_wc2026_player_${player.id}`;
     items.push({
-      schemaVersion: 2, id: contentId, revision: 1, type: "person_profile", sport: "football",
+      schemaVersion: 3, id: contentId, revision: 1, type: "person_profile", sport: "football",
       primaryIntentKey: `world-cup-2026-player-${player.id}-profile`, angleKey: "tournament-role-output-and-team-context",
       originalContribution: `Audits ${player.raw.name}'s 2026 World Cup roster status, minutes, position-specific output and team context from match-level records.`,
       readerQuestion: `What did ${player.raw.name}'s role and verified tournament sample show?`,
@@ -519,7 +517,7 @@ export function buildWorldCup2026Content(snapshot) {
     evidenceRefs: [snapshot.official.evidenceId, ...snapshot.matches.slice(-4).map(({ evidenceId }) => evidenceId)],
   });
   items.push({
-    schemaVersion: 2, id: "content_wc2026_current_state_20260714", revision: 1, type: "competition_story", sport: "football",
+    schemaVersion: 3, id: "content_wc2026_current_state_20260714", revision: 1, type: "competition_story", sport: "football",
     primaryIntentKey: "world-cup-2026-current-state-after-quarterfinals", angleKey: "completed-field-semifinalists-and-coverage-audit",
     originalContribution: `A dated, non-live snapshot connecting the completed match count, remaining bracket and verified player coverage after the quarterfinals.`,
     readerQuestion: "What is the verified state of the 2026 World Cup after the quarterfinals?", author: "Event Analysis Editorial Desk",
@@ -530,7 +528,7 @@ export function buildWorldCup2026Content(snapshot) {
       { id: "claim_wc2026_reading", kind: "analysis", factRefs: [stateFact], summary: "The remaining bracket is presented as a dated state, not a live-score or prediction product." },
     ],
     editions: {
-      zh: { status: "published", slug: "2026世界杯-四分之一决赛后-赛事全景", slugFrozenAt: capturedAt, title: "2026 世界杯最新赛况：100 场结束，四队进入半决赛", deck: `截至本次静态快照，${snapshot.events.length} 场赛程中已有 ${snapshot.matches.length} 场结束；${activeTeams.map((name) => CHINESE_TEAMS.get(name) || name).join("、")}仍在争冠。`, kicker: "2026 世界杯 · 阶段快照", reviewer: "Event Analysis Verification Desk", sections: [
+      zh: { status: "needs_review", complianceStatus: "unreviewed", slug: "2026世界杯-四分之一决赛后-赛事全景", slugFrozenAt: capturedAt, title: "2026 世界杯最新赛况：100 场结束，四队进入半决赛", deck: `截至本次静态快照，${snapshot.events.length} 场赛程中已有 ${snapshot.matches.length} 场结束；${activeTeams.map((name) => CHINESE_TEAMS.get(name) || name).join("、")}仍在争冠。`, kicker: "2026 世界杯 · 阶段快照", reviewer: "Event Analysis Verification Desk", sections: [
         { id: "state", title: "赛事进度", paragraphs: [{ claimRefs: ["claim_wc2026_state"], text: `本届赛事共有 ${snapshot.teams.length} 支球队、${snapshot.events.length} 场比赛。截至快照已结束 ${snapshot.matches.length} 场，剩余 ${remaining.length} 场。这个页面是赛后静态记录，不提供实时比分。` }] },
         { id: "field", title: "仍在争冠的球队", paragraphs: [{ claimRefs: ["claim_wc2026_state", "claim_wc2026_reading"], text: `${activeTeams.map((name) => CHINESE_TEAMS.get(name) || name).join("、")}进入最后阶段。尚未开球的场次只列作赛程状态，不提前生成赛后结论。` }] },
         { id: "coverage", title: "内容覆盖", paragraphs: [{ claimRefs: ["claim_wc2026_coverage"], text: `本批次从逐场名单中归一化 ${players.size} 名球员，并为每场已结束比赛建立结果、首发连续性、关键事件和球员统计事实对象；资料不足的判断不会用推测补齐。` }] },
@@ -543,11 +541,31 @@ export function buildWorldCup2026Content(snapshot) {
     },
   });
 
+  const entityMap = new Map(entities.map((entity) => [entity.id, entity]));
+  const eventMap = new Map(events.map((event) => [event.id, event]));
+  function addJurisdiction(result, entity) {
+    if (!entity) return;
+    if (entity.attributes?.countryCode) result.add(entity.attributes.countryCode);
+    if (entity.attributes?.organizerJurisdiction) result.add(entity.attributes.organizerJurisdiction);
+    for (const relation of entity.relations || []) addJurisdiction(result, entityMap.get(relation.targetId));
+  }
+  for (const item of items) {
+    delete item.editions.en;
+    const nexus = new Set();
+    for (const entityRef of item.entityRefs || []) addJurisdiction(nexus, entityMap.get(entityRef));
+    for (const eventRef of item.eventRefs || []) {
+      const event = eventMap.get(eventRef);
+      for (const entityRef of [event?.homeTeamId, event?.awayTeamId, event?.competitionId, event?.placeId]) addJurisdiction(nexus, entityMap.get(entityRef));
+    }
+    item.nexusJurisdictions = [...nexus].sort();
+    prepareChineseMaster(item);
+  }
+
   return {
     counts: { teams: snapshot.teams.length, players: players.size, events: events.length, facts: facts.length, items: items.length },
-    entities: { schemaVersion: 2, records: entities },
-    events: { schemaVersion: 2, records: events },
-    facts: { schemaVersion: 2, records: facts },
-    items: { schemaVersion: 2, records: items },
+    entities: { schemaVersion: 3, records: entities },
+    events: { schemaVersion: 3, records: events },
+    facts: { schemaVersion: 3, records: facts },
+    items: { schemaVersion: 3, records: items },
   };
 }

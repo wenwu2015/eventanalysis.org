@@ -1,0 +1,66 @@
+{
+  "contentId": "match_analysis_event_1fa9a50fd27ce823bb3f_zh",
+  "status": "release_blocked",
+  "summary": "发布申请已被阻断，需先补齐 legal pack、辖区或事实证据。",
+  "updatedAt": "2026-07-16T11:33:51.088Z",
+  "preview": {
+    "dynamicRoute": "/review-preview/match_analysis_event_1fa9a50fd27ce823bb3f_zh",
+    "reviewHtmlRoute": null,
+    "reviewHtmlPath": null,
+    "reviewBuiltAt": null
+  },
+  "release": {
+    "requestedAt": "2026-07-16T11:32:54.182Z",
+    "decisionAt": "2026-07-16T11:33:51.088Z",
+    "requestedLocales": [
+      "zh"
+    ],
+    "decision": "BLOCK",
+    "riskClass": "A",
+    "findings": [
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "ES",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      },
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "FR",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      },
+      {
+        "code": "nexus_legal_pack_invalid",
+        "jurisdiction": "ZZ",
+        "reasons": [
+          "pack_not_active",
+          "invalid_jurisdiction",
+          "invalid_reviewed_at",
+          "pack_expired",
+          "missing_counsel_signature",
+          "invalid_official_sources"
+        ],
+        "severity": "BLOCK"
+      }
+    ],
+    "reportPath": "private-compliance/reports/match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1.json",
+    "destination": null,
+    "previewPath": "/zh/football/比赛分析/france-0-2-spain-continuity-decisive-moments/",
+    "commandError": null
+  }
+}

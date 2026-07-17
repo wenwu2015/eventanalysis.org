@@ -20,6 +20,20 @@ async function startServer(port) {
   return child;
 }
 
+async function startZhServer(port) {
+  const child = spawn("npm", ["run", "start:zh"], { cwd: root, env: { ...process.env, PORT: String(port) }, stdio: ["ignore", "pipe", "pipe"] });
+  let output = "";
+  child.stdout.on("data", (chunk) => { output += chunk; });
+  child.stderr.on("data", (chunk) => { output += chunk; });
+  const deadline = Date.now() + 20_000;
+  while (!output.includes("Static server running")) {
+    if (child.exitCode !== null) throw new Error(`Chinese preview server exited early: ${output}`);
+    if (Date.now() > deadline) throw new Error(`Chinese preview server did not become ready: ${output}`);
+    await new Promise((resolveWait) => setTimeout(resolveWait, 100));
+  }
+  return child;
+}
+
 async function htmlFiles(directory) {
   const files = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -28,6 +42,20 @@ async function htmlFiles(directory) {
     else if (entry.name.endsWith(".html")) files.push(path);
   }
   return files;
+}
+
+function runNpmScript(script) {
+  return new Promise((resolveRun, rejectRun) => {
+    const child = spawn("npm", ["run", script], { cwd: root, stdio: ["ignore", "pipe", "pipe"] });
+    let output = "";
+    child.stdout.on("data", (chunk) => { output += chunk; });
+    child.stderr.on("data", (chunk) => { output += chunk; });
+    child.on("error", rejectRun);
+    child.on("exit", (code) => {
+      if (code === 0) resolveRun();
+      else rejectRun(new Error(`npm run ${script} failed: ${output}`));
+    });
+  });
 }
 
 test("AWS publish directory contains framework-free static output", async () => {
@@ -41,7 +69,7 @@ test("AWS publish directory contains framework-free static output", async () => 
   await access(resolve(root, "dist/client/favicon.svg"));
   await assert.rejects(access(resolve(root, "dist/client/assets/ad-slot.js")));
   const pages = await htmlFiles(resolve(root, "dist/client"));
-  assert.ok(pages.length >= 29, "21 locale homes and editorial routes should be pre-generated");
+  assert.ok(pages.length >= 44, "21 locale homes, 21 legal pages, root and 404 should be pre-generated");
   for (const path of pages) {
     const html = await readFile(path, "utf8");
     assert.match(html, /^<!doctype html>/i, path);
@@ -52,7 +80,7 @@ test("AWS publish directory contains framework-free static output", async () => 
   }
 });
 
-test("new localized URL contract works and retired URLs are real 404s", async () => {
+test("quarantined holding site exposes locale homes and legal pages only", async () => {
   const port = 43173;
   const server = await startServer(port);
   try {
@@ -61,10 +89,8 @@ test("new localized URL contract works and retired URLs are real 404s", async ()
       "/en/football/",
       "/ja/football/",
       "/ar/football/",
-      "/en/football/all-content/",
-      "/en/football/match-analysis/",
-      "/en/football/match-analysis/spain-england-euro-2024-final/",
-      "/zh/football/%E6%AF%94%E8%B5%9B%E5%88%86%E6%9E%90/%E8%A5%BF%E7%8F%AD%E7%89%99-%E8%8B%B1%E6%A0%BC%E5%85%B0-2024%E6%AC%A7%E6%B4%B2%E6%9D%AF%E5%86%B3%E8%B5%9B/",
+      "/en/football/legal/",
+      "/zh/football/legal/",
     ];
     for (const path of publicPaths) {
       const response = await fetch(`http://127.0.0.1:${port}${path}`);
@@ -74,7 +100,7 @@ test("new localized URL contract works and retired URLs are real 404s", async ()
       assert.doesNotMatch(html, /sofascore|sportradar|genius sports|wyscout|statsbomb|transfermarkt|skillcorner/i, path);
       assert.doesNotMatch(html, /\b(?:AI|ChatGPT|OpenAI)\b|人工智能/i, path);
     }
-    for (const path of ["/en/", "/zh/", "/en/archive/", "/zh/archive/", "/en/methodology/", "/zh/methodology/", "/en/articles/spain-england-euro-2024-final/"]) {
+    for (const path of ["/en/", "/zh/", "/en/archive/", "/zh/archive/", "/en/methodology/", "/zh/methodology/", "/en/articles/spain-england-euro-2024-final/", "/en/football/all-content/", "/en/football/search/", "/en/football/match-analysis/spain-england-euro-2024-final/"]) {
       assert.equal((await fetch(`http://127.0.0.1:${port}${path}`, { redirect: "manual" })).status, 404, path);
     }
     for (const [acceptLanguage, expectedLocation] of [
@@ -87,30 +113,57 @@ test("new localized URL contract works and retired URLs are real 404s", async ()
       assert.equal(response.headers.get("location"), expectedLocation);
       assert.equal(response.headers.get("vary"), "Accept-Language");
     }
-    const article = await (await fetch(`http://127.0.0.1:${port}/en/football/match-analysis/spain-england-euro-2024-final/`)).text();
-    assert.match(article, /application\/ld\+json/);
-    assert.match(article, /hreflang="zh-CN"/);
-    assert.match(article, /48\.1%/);
-    assert.match(article, /href="\/zh\/football\/%E6%AF%94%E8%B5%9B%E5%88%86%E6%9E%90\//);
+    const legal = await (await fetch(`http://127.0.0.1:${port}/en/football/legal/`)).text();
+    assert.match(legal, /application\/ld\+json/);
+    assert.match(legal, /Legal, corrections and content concerns/);
+    assert.match(legal, /legal@eventanalysis\.org/);
+    const chinese = await (await fetch(`http://127.0.0.1:${port}/zh/football/`)).text();
+    assert.match(chinese, /我们从三个角度解释比赛/);
+    assert.match(chinese, /赛前发生过什么/);
+    assert.match(chinese, /这一次改变了什么/);
+    assert.match(chinese, /为什么形成这个结果/);
+    assert.doesNotMatch(chinese, /我们的分析框架/);
     const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/football/`)).text();
     assert.match(japanese, /分析の枠組み/);
     assert.doesNotMatch(japanese, /Spain 2–1 England|準備中/);
     const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/football/`)).text();
     assert.match(arabic, /dir="rtl"/);
     assert.match(arabic, /تنتهي المباراة/);
-    const search = await (await fetch(`http://127.0.0.1:${port}/en/football/search/?q=Spain`)).text();
-    assert.match(search, /name="robots" content="noindex,follow"/);
-    assert.match(search, /data-search-result/);
   } finally {
     server.kill("SIGTERM");
   }
 });
 
-test("RSS and nested sitemap index are static assets", async () => {
-  await access(resolve(root, "dist/client/en/football/feed.xml"));
-  await access(resolve(root, "dist/client/zh/football/feed.xml"));
+test("holding sitemap contains only indexable homes and legal pages", async () => {
+  await assert.rejects(access(resolve(root, "dist/client/en/football/feed.xml")));
+  await assert.rejects(access(resolve(root, "dist/client/zh/football/search-index.json")));
   const sitemap = await readFile(resolve(root, "dist/client/sitemap.xml"), "utf8");
   assert.match(sitemap, /<sitemapindex/);
-  assert.match(sitemap, /sitemaps\/en-football-match-analysis\.xml/);
+  assert.match(sitemap, /sitemaps\/en-football\.xml/);
+  assert.doesNotMatch(sitemap, /match-analysis/);
   assert.doesNotMatch(sitemap, /methodology|archive|\/search/);
+  const english = await readFile(resolve(root, "dist/client/sitemaps/en-football.xml"), "utf8");
+  assert.match(english, /https:\/\/eventanalysis\.org\/en\/football\/<\/loc>/);
+  assert.match(english, /https:\/\/eventanalysis\.org\/en\/football\/legal\/<\/loc>/);
+  assert.doesNotMatch(english, /match-analysis|people|all-content/);
+});
+
+test("Chinese preview build opens directly without a JavaScript-only root page", async () => {
+  await runNpmScript("build:zh");
+  const rootHtml = await readFile(resolve(root, "dist/preview-zh/index.html"), "utf8");
+  assert.match(rootHtml, /赛后足球分析/);
+  assert.match(rootHtml, /我们从三个角度解释比赛/);
+  assert.doesNotMatch(rootHtml, /location\.replace/);
+  await assert.rejects(access(resolve(root, "dist/preview-zh/en")));
+  const port = 43174;
+  const server = await startZhServer(port);
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/`, { headers: { "accept-language": "en-US,en;q=0.9" }, redirect: "manual" });
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get("location"), "/zh/football/");
+    const html = await (await fetch(`http://127.0.0.1:${port}/zh/football/`)).text();
+    assert.match(html, /赛前发生过什么/);
+  } finally {
+    server.kill("SIGTERM");
+  }
 });

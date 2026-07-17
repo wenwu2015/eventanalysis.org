@@ -1,11 +1,12 @@
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { COMPLIANCE_STATUSES, RISK_CLASSES, sourceEditionHash } from "./compliance.mjs";
 
 const CONTENT_TYPES = new Set([
   "match_analysis", "moment_analysis", "person_profile", "person_comparison",
   "team_profile", "competition_story", "place_story", "topic_story", "roundup",
 ]);
-const STATUSES = new Set(["draft", "needs_review", "data_incomplete", "approved", "published", "withdrawn"]);
+const STATUSES = new Set(["draft", "needs_review", "data_incomplete", "approved", "published", "quarantined", "withdrawn"]);
 const FACT_STATUSES = new Set(["observed", "confirmed", "conflicted", "superseded"]);
 const CLAIM_KINDS = new Set(["fact", "calculation", "analysis"]);
 const ENTITY_KINDS = new Set(["Person", "Team", "Competition", "Season", "Place", "Topic"]);
@@ -116,7 +117,7 @@ export async function loadContentData(root) {
 
 export async function validateContentData(root, { requirePrivateEvidence = false } = {}) {
   const data = await loadContentData(root);
-  if (data.schema.schemaVersion !== 2 || data.routes.schemaVersion !== 2) fail("schema version must be 2");
+  if (data.schema.schemaVersion !== 3 || data.routes.schemaVersion !== 2) fail("content schema must be 3 and route schema must be 2");
   const localeFile = await readJson(resolve(root, "content/locales.json"));
   const sportFile = await readJson(resolve(root, "content/sports.json"));
   const locales = new Set(localeFile.map(({ code }) => code));
@@ -177,6 +178,11 @@ export async function validateContentData(root, { requirePrivateEvidence = false
     if (!CONTENT_TYPES.has(item.type)) fail(`item ${item.id} has invalid type ${item.type}`);
     if (!sports.has(item.sport)) fail(`item ${item.id} has unknown sport ${item.sport}`);
     if (!item.primaryIntentKey || !item.angleKey || !item.originalContribution) fail(`item ${item.id} is missing editorial identity fields`);
+    if (item.sourceLocale !== "zh" || !item.editions?.zh) fail(`item ${item.id} must use a Chinese source edition`);
+    if (Number(item.sourceRevision) !== Number(item.revision)) fail(`item ${item.id} source revision does not match item revision`);
+    if (!/^[a-f0-9]{64}$/i.test(item.sourceEditionHash || "") || item.sourceEditionHash !== sourceEditionHash(item.editions.zh)) fail(`item ${item.id} source edition hash is invalid`);
+    if (!RISK_CLASSES.has(item.riskClass)) fail(`item ${item.id} has invalid risk class`);
+    if (!Array.isArray(item.nexusJurisdictions) || item.nexusJurisdictions.some((code) => !/^[A-Z]{2}$/.test(code))) fail(`item ${item.id} has invalid nexus jurisdictions`);
     for (const id of item.entityRefs || []) if (!entityIds.has(id)) fail(`item ${item.id} references unknown entity ${id}`);
     for (const id of item.eventRefs || []) if (!eventIds.has(id)) fail(`item ${item.id} references unknown event ${id}`);
     const claimIds = new Set();
@@ -185,22 +191,36 @@ export async function validateContentData(root, { requirePrivateEvidence = false
       claimIds.add(claim.id);
       if (!CLAIM_KINDS.has(claim.kind)) fail(`item ${item.id} claim ${claim.id} has invalid kind`);
       for (const ref of claim.factRefs || []) if (!factIds.has(ref)) fail(`claim ${claim.id} references unknown fact ${ref}`);
-      if (claim.kind !== "analysis" && (!claim.factRefs || claim.factRefs.length === 0)) fail(`claim ${claim.id} has no fact reference`);
+      if (!claim.factRefs || claim.factRefs.length === 0) fail(`claim ${claim.id} has no fact reference`);
     }
     for (const [locale, edition] of Object.entries(item.editions || {})) {
       if (!locales.has(locale)) fail(`item ${item.id} has unknown locale ${locale}`);
       if (!STATUSES.has(edition.status)) fail(`item ${item.id}/${locale} has invalid status`);
+      if (!COMPLIANCE_STATUSES.has(edition.complianceStatus)) fail(`item ${item.id}/${locale} has invalid compliance status`);
       if (normalizeSlug(edition.slug) !== edition.slug) fail(`item ${item.id}/${locale} slug is not canonical`);
       if (!edition.title || !edition.deck || !Array.isArray(edition.sections)) fail(`item ${item.id}/${locale} is incomplete`);
       if (!edition.sections.length) fail(`item ${item.id}/${locale} has no sections`);
       for (const section of edition.sections) for (const paragraph of section.paragraphs || []) {
+        if (!paragraph.id) fail(`item ${item.id}/${locale} contains a paragraph without an id`);
         if (!paragraph.text?.trim()) fail(`item ${item.id}/${locale} contains an empty paragraph`);
+        if (!Array.isArray(paragraph.claimRefs) || paragraph.claimRefs.length === 0) fail(`item ${item.id}/${locale} paragraph has no claim references`);
         for (const ref of paragraph.claimRefs || []) if (!claimIds.has(ref)) fail(`item ${item.id}/${locale} paragraph references unknown claim ${ref}`);
       }
       for (const event of edition.timeline || []) {
         for (const ref of event.claimRefs || []) if (!claimIds.has(ref)) fail(`item ${item.id}/${locale} timeline references unknown claim ${ref}`);
       }
+      if (locale !== "zh") {
+        if (edition.derivedFromLocale !== "zh") fail(`item ${item.id}/${locale} does not derive from Chinese`);
+        if (!new Set(["current", "stale", "blocked"]).has(edition.translationStatus)) fail(`item ${item.id}/${locale} has invalid translation status`);
+        if (edition.translationStatus === "current" && (Number(edition.derivedFromRevision) !== Number(item.sourceRevision) || edition.derivedFromHash !== item.sourceEditionHash)) fail(`item ${item.id}/${locale} current translation does not derive from the current Chinese source`);
+        if (edition.translationStatus !== "current" && edition.status === "published") fail(`item ${item.id}/${locale} publishes a non-current translation`);
+        if (!Array.isArray(edition.paragraphMappings)) fail(`item ${item.id}/${locale} has no paragraph mappings`);
+      }
       if (edition.status === "published") {
+        if (edition.complianceStatus !== "passed") fail(`item ${item.id}/${locale} is published without passed compliance`);
+        if (!edition.complianceValidUntil || Number.isNaN(Date.parse(edition.complianceValidUntil))) fail(`item ${item.id}/${locale} has no compliance lease`);
+        if (!Array.isArray(edition.allowedJurisdictions) || edition.allowedJurisdictions.length === 0) fail(`item ${item.id}/${locale} has no allowed jurisdictions`);
+        if (locale !== "zh" && edition.translationStatus !== "current") fail(`item ${item.id}/${locale} publishes a stale translation`);
         if (!edition.slugFrozenAt || Number.isNaN(Date.parse(edition.slugFrozenAt))) fail(`item ${item.id}/${locale} has no valid slug freeze timestamp`);
         const path = routePath({ locale, sport: item.sport, routeKey: routeKeyForType(item.type), slug: edition.slug, routes: data.routes });
         if (routeCollisions.has(path)) fail(`route collision ${path}`);

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object",
+  "required": ["contentId", "revision", "sourceEditionHash", "policyHash", "legalPackHashes", "riskClass", "decision", "scope", "jurisdictionDecisions", "factFindings", "civilityFindings", "translationFindings", "prohibitedClaimFindings", "expiresAt", "reviewRunId"],
+  "properties": {
+    "contentId": { "type": "string" }, "revision": { "type": "integer" }, "sourceEditionHash": { "type": "string" }, "policyHash": { "type": "string" },
+    "legalPackHashes": { "type": "array", "items": { "type": "string" } }, "riskClass": { "type": "string", "enum": ["A", "B", "C"] }, "decision": { "type": "string", "enum": ["PASS", "REVIEW", "BLOCK"] }, "scope": { "type": "string", "enum": ["all_locales", "locale_only"] },
+    "jurisdictionDecisions": { "type": "array", "items": { "type": "object", "required": ["jurisdiction", "decision", "ruleRefs"], "properties": { "jurisdiction": { "type": "string" }, "decision": { "type": "string", "enum": ["PASS", "REVIEW", "BLOCK"] }, "ruleRefs": { "type": "array", "items": { "type": "string" } } }, "additionalProperties": false } },
+    "factFindings": { "type": "array", "items": { "$ref": "#/$defs/finding" } }, "civilityFindings": { "type": "array", "items": { "$ref": "#/$defs/finding" } }, "translationFindings": { "type": "array", "items": { "$ref": "#/$defs/finding" } }, "prohibitedClaimFindings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "expiresAt": { "type": "string" }, "reviewRunId": { "type": "string" }
+  }, "additionalProperties": false,
+  "$defs": { "finding": { "type": "object", "required": ["code", "detail", "locale"], "properties": { "code": { "type": "string" }, "detail": { "type": "string" }, "locale": { "type": "string" } }, "additionalProperties": false } }
+}

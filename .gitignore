@@ -45,6 +45,10 @@ next-env.d.ts
 /private-sources/
 /private-evidence/
 /private-auth/
+/private-legal/
+/private-compliance/
+/private-incidents/
+/private-quarantine/
 /pipeline/jobs/
 /pipeline/runtime/
 /pipeline/config/sources.local.json
@@ -53,3 +57,4 @@ next-env.d.ts
 /pipeline/config/search-console.local.json
 /output/
 /.playwright-cli/
+/ops/skills/eventanalysis-publish-compliance-workspace/

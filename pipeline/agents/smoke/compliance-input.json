@@ -1,0 +1,18 @@
+{
+  "objective": "Return a BLOCK AgentPreAudit for this deliberately incomplete smoke-test item. Do not add facts.",
+  "expected": {
+    "contentId": "smoke-test",
+    "revision": 1,
+    "sourceEditionHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "policyHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "riskClass": "A",
+    "legalPackHashes": [],
+    "expiresWithinHours": 24
+  },
+  "applicableJurisdictions": ["CN"],
+  "missingLegalPacks": ["CN"],
+  "facts": [],
+  "claims": [],
+  "sourceEdition": { "title": "测试", "deck": "缺少事实。", "sections": [] },
+  "derivedEditions": {}
+}

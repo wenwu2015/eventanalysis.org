@@ -1,10 +1,12 @@
 {
   "activeSports": ["football"],
   "lookbackHours": 48,
+  "postMatchStabilityMinutes": 20,
   "maxCandidates": 20,
   "maxDraftsPerRun": 3,
   "orphanMaxAgeMinutes": 60,
   "jobDiskLimitBytes": 2147483648,
   "navigationTimeoutMs": 45000,
-  "minimumIndependentCoreSources": 2
+  "minimumIndependentCoreSources": 2,
+  "awsPublicationMode": "manual"
 }

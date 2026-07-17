@@ -9,6 +9,10 @@ function coreSignature(event) {
   });
 }
 
+function normalizeTeamKey(value) {
+  return String(value || "").normalize("NFKD").replace(/[^\p{L}\p{N}]+/gu, " ").trim().toLowerCase();
+}
+
 export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
   if (!Array.isArray(evidence) || evidence.length === 0) throw new Error("No evidence was collected");
   const signatures = new Map();
@@ -22,8 +26,17 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
   const coreSources = agreed?.[1] || new Set();
   const primary = evidence.find((item) => coreSignature(item.event) === agreed?.[0]) || evidence[0];
   const event = primary.event;
+  const canonicalTeamIds = new Map([
+    [normalizeTeamKey(event.homeTeam), String(event.homeTeamId)],
+    [normalizeTeamKey(event.awayTeam), String(event.awayTeamId)],
+  ]);
+  const comparableH2hEvents = evidence.flatMap((item) => item.h2hEvents || []).map((item) => ({
+    ...item,
+    homeTeamId: canonicalTeamIds.get(normalizeTeamKey(item.homeTeam)) || String(item.homeTeamId),
+    awayTeamId: canonicalTeamIds.get(normalizeTeamKey(item.awayTeam)) || String(item.awayTeamId),
+  }));
   const headToHead = buildHeadToHead(
-    primary.h2hEvents || [],
+    comparableH2hEvents,
     event.id,
     event.homeTeamId,
     event.awayTeamId,
@@ -49,6 +62,8 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2) {
       awayTeamId: event.awayTeamId,
       homeTeam: event.homeTeam,
       awayTeam: event.awayTeam,
+      homeJurisdiction: event.homeJurisdiction || null,
+      awayJurisdiction: event.awayJurisdiction || null,
       homeScore: event.homeScore,
       awayScore: event.awayScore,
       result: scoreResult(event.homeScore, event.awayScore),

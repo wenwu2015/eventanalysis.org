@@ -1,0 +1,19 @@
+{
+  "writer": {
+    "command": ["node", "pipeline/agents/codex-json-runner.mjs", "writer"],
+    "timeoutMs": 600000
+  },
+  "translator": {
+    "command": ["node", "pipeline/agents/codex-json-runner.mjs", "translator"],
+    "timeoutMs": 1200000
+  },
+  "complianceReviewer": {
+    "command": ["node", "tests/helpers/mock-compliance-reviewer.mjs"],
+    "timeoutMs": 15000
+  },
+  "video": {
+    "transcribeCommand": [],
+    "visionCommand": [],
+    "timeoutMs": 1200000
+  }
+}

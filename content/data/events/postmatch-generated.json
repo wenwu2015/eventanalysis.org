@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 3,
+  "records": [
+    {
+      "id": "event_1fa9a50fd27ce823bb3f",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "World Championship, Knockout",
+      "startedAt": "2026-07-14T19:00:00.000Z",
+      "status": "finished",
+      "homeScore": 0,
+      "awayScore": 2,
+      "entityRefs": [
+        "team_0702f2cee3c1b2321d1a",
+        "team_0f34b7bb2edb12d9b7d3"
+      ],
+      "homeTeamId": "team_0702f2cee3c1b2321d1a",
+      "awayTeamId": "team_0f34b7bb2edb12d9b7d3"
+    },
+    {
+      "id": "event_673c35b096169f32bc92",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-15T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_65189e47a75eca903fca",
+        "team_286dbc7f218c4768b458"
+      ],
+      "homeTeamId": "team_65189e47a75eca903fca",
+      "awayTeamId": "team_286dbc7f218c4768b458",
+      "homeScore": 1,
+      "awayScore": 2
+    }
+  ]
+}

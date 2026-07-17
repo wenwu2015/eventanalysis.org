@@ -79,7 +79,9 @@ The public editorial gate also blocks production-process attribution, placeholde
 
 ```bash
 npm install
+npm run build:zh
 npm run build:preview
+npm run build:preview:all
 npm run build
 npm test
 npm run verify:editorial
@@ -94,15 +96,32 @@ Advertising is disabled in `site/ad-config.json`; disabled builds emit no advert
 
 ## Review and publication
 
-Drafts are private review packets. An editor may approve one language independently; pending languages remain absent rather than blocking the approved edition.
+Drafts are private review packets. Routine editing and post-match automation approve only the Chinese master for local preview. Derived languages are generated later, during the explicit production-release preparation step, so local copy changes do not spend translation/compliance work until publication is intended.
 
 ```bash
 npm run review:pr
+npm run review:admin
+npm run review:html -- content/review-packets/<content>.json
+npm run release:request -- content/review-packets/<content>.json --locales=zh
+npm run publish:automatic -- --content=<id> --locales=zh
+npm run build:zh
+npm run release:prepare-locales
 npm run content:publish -- content/review-packets/<content>.json
-npm run release:aws
+npm run release:aws -- --confirm-production
 ```
 
-The AWS release repeats data, quality, test, editorial and prepublish gates, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. See `doc/AWS_Deployment_Guide.md`.
+`npm run review:admin` starts a local review console on `http://127.0.0.1:3210`. It reads `content/review-packets` directly, renders the Chinese draft without requiring a public static page, shows automation/legal blockers, and splits the workflow into two explicit steps:
+
+1. `生成审稿 HTML`
+2. `提交中文发布申请`
+
+The first step writes a private static review page to `private-review/html/<content-id>/index.html`, exposes a dynamic review page at `/review-preview/<content-id>` and a static review page at `/private-review/<content-id>/`, and keeps the draft suitable for editor and distribution review without generating a public page.
+
+The second step runs `compliance:preaudit`, deterministic audit, and if the result is PASS, `publish:automatic --locales=zh` plus `build:zh`. If legal packs, jurisdictions or facts are incomplete, the console records `release_blocked` or `release_review_required` instead of failing with an untracked error. It never triggers AWS release.
+
+`npm run review:smoke` exercises the same state machine end to end. It generates a private Chinese review HTML page, submits a release request, verifies that the workflow lands in `release_ready`, `release_review_required`, or `release_blocked`, and then resets the packet. The smoke run uses the local deterministic reviewer config in `pipeline/config/ai.smoke.json`; routine work continues to use `pipeline/config/ai.local.json`.
+
+The AWS release repeats data, quality, test, editorial and prepublish gates, derives missing non-Chinese editions from the Chinese master, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. See `doc/AWS_Deployment_Guide.md`.
 
 Search Console access stays local. Copy `pipeline/config/search-console.example.json` to the ignored `search-console.local.json`, set a short-lived `GOOGLE_SEARCH_CONSOLE_TOKEN`, then run:
 

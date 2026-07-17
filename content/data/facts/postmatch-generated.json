@@ -1,0 +1,930 @@
+{
+  "schemaVersion": 3,
+  "records": [
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-16T08:18:25.188Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813008_a7ba7ed5d058",
+        "evidence_fifa_400021541_00dd9eb09a08"
+      ],
+      "id": "event_1fa9a50fd27ce823bb3f_final_result",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "result": "away_win"
+      },
+      "subjectId": "event_1fa9a50fd27ce823bb3f"
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-16T08:18:25.188Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813008_a7ba7ed5d058",
+        "evidence_fifa_400021541_00dd9eb09a08"
+      ],
+      "id": "event_1fa9a50fd27ce823bb3f_head_to_head_before_match",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 1,
+        "draws": 0,
+        "awayWins": 6,
+        "matches": 7,
+        "homeWinRate": 14.3,
+        "drawRate": 0,
+        "awayWinRate": 85.7
+      },
+      "subjectId": "event_1fa9a50fd27ce823bb3f"
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-16T08:18:25.188Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813008_a7ba7ed5d058",
+        "evidence_fifa_400021541_00dd9eb09a08"
+      ],
+      "id": "event_1fa9a50fd27ce823bb3f_key_events",
+      "predicate": "key_events",
+      "value": [
+        {
+          "minute": "22'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Penalty Goal",
+          "description": "Mikel OYARZABAL (Spain) successfully converts the penalty!"
+        },
+        {
+          "minute": "24'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": null,
+          "eventType": "Delay",
+          "description": "Match paused for a hydration break"
+        },
+        {
+          "minute": "27'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": null,
+          "eventType": "Resume",
+          "description": "Match resumed after interruption"
+        },
+        {
+          "minute": "30'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Substitution",
+          "description": "Maxence LACROIX (in) comes off the bench to replace William SALIBA (out) (France)"
+        },
+        {
+          "minute": "31'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Yellow card",
+          "description": "Marc CUCURELLA (Spain) is booked by the referee."
+        },
+        {
+          "minute": "34'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Dani OLMO (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "35'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "RODRI (Spain) commits a foul."
+        },
+        {
+          "minute": "36'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Bradley BARCOLA (France) attempts an effort on goal."
+        },
+        {
+          "minute": "37'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Pedro PORRO (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "38'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Fabian RUIZ (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "39'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "40'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Offside",
+          "description": "Kylian MBAPPE (France) is ruled offside."
+        },
+        {
+          "minute": "41'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Offside",
+          "description": "Kylian MBAPPE (France) is ruled offside."
+        },
+        {
+          "minute": "43'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Corner",
+          "description": "Michael OLISE (France) takes a corner kick."
+        },
+        {
+          "minute": "45'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Adrien RABIOT (France) commits a foul."
+        },
+        {
+          "minute": "45'+1'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Jules KOUNDE (France) commits a foul."
+        },
+        {
+          "minute": "45'+3'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Offside",
+          "description": "Adrien RABIOT (France) is ruled offside."
+        },
+        {
+          "minute": "45'+4'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Alex BAENA (Spain) commits a foul."
+        },
+        {
+          "minute": "45'+7'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": null,
+          "eventType": "End Time",
+          "description": "The referee brings the first period to an end."
+        },
+        {
+          "minute": "49'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Fabian RUIZ (Spain) commits a foul."
+        },
+        {
+          "minute": "50'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Maxence LACROIX (France) commits a foul."
+        },
+        {
+          "minute": "51'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Lamine YAMAL (Spain) is ruled offside."
+        },
+        {
+          "minute": "52'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Mikel OYARZABAL (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "55'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Alex BAENA (Spain) is ruled offside."
+        },
+        {
+          "minute": "57'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Substitution",
+          "description": "Desire DOUE (in) comes off the bench to replace Bradley BARCOLA (out) (France)"
+        },
+        {
+          "minute": "58'",
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Alex BAENA (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "58'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Goal!",
+          "description": "Pedro PORRO (Spain) scores!!"
+        },
+        {
+          "minute": "61'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Lamine YAMAL (Spain) is ruled offside."
+        },
+        {
+          "minute": "65'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Corner",
+          "description": "Michael OLISE (France) takes a corner kick."
+        },
+        {
+          "minute": "67'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Kylian MBAPPE (France) attempts an effort on goal."
+        },
+        {
+          "minute": "68'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Offside",
+          "description": "Kylian MBAPPE (France) is ruled offside."
+        },
+        {
+          "minute": "69'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Jules KOUNDE (France) commits a foul."
+        },
+        {
+          "minute": "72'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Substitution",
+          "description": "Rayan CHERKI (in) comes off the bench to replace Michael OLISE (out) (France)"
+        },
+        {
+          "minute": "73'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": null,
+          "eventType": "Resume",
+          "description": "Match resumed after interruption"
+        },
+        {
+          "minute": "74'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Substitution",
+          "description": "Ferran TORRES (in) comes off the bench to replace Mikel OYARZABAL (out) (Spain)"
+        },
+        {
+          "minute": "76'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "77'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Maxence LACROIX (France) commits a foul."
+        },
+        {
+          "minute": "78'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Ferran TORRES (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "79'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "RODRI (Spain) commits a foul."
+        },
+        {
+          "minute": "81'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Desire DOUE (France) attempts an effort on goal."
+        },
+        {
+          "minute": "83'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Substitution",
+          "description": "Nico WILLIAMS (in) comes off the bench to replace Alex BAENA (out) (Spain)"
+        },
+        {
+          "minute": "84'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Ferran TORRES (Spain) commits a foul."
+        },
+        {
+          "minute": "85'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "RODRI (Spain) commits a foul."
+        },
+        {
+          "minute": "86'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Yellow card",
+          "description": "Kylian MBAPPE (France) is booked by the referee."
+        },
+        {
+          "minute": "88'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "89'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Kylian MBAPPE (France) attempts an effort on goal."
+        },
+        {
+          "minute": "90'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Corner",
+          "description": "Ousmane DEMBELE (France) takes a corner kick."
+        },
+        {
+          "minute": "90'+3'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Foul",
+          "description": "Manu KONE (France) commits a foul."
+        },
+        {
+          "minute": "90'+4'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43969",
+          "eventType": "Attempt at Goal",
+          "description": "Nico WILLIAMS (Spain) attempts an effort on goal."
+        },
+        {
+          "minute": "90'+5'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Ousmane DEMBELE (France) attempts an effort on goal."
+        },
+        {
+          "minute": "90'+7'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": "43946",
+          "eventType": "Attempt at Goal",
+          "description": "Ousmane DEMBELE (France) attempts an effort on goal."
+        },
+        {
+          "minute": "90'+8'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": null,
+          "eventType": "End Time",
+          "description": "The referee brings the second period to an end."
+        },
+        {
+          "minute": "98'",
+          "homeScore": 0,
+          "awayScore": 2,
+          "teamId": null,
+          "eventType": "Match end",
+          "description": "The final whistle sounds."
+        },
+        {
+          "minute": null,
+          "homeScore": 0,
+          "awayScore": 1,
+          "teamId": "43946",
+          "eventType": "Substitution",
+          "description": "Before the second half begins Manu KONE (in) comes off the bench to replace Adrien RABIOT (out) (France)"
+        }
+      ],
+      "subjectId": "event_1fa9a50fd27ce823bb3f"
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-16T08:18:25.188Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813008_a7ba7ed5d058",
+        "evidence_fifa_400021541_00dd9eb09a08"
+      ],
+      "id": "event_1fa9a50fd27ce823bb3f_personnel_changes",
+      "predicate": "personnel_changes",
+      "value": [
+        {
+          "baseline": true,
+          "previousMatchId": "400021536",
+          "currentMatchId": "400021541",
+          "teamId": "43946",
+          "teamName": "France",
+          "sharedStarters": 0,
+          "currentStarters": 11,
+          "continuityRate": 0,
+          "incomingPlayerIds": [
+            "448332",
+            "368860",
+            "389876",
+            "430707",
+            "419177",
+            "405893",
+            "402047",
+            "398680",
+            "389867",
+            "485655",
+            "484860"
+          ],
+          "outgoingPlayerIds": [],
+          "incomingPlayers": [
+            {
+              "id": "448332",
+              "name": "Mike MAIGNAN"
+            },
+            {
+              "id": "368860",
+              "name": "Lucas Digne"
+            },
+            {
+              "id": "389876",
+              "name": "Dayot UPAMECANO"
+            },
+            {
+              "id": "430707",
+              "name": "Jules KOUNDE"
+            },
+            {
+              "id": "419177",
+              "name": "William SALIBA"
+            },
+            {
+              "id": "405893",
+              "name": "Aurelien TCHOUAMENI"
+            },
+            {
+              "id": "402047",
+              "name": "Adrien RABIOT"
+            },
+            {
+              "id": "398680",
+              "name": "Ousmane DEMBELE"
+            },
+            {
+              "id": "389867",
+              "name": "Kylian MBAPPE"
+            },
+            {
+              "id": "485655",
+              "name": "Michael OLISE"
+            },
+            {
+              "id": "484860",
+              "name": "Bradley BARCOLA"
+            }
+          ],
+          "outgoingPlayers": []
+        },
+        {
+          "baseline": false,
+          "previousMatchId": "400021538",
+          "currentMatchId": "400021541",
+          "teamId": "43969",
+          "teamName": "Spain",
+          "sharedStarters": 11,
+          "currentStarters": 11,
+          "continuityRate": 100,
+          "incomingPlayerIds": [],
+          "outgoingPlayerIds": [],
+          "incomingPlayers": [],
+          "outgoingPlayers": []
+        }
+      ],
+      "subjectId": "event_1fa9a50fd27ce823bb3f"
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-17T00:08:07.486Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12812996_b3e61fdfcf65",
+        "evidence_fifa_400021540_1dbecc6d466b"
+      ],
+      "id": "event_673c35b096169f32bc92_final_result",
+      "subjectId": "event_673c35b096169f32bc92",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-17T00:08:07.486Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12812996_b3e61fdfcf65",
+        "evidence_fifa_400021540_1dbecc6d466b"
+      ],
+      "id": "event_673c35b096169f32bc92_head_to_head_before_match",
+      "subjectId": "event_673c35b096169f32bc92",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 5,
+        "draws": 1,
+        "awayWins": 6,
+        "matches": 12,
+        "homeWinRate": 41.7,
+        "drawRate": 8.3,
+        "awayWinRate": 50
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-17T00:08:07.486Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12812996_b3e61fdfcf65",
+        "evidence_fifa_400021540_1dbecc6d466b"
+      ],
+      "id": "event_673c35b096169f32bc92_key_events",
+      "subjectId": "event_673c35b096169f32bc92",
+      "predicate": "key_events",
+      "value": [
+        {
+          "minute": "55'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Goal!",
+          "description": "Anthony GORDON (England) scores!!"
+        },
+        {
+          "minute": "58'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "61'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Enzo FERNANDEZ (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "64'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Substitution",
+          "description": "Nico GONZALEZ (in) comes off the bench to replace Leandro PAREDES (out) (Argentina)"
+        },
+        {
+          "minute": "66'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Attempt at Goal",
+          "description": "Declan RICE (England) attempts an effort on goal."
+        },
+        {
+          "minute": "67'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Foul",
+          "description": "Morgan ROGERS (England) commits a foul."
+        },
+        {
+          "minute": "68'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "69'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Nico GONZALEZ (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "72'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Substitution",
+          "description": "Ezri KONSA (in) comes off the bench to replace Anthony GORDON (out) (England)"
+        },
+        {
+          "minute": "73'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "Resume",
+          "description": "Match resumed after interruption"
+        },
+        {
+          "minute": "75'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Alexis MAC ALLISTER (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "76'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Julian ALVAREZ (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "77'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Offside",
+          "description": "Nico GONZALEZ (Argentina) is ruled offside."
+        },
+        {
+          "minute": "79'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Attempt at Goal",
+          "description": "Morgan ROGERS (England) attempts an effort on goal."
+        },
+        {
+          "minute": "81'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Foul",
+          "description": "Nico GONZALEZ (Argentina) commits a foul."
+        },
+        {
+          "minute": "82'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43942",
+          "eventType": "Substitution",
+          "description": "Dan BURN (in) comes off the bench to replace Reece JAMES (out) (England)"
+        },
+        {
+          "minute": "84'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Rodrigo DE PAUL (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "85'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Enzo FERNANDEZ (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "85'",
+          "homeScore": 1,
+          "awayScore": 1,
+          "teamId": "43922",
+          "eventType": "Goal!",
+          "description": "Enzo FERNANDEZ (Argentina) scores!!"
+        },
+        {
+          "minute": "90'+2'",
+          "homeScore": 1,
+          "awayScore": 1,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Alexis MAC ALLISTER (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "90'+2'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": "43922",
+          "eventType": "Goal!",
+          "description": "Lautaro MARTINEZ (Argentina) scores!!"
+        },
+        {
+          "minute": "90'+4'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": "43922",
+          "eventType": "Yellow card",
+          "description": "Rodrigo DE PAUL (Argentina) is booked by the referee."
+        },
+        {
+          "minute": "90'+6'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": "43942",
+          "eventType": "Substitution",
+          "description": "Ivan TONEY (in) comes off the bench to replace John STONES (out) (England)"
+        },
+        {
+          "minute": "90'+9'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": "43942",
+          "eventType": "Foul",
+          "description": "Jude BELLINGHAM (England) commits a foul."
+        },
+        {
+          "minute": "90'+12'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": "43942",
+          "eventType": "Foul",
+          "description": "Dan BURN (England) commits a foul."
+        },
+        {
+          "minute": "102'",
+          "homeScore": 1,
+          "awayScore": 2,
+          "teamId": null,
+          "eventType": "Match end",
+          "description": "The final whistle sounds."
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-17T00:08:07.486Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12812996_b3e61fdfcf65",
+        "evidence_fifa_400021540_1dbecc6d466b"
+      ],
+      "id": "event_673c35b096169f32bc92_personnel_changes",
+      "subjectId": "event_673c35b096169f32bc92",
+      "predicate": "personnel_changes",
+      "value": [
+        {
+          "baseline": false,
+          "previousMatchId": "400021539",
+          "currentMatchId": "400021540",
+          "teamId": "43942",
+          "teamName": "England",
+          "sharedStarters": 8,
+          "currentStarters": 11,
+          "continuityRate": 72.7,
+          "incomingPlayerIds": [
+            "439641",
+            "506329",
+            "492716"
+          ],
+          "outgoingPlayerIds": [
+            "403049",
+            "463780",
+            "489732"
+          ],
+          "incomingPlayers": [
+            {
+              "id": "439641",
+              "name": "Reece JAMES"
+            },
+            {
+              "id": "506329",
+              "name": "Djed SPENCE"
+            },
+            {
+              "id": "492716",
+              "name": "Morgan ROGERS"
+            }
+          ],
+          "outgoingPlayers": [
+            {
+              "id": "403049",
+              "name": "Ezri KONSA"
+            },
+            {
+              "id": "463780",
+              "name": "Nico OREILLY"
+            },
+            {
+              "id": "489732",
+              "name": "Noni MADUEKE"
+            }
+          ]
+        },
+        {
+          "baseline": false,
+          "previousMatchId": "400021537",
+          "currentMatchId": "400021540",
+          "teamId": "43922",
+          "teamName": "Argentina",
+          "sharedStarters": 10,
+          "currentStarters": 11,
+          "continuityRate": 90.9,
+          "incomingPlayerIds": [
+            "485595"
+          ],
+          "outgoingPlayerIds": [
+            "428882"
+          ],
+          "incomingPlayers": [
+            {
+              "id": "485595",
+              "name": "Giuliano SIMEONE"
+            }
+          ],
+          "outgoingPlayers": [
+            {
+              "id": "428882",
+              "name": "Rodrigo DE PAUL"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

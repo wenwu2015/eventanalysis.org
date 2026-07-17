@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://eventanalysis.org/internal/content-data-v2.schema.json",
   "title": "Event Analysis structured content data",
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "objectKinds": [
     "Person",
     "Team",
@@ -33,8 +33,12 @@
     "data_incomplete",
     "approved",
     "published",
+    "quarantined",
     "withdrawn"
   ],
   "factStatuses": ["observed", "confirmed", "conflicted", "superseded"],
-  "claimKinds": ["fact", "calculation", "analysis"]
+  "claimKinds": ["fact", "calculation", "analysis"],
+  "complianceStatuses": ["unreviewed", "reviewing", "passed", "quarantined", "withdrawn"],
+  "riskClasses": ["A", "B", "C"],
+  "sourceLocale": "zh"
 }

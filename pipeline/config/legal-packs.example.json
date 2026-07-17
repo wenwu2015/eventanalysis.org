@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "operatorJurisdictions": [],
+  "packs": [],
+  "note": "Production requires private-legal/packs.json. No jurisdiction is active from this example file."
+}

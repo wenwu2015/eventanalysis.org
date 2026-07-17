@@ -32,6 +32,8 @@ export function normalizeSofaEvent(event) {
     awayTeamId: String(event.awayTeam.id),
     homeTeam: event.homeTeam.name,
     awayTeam: event.awayTeam.name,
+    homeJurisdiction: event.homeTeam.country?.alpha2?.toUpperCase?.() || null,
+    awayJurisdiction: event.awayTeam.country?.alpha2?.toUpperCase?.() || null,
     homeTeamSlug: event.homeTeam.slug,
     awayTeamSlug: event.awayTeam.slug,
     homeScore: Number.isFinite(homeScore) ? Number(homeScore) : null,
@@ -58,7 +60,7 @@ function datePath(date) {
   return date.toISOString().slice(0, 10);
 }
 
-export async function discoverFinishedMatches({ source, job, now = new Date(), lookbackHours = 48, timeoutMs }) {
+export async function discoverFinishedMatches({ source, job, now = new Date(), lookbackHours = 48, stabilityMinutes = 20, timeoutMs }) {
   const dates = new Set();
   for (let hours = 0; hours <= lookbackHours; hours += 24) {
     dates.add(datePath(new Date(now.getTime() - hours * 3_600_000)));
@@ -76,11 +78,14 @@ export async function discoverFinishedMatches({ source, job, now = new Date(), l
     }
   }
   const cutoff = Math.floor((now.getTime() - lookbackHours * 3_600_000) / 1000);
-  const end = Math.floor(now.getTime() / 1000);
+  // We do not trust an instantaneous "finished" flag. With no authoritative
+  // end timestamp, start + 3 hours is a conservative upper bound, followed by
+  // the required stability window.
+  const stableBefore = Math.floor((now.getTime() - (180 + stabilityMinutes) * 60_000) / 1000);
   return [...all.values()].filter((event) =>
     ["finished", "afterpenalties", "afterextra"].some((status) => event.status.includes(status))
     && event.startTimestamp >= cutoff
-    && event.startTimestamp <= end
+    && event.startTimestamp <= stableBefore
     && event.homeScore !== null
     && event.awayScore !== null
   );

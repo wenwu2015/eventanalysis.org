@@ -1,0 +1,38 @@
+{
+  "version": "2026-07-15.1",
+  "sourceLocale": "zh",
+  "legalPackMaxAgeDays": 90,
+  "publicationLeaseHours": 24,
+  "postMatchStabilityMinutes": 20,
+  "minimumIndependentCoreSources": 2,
+  "localeMarkets": {
+    "zh": ["CN"],
+    "zh-hant": ["TW", "HK", "MO"],
+    "en": ["US", "GB"],
+    "ja": ["JP"],
+    "ko": ["KR"],
+    "ru": ["RU"],
+    "es": ["ES"],
+    "pt": ["PT", "BR"],
+    "fr": ["FR"],
+    "de": ["DE"],
+    "it": ["IT"],
+    "ar": ["SA", "AE", "QA"],
+    "sv": ["SE"],
+    "nl": ["NL"],
+    "tr": ["TR"],
+    "pl": ["PL"],
+    "hr": ["HR"],
+    "sr": ["RS"],
+    "uk": ["UA"],
+    "fa": ["IR"],
+    "id": ["ID"]
+  },
+  "automaticTypes": ["match_analysis", "moment_analysis", "competition_story", "roundup"],
+  "humanReviewTypes": ["person_profile", "person_comparison", "team_profile", "place_story", "topic_story"],
+  "highRiskCategories": [
+    "minor_profile", "personal_criticism", "health", "injury", "discipline", "transfer", "contract",
+    "private_life", "nationality", "religion", "politics", "betting", "match_fixing", "doping",
+    "corruption", "crime", "unverified_allegation"
+  ]
+}

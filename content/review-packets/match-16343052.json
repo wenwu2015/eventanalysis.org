@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "match-16343052",
+  "sport": "football",
+  "collectedAt": "2026-07-16T00:05:26.334Z",
+  "status": "data_incomplete",
+  "match": {
+    "id": "16343052",
+    "competition": "UEFA Champions League, Qualification",
+    "startedAt": "2026-07-14T15:00:00.000Z",
+    "homeTeamId": "2244",
+    "awayTeamId": "5403",
+    "homeTeam": "Kuopion Palloseura",
+    "awayTeam": "FK Vardar Skopje",
+    "homeJurisdiction": "FI",
+    "awayJurisdiction": "MK",
+    "homeScore": 2,
+    "awayScore": 3,
+    "result": "away_win"
+  },
+  "headToHeadBeforeMatch": {
+    "homeWins": 1,
+    "draws": 0,
+    "awayWins": 0,
+    "matches": 1,
+    "homeWinRate": 100,
+    "drawRate": 0,
+    "awayWinRate": 0
+  },
+  "personnelChanges": [],
+  "keyEvents": [],
+  "videoObservations": [],
+  "coreSourceConfirmations": 1,
+  "evidenceRefs": [
+    "evidence_sofascore_16343052_929fea627bb3"
+  ],
+  "missing": [
+    "independent_core_source_confirmation",
+    "personnel_change_confirmation"
+  ],
+  "collectionErrors": [],
+  "publicationBlocked": true
+}

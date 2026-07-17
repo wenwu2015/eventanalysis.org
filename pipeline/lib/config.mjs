@@ -10,7 +10,7 @@ async function readJson(path) {
 export async function loadPipelineConfig() {
   const policy = await readJson(resolve(root, "pipeline/config/policy.json"));
   let sourcePath = resolve(root, "pipeline/config/sources.local.json");
-  let aiPath = resolve(root, "pipeline/config/ai.local.json");
+  let aiPath = process.env.EA_AI_CONFIG ? resolve(root, process.env.EA_AI_CONFIG) : resolve(root, "pipeline/config/ai.local.json");
   let sources;
   let ai;
   try {

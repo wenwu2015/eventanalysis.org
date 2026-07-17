@@ -135,6 +135,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .page-hero { padding: 4rem 0 2rem; border-bottom: 1px solid var(--ink); }
 .page-hero h1 { max-width: 900px; margin: 0; font-family: var(--serif); font-size: clamp(3.2rem, 8vw, 7rem); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
 .page-hero p { max-width: 700px; margin: 2rem 0 0; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+.legal-contact { max-width: 760px; }
+.legal-contact p { max-width: 720px; color: var(--muted); line-height: 1.7; }
+.legal-contact a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 4px; }
 
 .breadcrumbs { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: 1.5rem; color: var(--muted); font-family: var(--mono); font-size: .68rem; }
 .breadcrumbs a { color: var(--ink); text-decoration: underline; text-underline-offset: .2rem; }

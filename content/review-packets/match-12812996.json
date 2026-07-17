@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "id": "match-12812996",
+  "sport": "football",
+  "collectedAt": "2026-07-16T08:04:49.484Z",
+  "status": "data_incomplete",
+  "match": {
+    "id": "12812996",
+    "competition": "World Championship, Knockout",
+    "startedAt": "2026-07-15T19:00:00.000Z",
+    "homeTeamId": "4713",
+    "awayTeamId": "4819",
+    "homeTeam": "England",
+    "awayTeam": "Argentina",
+    "homeJurisdiction": "EN",
+    "awayJurisdiction": "AR",
+    "homeScore": 1,
+    "awayScore": 2,
+    "result": "away_win"
+  },
+  "headToHeadBeforeMatch": {
+    "homeWins": 0,
+    "draws": 0,
+    "awayWins": 0,
+    "matches": 0,
+    "homeWinRate": null,
+    "drawRate": null,
+    "awayWinRate": null
+  },
+  "personnelChanges": [
+    {
+      "baseline": false,
+      "previousMatchId": "400021539",
+      "currentMatchId": "400021540",
+      "teamId": "43942",
+      "teamName": "England",
+      "sharedStarters": 8,
+      "currentStarters": 11,
+      "continuityRate": 72.7,
+      "incomingPlayerIds": [
+        "439641",
+        "506329",
+        "492716"
+      ],
+      "outgoingPlayerIds": [
+        "403049",
+        "463780",
+        "489732"
+      ],
+      "incomingPlayers": [
+        {
+          "id": "439641",
+          "name": "Reece JAMES"
+        },
+        {
+          "id": "506329",
+          "name": "Djed SPENCE"
+        },
+        {
+          "id": "492716",
+          "name": "Morgan ROGERS"
+        }
+      ],
+      "outgoingPlayers": [
+        {
+          "id": "403049",
+          "name": "Ezri KONSA"
+        },
+        {
+          "id": "463780",
+          "name": "Nico OREILLY"
+        },
+        {
+          "id": "489732",
+          "name": "Noni MADUEKE"
+        }
+      ]
+    },
+    {
+      "baseline": false,
+      "previousMatchId": "400021537",
+      "currentMatchId": "400021540",
+      "teamId": "43922",
+      "teamName": "Argentina",
+      "sharedStarters": 10,
+      "currentStarters": 11,
+      "continuityRate": 90.9,
+      "incomingPlayerIds": [
+        "485595"
+      ],
+      "outgoingPlayerIds": [
+        "428882"
+      ],
+      "incomingPlayers": [
+        {
+          "id": "485595",
+          "name": "Giuliano SIMEONE"
+        }
+      ],
+      "outgoingPlayers": [
+        {
+          "id": "428882",
+          "name": "Rodrigo DE PAUL"
+        }
+      ]
+    }
+  ],
+  "keyEvents": [
+    {
+      "minute": "55'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Goal!",
+      "description": "Anthony GORDON (England) scores!!"
+    },
+    {
+      "minute": "58'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Corner",
+      "description": "Lionel MESSI (Argentina) takes a corner kick."
+    },
+    {
+      "minute": "61'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Enzo FERNANDEZ (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "64'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Substitution",
+      "description": "Nico GONZALEZ (in) comes off the bench to replace Leandro PAREDES (out) (Argentina)"
+    },
+    {
+      "minute": "66'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Attempt at Goal",
+      "description": "Declan RICE (England) attempts an effort on goal."
+    },
+    {
+      "minute": "67'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Foul",
+      "description": "Morgan ROGERS (England) commits a foul."
+    },
+    {
+      "minute": "68'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Corner",
+      "description": "Lionel MESSI (Argentina) takes a corner kick."
+    },
+    {
+      "minute": "69'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Nico GONZALEZ (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "72'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Substitution",
+      "description": "Ezri KONSA (in) comes off the bench to replace Anthony GORDON (out) (England)"
+    },
+    {
+      "minute": "73'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": null,
+      "eventType": "Resume",
+      "description": "Match resumed after interruption"
+    },
+    {
+      "minute": "75'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Alexis MAC ALLISTER (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "76'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Julian ALVAREZ (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "77'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Offside",
+      "description": "Nico GONZALEZ (Argentina) is ruled offside."
+    },
+    {
+      "minute": "79'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Attempt at Goal",
+      "description": "Morgan ROGERS (England) attempts an effort on goal."
+    },
+    {
+      "minute": "81'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Foul",
+      "description": "Nico GONZALEZ (Argentina) commits a foul."
+    },
+    {
+      "minute": "82'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43942",
+      "eventType": "Substitution",
+      "description": "Dan BURN (in) comes off the bench to replace Reece JAMES (out) (England)"
+    },
+    {
+      "minute": "84'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Rodrigo DE PAUL (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "85'",
+      "homeScore": 1,
+      "awayScore": 0,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Enzo FERNANDEZ (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "85'",
+      "homeScore": 1,
+      "awayScore": 1,
+      "teamId": "43922",
+      "eventType": "Goal!",
+      "description": "Enzo FERNANDEZ (Argentina) scores!!"
+    },
+    {
+      "minute": "90'+2'",
+      "homeScore": 1,
+      "awayScore": 1,
+      "teamId": "43922",
+      "eventType": "Attempt at Goal",
+      "description": "Alexis MAC ALLISTER (Argentina) attempts an effort on goal."
+    },
+    {
+      "minute": "90'+2'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": "43922",
+      "eventType": "Goal!",
+      "description": "Lautaro MARTINEZ (Argentina) scores!!"
+    },
+    {
+      "minute": "90'+4'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": "43922",
+      "eventType": "Yellow card",
+      "description": "Rodrigo DE PAUL (Argentina) is booked by the referee."
+    },
+    {
+      "minute": "90'+6'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": "43942",
+      "eventType": "Substitution",
+      "description": "Ivan TONEY (in) comes off the bench to replace John STONES (out) (England)"
+    },
+    {
+      "minute": "90'+9'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": "43942",
+      "eventType": "Foul",
+      "description": "Jude BELLINGHAM (England) commits a foul."
+    },
+    {
+      "minute": "90'+12'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": "43942",
+      "eventType": "Foul",
+      "description": "Dan BURN (England) commits a foul."
+    },
+    {
+      "minute": "102'",
+      "homeScore": 1,
+      "awayScore": 2,
+      "teamId": null,
+      "eventType": "Match end",
+      "description": "The final whistle sounds."
+    }
+  ],
+  "videoObservations": [],
+  "coreSourceConfirmations": 2,
+  "evidenceRefs": [
+    "evidence_sofascore_12812996_3db37897caf6",
+    "evidence_fifa_400021540_720b22a3fefa"
+  ],
+  "missing": [
+    "head_to_head_history"
+  ],
+  "collectionErrors": [],
+  "publicationBlocked": true
+}

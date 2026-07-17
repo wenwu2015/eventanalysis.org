@@ -1,0 +1,228 @@
+{
+  "id": "match-12812996-analysis-zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "post_match_analysis",
+  "angleKey": "late_pressure_and_lineup_continuity",
+  "originalContribution": "以首发延续率差异为背景，结合55分钟后关键事件的连续性，解释阿根廷如何在落后一球的情况下于比赛末段完成逆转，同时明确区分已确认事实、数值计算与比赛解读。",
+  "readerQuestion": "阿根廷为何能在第85分钟仍落后的情况下，最终以2比1逆转英格兰？",
+  "author": "EventAnalysis writer",
+  "confidence": 92,
+  "entityRefs": [
+    "team_65189e47a75eca903fca",
+    "team_286dbc7f218c4768b458"
+  ],
+  "eventRefs": [
+    "event_673c35b096169f32bc92"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_final_result"
+      ],
+      "summary": "阿根廷以2比1击败英格兰。"
+    },
+    {
+      "id": "claim_scoring_sequence",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "安东尼·戈登第55分钟为英格兰破门；恩佐·费尔南德斯第85分钟扳平；劳塔罗·马丁内斯在第90+2分钟攻入制胜球。"
+    },
+    {
+      "id": "claim_argentina_pressure",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "英格兰领先后，阿根廷在第58、61、64、68、69、75、76、84和85分钟连续出现角球、射门或换人事件，并在第85分钟追平。"
+    },
+    {
+      "id": "claim_continuity",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "相较各自前一场比赛，英格兰保留8名首发，首发延续率为72.7%；阿根廷保留10名首发，首发延续率为90.9%。"
+    },
+    {
+      "id": "claim_continuity_gap",
+      "kind": "calculation",
+      "factRefs": [
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "阿根廷的首发延续率比英格兰高18.2个百分点，且首发变动少2人。"
+    },
+    {
+      "id": "claim_h2h",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_head_to_head_before_match"
+      ],
+      "summary": "赛前双方12次交锋中，英格兰5胜1平6负；对应胜率分别为41.7%、8.3%和50%。"
+    },
+    {
+      "id": "claim_interpretation",
+      "kind": "analysis",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events",
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "阿根廷更高的阵容延续性构成稳定性背景，而其落后后的持续进攻事件最终在比赛末段转化为两粒进球；这说明逆转来自压力的连续累积，而非一次孤立机会。"
+    },
+    {
+      "id": "claim_england_response",
+      "kind": "analysis",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "英格兰在第72和82分钟先后用后卫换下进球者安东尼·戈登和里斯·詹姆斯，但仍在第85分钟及第90+2分钟失球，表明防守人员调整未能阻断阿根廷的末段攻势。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "england-argentina-1-2-late-comeback-2026",
+      "title": "阿根廷2比1逆转英格兰：持续施压如何改写最后阶段",
+      "deck": "英格兰第55分钟领先，但阿根廷在第85分钟扳平，并于第90+2分钟完成逆转；更高的首发延续率与落后后的连续进攻事件构成本场比赛的关键线索。",
+      "competition": "国际足联世界杯淘汰赛",
+      "venue": "未提供",
+      "homeName": "英格兰",
+      "awayName": "阿根廷",
+      "resultLabel": "英格兰 1比2 阿根廷",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "决定比赛的末段七分钟",
+          "paragraphs": [
+            {
+              "text": "英格兰由安东尼·戈登在第55分钟取得领先，但优势未能维持到终场。恩佐·费尔南德斯第85分钟将比分扳为1比1，劳塔罗·马丁内斯又在第90+2分钟破门，阿根廷最终以2比1取胜。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "两粒进球之间只隔了七个比赛分钟。比赛的决定性变化在此背景下集中在末段：阿根廷先消除比分压力，随后在补时阶段把持续进攻转化为制胜球。",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "扳平并非孤立事件",
+          "paragraphs": [
+            {
+              "text": "英格兰领先后，阿根廷的进攻事件持续出现：第58分钟角球、第61分钟射门、第64分钟换人、第68分钟角球，此后又在第69、75、76、84和85分钟形成射门。第85分钟的进球由此更适合被理解为连续压力的结果，而不是突然出现的单次机会。",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "英格兰第72分钟用埃兹里·孔萨换下进球者戈登，第82分钟又用丹·伯恩换下里斯·詹姆斯。尽管防守人员得到补充，球队仍在第85分钟和第90+2分钟连续失球，调整没有切断阿根廷的攻势。",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "阵容延续性提供的背景",
+          "paragraphs": [
+            {
+              "text": "相较各自前一场比赛，英格兰本场首发保留8人，延续率为72.7%；阿根廷保留10人，延续率为90.9%。阿根廷的延续率高出18.2个百分点，首发变动也少2人。",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "这些数字不能单独证明逆转的原因，但可以说明两队进入比赛时的稳定性背景不同。结合阿根廷落后后的连续进攻事件，更高的阵容延续性与末段执行力形成了相互呼应的解释线索。",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "赛前交锋与本场结果",
+          "paragraphs": [
+            {
+              "text": "本场之前，双方12次交锋中英格兰5胜、1平、6负，英格兰胜率为41.7%，平局率为8.3%，阿根廷胜率为50%。这组历史数据表明双方赛前对阵总体接近，而本场胜负仍由第85分钟后的关键事件决定。",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "安东尼·戈登破门，英格兰1比0领先。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "阿根廷用尼科·冈萨雷斯换下莱安德罗·帕雷德斯。",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "英格兰用丹·伯恩换下里斯·詹姆斯。",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "恩佐·费尔南德斯破门，阿根廷将比分扳为1比1。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "劳塔罗·马丁内斯破门，阿根廷2比1反超。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "needs_review",
+      "complianceStatus": "unreviewed"
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "AR",
+    "EN"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
+  "riskClass": "A"
+}
