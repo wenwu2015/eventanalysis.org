@@ -139,13 +139,32 @@ test("holding sitemap contains only indexable homes and legal pages", async () =
   await assert.rejects(access(resolve(root, "dist/client/zh/football/search-index.json")));
   const sitemap = await readFile(resolve(root, "dist/client/sitemap.xml"), "utf8");
   assert.match(sitemap, /<sitemapindex/);
-  assert.match(sitemap, /sitemaps\/en-football\.xml/);
+  assert.match(sitemap, /https:\/\/www\.eventanalysis\.org\/sitemaps\/en-football\.xml/);
+  assert.doesNotMatch(sitemap, /https:\/\/eventanalysis\.org/);
   assert.doesNotMatch(sitemap, /match-analysis/);
   assert.doesNotMatch(sitemap, /methodology|archive|\/search/);
+  const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
+  const pageUrls = [];
+  for (const sitemapUrl of sitemapUrls) {
+    const parsedSitemapUrl = new URL(sitemapUrl);
+    assert.equal(parsedSitemapUrl.origin, "https://www.eventanalysis.org");
+    const xml = await readFile(resolve(root, "dist/client", `.${parsedSitemapUrl.pathname}`), "utf8");
+    for (const [, pageUrl] of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+      const parsedPageUrl = new URL(pageUrl);
+      assert.equal(parsedPageUrl.origin, "https://www.eventanalysis.org");
+      const localPath = resolve(root, "dist/client", `.${decodeURIComponent(parsedPageUrl.pathname)}`, parsedPageUrl.pathname.endsWith("/") ? "index.html" : "");
+      await access(localPath);
+      pageUrls.push(pageUrl);
+    }
+  }
+  assert.equal(new Set(pageUrls).size, pageUrls.length, "sitemap URLs must be unique");
   const english = await readFile(resolve(root, "dist/client/sitemaps/en-football.xml"), "utf8");
-  assert.match(english, /https:\/\/eventanalysis\.org\/en\/football\/<\/loc>/);
-  assert.match(english, /https:\/\/eventanalysis\.org\/en\/football\/legal\/<\/loc>/);
+  assert.match(english, /https:\/\/www\.eventanalysis\.org\/en\/football\/<\/loc>/);
+  assert.match(english, /https:\/\/www\.eventanalysis\.org\/en\/football\/legal\/<\/loc>/);
+  assert.doesNotMatch(english, /https:\/\/eventanalysis\.org/);
   assert.doesNotMatch(english, /match-analysis|people|all-content/);
+  const robots = await readFile(resolve(root, "dist/client/robots.txt"), "utf8");
+  assert.equal(robots, "User-agent: *\nAllow: /\nSitemap: https://www.eventanalysis.org/sitemap.xml\nHost: https://www.eventanalysis.org\n");
 });
 
 test("Chinese preview build opens directly without a JavaScript-only root page", async () => {

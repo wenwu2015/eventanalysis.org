@@ -13,6 +13,7 @@ const includeApproved = process.argv.includes("--include-approved");
 const localeArgument = process.argv.find((value) => value.startsWith("--locales="))?.slice("--locales=".length);
 const clientOutput = outputArgument ? resolve(root, outputArgument) : resolve(root, "dist/client");
 const baseUrl = "https://eventanalysis.org";
+const sitemapBaseUrl = "https://www.eventanalysis.org";
 const [data, locales, sports, adConfig] = await Promise.all([
   validateContentData(root),
   readJson("content/locales.json"),
@@ -343,12 +344,12 @@ for (const sport of activeSports) for (const locale of buildLocaleCodes) {
 }
 
 for (const group of sitemapGroups) {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${group.paths.map((path) => `<url><loc>${absoluteUrl(path)}</loc><lastmod>${new Date(group.lastModified).toISOString()}</lastmod></url>`).join("")}</urlset>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${group.paths.map((path) => `<url><loc>${absoluteUrl(path, sitemapBaseUrl)}</loc><lastmod>${new Date(group.lastModified).toISOString()}</lastmod></url>`).join("")}</urlset>\n`;
   await writeFileEnsured(resolve(clientOutput, "sitemaps", `${group.name}.xml`), xml);
 }
-const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapGroups.map(({ name, lastModified }) => `<sitemap><loc>${baseUrl}/sitemaps/${name}.xml</loc><lastmod>${new Date(lastModified).toISOString()}</lastmod></sitemap>`).join("")}</sitemapindex>\n`;
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapGroups.map(({ name, lastModified }) => `<sitemap><loc>${sitemapBaseUrl}/sitemaps/${name}.xml</loc><lastmod>${new Date(lastModified).toISOString()}</lastmod></sitemap>`).join("")}</sitemapindex>\n`;
 await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemapIndex);
-await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
+await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${sitemapBaseUrl}/sitemap.xml\nHost: ${sitemapBaseUrl}\n`);
 const notFoundLocale = buildLocaleCodes.includes("en") ? "en" : buildLocaleCodes[0];
 await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ locale: notFoundLocale, title: notFoundLocale === "zh" ? "页面不存在" : "Page not found", description: notFoundLocale === "zh" ? "请求的页面不存在。" : "The requested page does not exist.", canonical: "/404.html", robots: "noindex,follow", body: shell(notFoundLocale, "football", `<div class="not-found"><div><strong>404</strong><h1>${notFoundLocale === "zh" ? "页面不存在" : "Page not found"}</h1><a href="${homeRoute(notFoundLocale)}">Event Analysis</a></div></div>`) }));
 
