@@ -2,7 +2,7 @@
   "id": "match_analysis_event_1fa9a50fd27ce823bb3f_zh",
   "type": "match_analysis",
   "sport": "football",
-  "primaryIntentKey": "post_match_analysis",
+  "primaryIntentKey": "match-analysis-event-1fa9a50fd27ce823bb3f",
   "angleKey": "continuity_and_decisive_moments",
   "originalContribution": "把赛前交锋差距、首发连续性差异与两个进球节点放在同一框架内，解释西班牙如何将既有优势转化为一场零封胜利，同时明确阵容连续性只能作为分析线索，不能单独视为胜因。",
   "readerQuestion": "西班牙为何能够以2比0击败法国，赛前交锋优势、首发连续性和关键进球分别说明了什么？",
@@ -190,7 +190,7 @@
           "title": "如何理解这场2比0",
           "paragraphs": [
             {
-              "text": "这场比赛呈现出三层相互衔接的信息：西班牙拥有显著的赛前交锋优势，首发阵容也更连续，并且在第22分钟和第58分钟把优势转化为进球。最稳妥的结论是，连续性与历史记录构成背景，两个关键进球才是比分演变中可明确识别的转折。",
+            "text": "这场比赛呈现出三层相互衔接的信息：西班牙拥有显著的赛前交锋优势，首发阵容也更连续，并在第22分钟和第58分钟取得进球。最稳妥的结论是，连续性与历史记录构成背景，两个关键进球才是比分演变中可明确识别的转折。",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",

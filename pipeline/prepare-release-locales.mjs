@@ -8,8 +8,9 @@ import { runCommand } from "./lib/command-runner.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const contentFilter = process.argv.find((value) => value.startsWith("--content="))?.slice("--content=".length);
+const localeFilter = process.argv.find((value) => value.startsWith("--locales="))?.slice("--locales=".length).split(",").map((value) => value.trim()).filter(Boolean);
 const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8")).map(({ code }) => code);
-const targetLocales = locales.filter((code) => code !== "zh");
+const targetLocales = (localeFilter?.length ? localeFilter : locales).filter((code) => code !== "zh");
 const TRANSLATION_BATCH_SIZE = 1;
 
 function chunk(values = [], size = 1) {
@@ -42,7 +43,7 @@ for (const candidate of candidates) {
       });
     }
   }
-  await runCommand(["npm", "run", "publish:automatic", "--", `--content=${candidate.id}`], { cwd: root, timeoutMs: 1_800_000 });
+  await runCommand(["npm", "run", "publish:automatic", "--", `--content=${candidate.id}`, `--locales=zh,${targetLocales.join(",")}`], { cwd: root, timeoutMs: 1_800_000 });
   const found = await findContentItemFile(root, candidate.id);
   if (!found) throw new Error(`Content item disappeared during release preparation: ${candidate.id}`);
   const item = found.item;

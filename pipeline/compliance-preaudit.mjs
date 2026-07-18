@@ -2,7 +2,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { loadPipelineConfig } from "./lib/config.mjs";
-import { legalPackHash, policyHash, riskClassForItem, validateAgentPreAudit } from "./lib/compliance.mjs";
+import { legalPackHash, legalValidationDisabled, policyHash, riskClassForItem, validateAgentPreAudit } from "./lib/compliance.mjs";
 import { agentReportPath, findContentItemFile, loadCompliancePolicy, loadLegalRegistry, writePrivateJson } from "./lib/compliance-store.mjs";
 import { loadContentData } from "./lib/data-store.mjs";
 import { withEphemeralJob } from "./lib/job-lifecycle.mjs";
@@ -29,14 +29,21 @@ if (!config.ai.complianceReviewer?.command?.length) throw new Error("Compliance 
 const facts = new Map(data.facts.map((fact) => [fact.id, fact]));
 const relevantFactIds = new Set((item.claims || []).flatMap((claim) => claim.factRefs || []));
 const editorialOneClickMode = requestedLocales?.length === 1 && requestedLocales[0] === "zh";
+const bypassLegalValidation = legalValidationDisabled(policy);
 const targetCountries = editorialOneClickMode
   ? []
+  : bypassLegalValidation
+    ? []
   : [...new Set((requestedLocales?.length ? requestedLocales : Object.keys(policy.localeMarkets || {})).flatMap((locale) => policy.localeMarkets?.[locale] || []))];
 const applicableCountries = editorialOneClickMode
   ? []
+  : bypassLegalValidation
+    ? []
   : [...new Set([...targetCountries, ...(item.nexusJurisdictions || []), ...(legalRegistry.operatorJurisdictions || [])])];
 const applicablePacks = editorialOneClickMode
   ? []
+  : bypassLegalValidation
+    ? []
   : applicableCountries.map((country) => legalRegistry.packs.find(({ jurisdiction }) => jurisdiction === country)).filter(Boolean);
 
 await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitBytes: config.policy.jobDiskLimitBytes }, async (job) => {
@@ -61,6 +68,8 @@ await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitByte
       "Use overall PASS only when the facts, claims, language and translations are safe. A target-market jurisdiction may still be BLOCK while other countries pass.",
       editorialOneClickMode
         ? "This review run is for Chinese one-click editorial flow only. Ignore legal-pack completeness, jurisdiction coverage, and counsel-material collection."
+        : bypassLegalValidation
+          ? "This review run ignores legal-pack completeness and jurisdiction coverage. Review only factual support, civility and translation fidelity."
         : "Use overall BLOCK when any content-nexus jurisdiction is missing or blocked; a nexus failure cannot be limited to one market.",
       "Use REVIEW for a high-risk but not prohibited topic that requires an editor or counsel.",
       "Use BLOCK for uncertainty, guessing, insult, national or ethnic attack, health speculation, unsupported allegation, translation drift, missing legal coverage or missing evidence.",
@@ -69,7 +78,7 @@ await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitByte
     ],
     policy,
     legalPacks: applicablePacks,
-    missingLegalPacks: editorialOneClickMode ? [] : applicableCountries.filter((country) => !applicablePacks.some((pack) => pack.jurisdiction === country)),
+    missingLegalPacks: editorialOneClickMode || bypassLegalValidation ? [] : applicableCountries.filter((country) => !applicablePacks.some((pack) => pack.jurisdiction === country)),
     facts: [...relevantFactIds].map((id) => facts.get(id)).filter(Boolean),
     claims: item.claims,
     sourceEdition: item.editions.zh,
@@ -78,7 +87,7 @@ await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitByte
   await writeFile(promptPath, `${JSON.stringify(prompt, null, 2)}\n`, { mode: 0o600 });
   await runCommand(config.ai.complianceReviewer.command, { cwd: root, timeoutMs: config.ai.complianceReviewer.timeoutMs, env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath } });
   const report = JSON.parse(await readFile(outputPath, "utf8"));
-  if (editorialOneClickMode) {
+  if (editorialOneClickMode || bypassLegalValidation) {
     report.jurisdictionDecisions = [];
     report.legalPackHashes = [];
   }
@@ -87,7 +96,7 @@ await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitByte
     item,
     policy,
     legalPacks: applicablePacks,
-    expectedJurisdictions: editorialOneClickMode ? [] : applicableCountries,
+    expectedJurisdictions: editorialOneClickMode || bypassLegalValidation ? [] : applicableCountries,
   });
   if (!validation.ok) throw new Error(`AgentPreAudit is invalid: ${validation.findings.join(", ")}`);
   await writePrivateJson(agentReportPath(root, item), report);

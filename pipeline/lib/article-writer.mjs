@@ -84,7 +84,7 @@ export function normalizeReviewDraft(item) {
 }
 
 function assertDraftShape(item, structured) {
-  if (!item.id || !item.type || !item.sport || !item.primaryIntentKey || !item.angleKey || !item.originalContribution) throw new Error("Structured draft identity fields are incomplete");
+  if (!item.id || !item.type || !item.sport || !item.angleKey || !item.originalContribution) throw new Error("Structured draft identity fields are incomplete");
   if (!Array.isArray(item.claims) || !item.claims.length) throw new Error("Structured draft requires evidence-backed claims");
   if (!item.editions?.zh) throw new Error("Structured draft has no Chinese source edition");
   if (Object.keys(item.editions).some((locale) => locale !== "zh")) throw new Error("The writer may only create the Chinese source edition");
@@ -97,6 +97,11 @@ function assertDraftShape(item, structured) {
     if (normalizeSlug(edition.slug) !== edition.slug) throw new Error(`Edition ${locale} slug is not canonical`);
     edition.status = "needs_review";
     edition.complianceStatus = "unreviewed";
+  }
+  if (!item.primaryIntentKey || item.primaryIntentKey === "post_match_analysis") {
+    const eventScope = [...new Set(structured.references.eventRefs || item.eventRefs || [])].sort();
+    if (!eventScope.length) throw new Error("Structured draft has no event scope for primary intent");
+    item.primaryIntentKey = normalizeSlug([item.type, ...eventScope].join("-"));
   }
   prepareChineseMaster(item);
   const publicCopy = JSON.stringify(item.editions);

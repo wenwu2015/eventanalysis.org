@@ -2,7 +2,7 @@
   "id": "match-12812996-analysis-zh",
   "type": "match_analysis",
   "sport": "football",
-  "primaryIntentKey": "post_match_analysis",
+  "primaryIntentKey": "match-analysis-event-673c35b096169f32bc92",
   "angleKey": "late_pressure_and_lineup_continuity",
   "originalContribution": "以首发延续率差异为背景，结合55分钟后关键事件的连续性，解释阿根廷如何在落后一球的情况下于比赛末段完成逆转，同时明确区分已确认事实、数值计算与比赛解读。",
   "readerQuestion": "阿根廷为何能在第85分钟仍落后的情况下，最终以2比1逆转英格兰？",

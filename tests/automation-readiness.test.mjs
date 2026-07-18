@@ -30,3 +30,15 @@ test("publication mode keeps legal blockers fatal", () => {
   assert.equal(result.status, "BLOCK");
   assert.ok(result.failures.includes("publishing_entity_jurisdiction_unconfirmed"));
 });
+
+test("publication mode ignores legal blockers when policy disables legal validation", () => {
+  const registry = { operatorJurisdictions: ["ZZ"], packs: [] };
+  const result = summarizeAutomationReadiness({
+    config,
+    policy: { ...policy, disableLegalPackValidation: true },
+    registry,
+    requirePublication: true,
+  });
+  assert.equal(result.status, "PASS");
+  assert.equal(result.publicationStatus, "PASS");
+});

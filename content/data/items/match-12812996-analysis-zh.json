@@ -2,7 +2,7 @@
   "id": "match-12812996-analysis-zh",
   "type": "match_analysis",
   "sport": "football",
-  "primaryIntentKey": "post_match_analysis",
+  "primaryIntentKey": "match-analysis-event-673c35b096169f32bc92",
   "angleKey": "late_pressure_and_lineup_continuity",
   "originalContribution": "以首发延续率差异为背景，结合55分钟后关键事件的连续性，解释阿根廷如何在落后一球的情况下于比赛末段完成逆转，同时明确区分已确认事实、数值计算与比赛解读。",
   "readerQuestion": "阿根廷为何能在第85分钟仍落后的情况下，最终以2比1逆转英格兰？",
@@ -211,13 +211,14 @@
           ]
         }
       ],
-      "status": "approved",
+      "status": "published",
       "complianceStatus": "passed",
-      "complianceValidUntil": "2026-07-19T06:58:15.466Z",
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
       "allowedJurisdictions": [
-        "LOCAL_PREVIEW"
+        "CN"
       ],
-      "reviewer": "Event Analysis Verification Desk"
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
     },
     "zh-hant": {
       "slug": "england-argentina-1-2-late-comeback-2026-zh-hant",
@@ -347,8 +348,8 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
       "derivedFromHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
@@ -383,7 +384,15 @@
           "sourceParagraphId": "paragraph_historical_context_1",
           "targetParagraphId": "paragraph_historical_context_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
+      "allowedJurisdictions": [
+        "TW",
+        "HK",
+        "MO"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
     },
     "en": {
       "slug": "england-argentina-1-2-late-comeback-2026-en",
@@ -513,8 +522,8 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
       "derivedFromHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
@@ -549,7 +558,14 @@
           "sourceParagraphId": "paragraph_historical_context_1",
           "targetParagraphId": "paragraph_historical_context_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
+      "allowedJurisdictions": [
+        "US",
+        "GB"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
     },
     "ja": {
       "slug": "england-argentina-1-2-gekiteki-gyakuten-2026-ja",
@@ -679,8 +695,8 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
       "derivedFromHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
@@ -715,7 +731,13 @@
           "sourceParagraphId": "paragraph_historical_context_1",
           "targetParagraphId": "paragraph_historical_context_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
+      "allowedJurisdictions": [
+        "JP"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
     },
     "es": {
       "slug": "inglaterra-argentina-1-2-remontada-tardia-2026-es",
@@ -845,8 +867,8 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
       "derivedFromHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
@@ -881,7 +903,187 @@
           "sourceParagraphId": "paragraph_historical_context_1",
           "targetParagraphId": "paragraph_historical_context_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
+      "allowedJurisdictions": [
+        "ES"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
+    },
+    "ar": {
+      "slug": "إنجلترا-الأرجنتين-1-2-عودة-متأخرة-2026",
+      "title": "الأرجنتين تقلب تأخرها إلى فوز 2-1 على إنجلترا: كيف غيّر الضغط المتواصل المرحلة الأخيرة",
+      "deck": "تقدمت إنجلترا في الدقيقة 55، لكن الأرجنتين تعادلت في الدقيقة 85 وأكملت العودة في الدقيقة 90+2؛ وشكّل ارتفاع معدل استمرارية التشكيلة الأساسية وتتابع الأحداث الهجومية بعد التأخر أبرز خيوط هذه المباراة.",
+      "competition": "الأدوار الإقصائية لكأس العالم لكرة القدم",
+      "venue": "غير متوفر",
+      "homeName": "إنجلترا",
+      "awayName": "الأرجنتين",
+      "resultLabel": "إنجلترا 1-2 الأرجنتين",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "الدقائق السبع الأخيرة التي حسمت المباراة",
+          "paragraphs": [
+            {
+              "text": "تقدمت إنجلترا عبر أنطوني غوردون في الدقيقة 55، لكن الأفضلية لم تستمر حتى النهاية. وأدرك إنزو فرنانديز التعادل 1-1 في الدقيقة 85، ثم سجل لاوتارو مارتينيز في الدقيقة 90+2، لتفوز الأرجنتين في النهاية 2-1.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "فصلت سبع دقائق لعب فقط بين الهدفين. وفي هذا السياق، تركز التحول الحاسم في المرحلة الأخيرة: أزالت الأرجنتين أولًا ضغط التأخر في النتيجة، ثم حوّلت هجومها المتواصل خلال الوقت بدل الضائع إلى هدف الفوز.",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "التعادل لم يكن حدثًا معزولًا",
+          "paragraphs": [
+            {
+              "text": "بعد تقدم إنجلترا، استمرت الأحداث الهجومية للأرجنتين: ركلة ركنية في الدقيقة 58، وتسديدة في الدقيقة 61، وتبديل في الدقيقة 64، وركلة ركنية في الدقيقة 68، ثم تسديدات في الدقائق 69 و75 و76 و84 و85. لذلك يُفهم هدف الدقيقة 85 بصورة أدق بوصفه نتيجة ضغط متواصل، لا فرصة منفردة ظهرت فجأة.",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "استبدلت إنجلترا مسجل الهدف غوردون بإزري كونسا في الدقيقة 72، ثم استبدلت ريس جيمس بدان بيرن في الدقيقة 82. ورغم تعزيز العناصر الدفاعية، استقبل الفريق هدفين متتاليين في الدقيقتين 85 و90+2، ولم تنجح التعديلات في وقف هجوم الأرجنتين.",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "الخلفية التي وفرتها استمرارية التشكيلة",
+          "paragraphs": [
+            {
+              "text": "مقارنة بالمباراة السابقة لكل فريق، احتفظت إنجلترا بـ8 من لاعبي التشكيلة الأساسية، بمعدل استمرارية بلغ 72.7%؛ بينما احتفظت الأرجنتين بـ10، بمعدل بلغ 90.9%. وكان معدل الأرجنتين أعلى بـ18.2 نقطة مئوية، كما أجرت تغييرات أقل بـ2 في التشكيلة الأساسية.",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "لا تثبت هذه الأرقام وحدها سبب العودة، لكنها توضح اختلاف خلفية الاستقرار التي دخل بها الفريقان المباراة. وبالاقتران مع تتابع الأحداث الهجومية للأرجنتين بعد تأخرها، يشكل ارتفاع استمرارية التشكيلة والفاعلية في المرحلة الأخيرة خيطين تفسيريين متكاملين.",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "المواجهات السابقة ونتيجة هذه المباراة",
+          "paragraphs": [
+            {
+              "text": "قبل هذه المباراة، حققت إنجلترا خلال 12 مواجهة بين الفريقين 5 انتصارات و1 تعادل و6 هزائم؛ وبلغت نسبة فوز إنجلترا 41.7%، ونسبة التعادل 8.3%، ونسبة فوز الأرجنتين 50%. وتشير هذه البيانات التاريخية إلى تقارب المواجهات إجمالًا قبل المباراة، بينما حُسمت نتيجة هذه المباراة بالأحداث المهمة التي وقعت بعد الدقيقة 85.",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "سجل أنطوني غوردون، لتتقدم إنجلترا 1-0.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "استبدلت الأرجنتين لياندرو باريديس بنيكو غونزاليس.",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "استبدلت إنجلترا ريس جيمس بدان بيرن.",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "سجل إنزو فرنانديز، لتتعادل الأرجنتين 1-1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "سجل لاوتارو مارتينيز، لتتقدم الأرجنتين 2-1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-19T12:42:58.311Z",
+      "allowedJurisdictions": [
+        "SA",
+        "AE",
+        "QA"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z"
     }
   },
   "schemaVersion": 3,
@@ -895,15 +1097,16 @@
   "sourceEditionHash": "ad0fd74ac6fe460b7e355ec80e0cf46ef857a56bd9c5920edfc1152573daa636",
   "riskClass": "A",
   "qualityReview": {
-    "reviewer": "compliance-agent:compliance-match-12812996-analysis-zh-r1-20260718",
+    "reviewer": "compliance-agent:compliance-review-match-12812996-analysis-zh-r1-20260718",
     "decision": "approved",
-    "reviewedAt": "2026-07-18T06:58:15.478Z"
+    "reviewedAt": "2026-07-18T12:42:58.320Z"
   },
   "complianceReview": {
-    "reviewRunId": "compliance-match-12812996-analysis-zh-r1-20260718",
-    "policyHash": "aff73b8e594baa36fdcf75df7f0780c72ce21d9214ca461ad9d0abee400f4e82",
-    "auditedAt": "2026-07-18T06:58:15.466Z",
-    "expiresAt": "2026-07-19T06:58:15.466Z"
+    "reviewRunId": "compliance-review-match-12812996-analysis-zh-r1-20260718",
+    "policyHash": "b6c337805b02c349b15e97d55c1b74c7e2ca85b505eb5fb3ab6e119e255e376e",
+    "auditedAt": "2026-07-18T12:42:58.311Z",
+    "expiresAt": "2026-07-19T12:42:58.311Z"
   },
-  "reviewedAt": "2026-07-18T06:58:15.478Z"
+  "reviewedAt": "2026-07-18T12:42:58.320Z",
+  "publishedAt": "2026-07-18T12:42:58.336Z"
 }

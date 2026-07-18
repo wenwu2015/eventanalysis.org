@@ -80,7 +80,7 @@ test("AWS publish directory contains framework-free static output", async () => 
   }
 });
 
-test("quarantined holding site exposes locale homes and legal pages only", async () => {
+test("published site exposes locale homes, legal pages and released match-analysis routes", async () => {
   const port = 43173;
   const server = await startServer(port);
   try {
@@ -91,6 +91,10 @@ test("quarantined holding site exposes locale homes and legal pages only", async
       "/ar/football/",
       "/en/football/legal/",
       "/zh/football/legal/",
+      "/en/football/all-content/",
+      "/en/football/search/",
+      "/en/football/match-analysis/",
+      "/en/football/match-analysis/england-argentina-1-2-late-comeback-2026-en/",
     ];
     for (const path of publicPaths) {
       const response = await fetch(`http://127.0.0.1:${port}${path}`);
@@ -100,7 +104,7 @@ test("quarantined holding site exposes locale homes and legal pages only", async
       assert.doesNotMatch(html, /sofascore|sportradar|genius sports|wyscout|statsbomb|transfermarkt|skillcorner/i, path);
       assert.doesNotMatch(html, /\b(?:AI|ChatGPT|OpenAI)\b|人工智能/i, path);
     }
-    for (const path of ["/en/", "/zh/", "/en/archive/", "/zh/archive/", "/en/methodology/", "/zh/methodology/", "/en/articles/spain-england-euro-2024-final/", "/en/football/all-content/", "/en/football/search/", "/en/football/match-analysis/spain-england-euro-2024-final/"]) {
+    for (const path of ["/en/", "/zh/", "/en/archive/", "/zh/archive/", "/en/methodology/", "/zh/methodology/", "/en/articles/spain-england-euro-2024-final/", "/en/football/match-analysis/spain-england-euro-2024-final/"]) {
       assert.equal((await fetch(`http://127.0.0.1:${port}${path}`, { redirect: "manual" })).status, 404, path);
     }
     for (const [acceptLanguage, expectedLocation] of [
@@ -134,14 +138,14 @@ test("quarantined holding site exposes locale homes and legal pages only", async
   }
 });
 
-test("holding sitemap contains only indexable homes and legal pages", async () => {
-  await assert.rejects(access(resolve(root, "dist/client/en/football/feed.xml")));
-  await assert.rejects(access(resolve(root, "dist/client/zh/football/search-index.json")));
+test("published sitemap includes homes, list pages and match-analysis detail sitemaps", async () => {
+  await access(resolve(root, "dist/client/en/football/feed.xml"));
+  await access(resolve(root, "dist/client/zh/football/search-index.json"));
   const sitemap = await readFile(resolve(root, "dist/client/sitemap.xml"), "utf8");
   assert.match(sitemap, /<sitemapindex/);
   assert.match(sitemap, /https:\/\/www\.eventanalysis\.org\/sitemaps\/en-football\.xml/);
+  assert.match(sitemap, /https:\/\/www\.eventanalysis\.org\/sitemaps\/en-football-match-analysis\.xml/);
   assert.doesNotMatch(sitemap, /https:\/\/eventanalysis\.org/);
-  assert.doesNotMatch(sitemap, /match-analysis/);
   assert.doesNotMatch(sitemap, /methodology|archive|\/search/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
   const pageUrls = [];
@@ -161,8 +165,12 @@ test("holding sitemap contains only indexable homes and legal pages", async () =
   const english = await readFile(resolve(root, "dist/client/sitemaps/en-football.xml"), "utf8");
   assert.match(english, /https:\/\/www\.eventanalysis\.org\/en\/football\/<\/loc>/);
   assert.match(english, /https:\/\/www\.eventanalysis\.org\/en\/football\/legal\/<\/loc>/);
+  assert.match(english, /https:\/\/www\.eventanalysis\.org\/en\/football\/all-content\/<\/loc>/);
   assert.doesNotMatch(english, /https:\/\/eventanalysis\.org/);
-  assert.doesNotMatch(english, /match-analysis|people|all-content/);
+  assert.doesNotMatch(english, /people|\/search\//);
+  const englishMatchAnalysis = await readFile(resolve(root, "dist/client/sitemaps/en-football-match-analysis.xml"), "utf8");
+  assert.match(englishMatchAnalysis, /https:\/\/www\.eventanalysis\.org\/en\/football\/match-analysis\/england-argentina-1-2-late-comeback-2026-en\/<\/loc>/);
+  assert.match(englishMatchAnalysis, /https:\/\/www\.eventanalysis\.org\/en\/football\/match-analysis\/france-0-2-spain-continuity-decisive-moments\/<\/loc>/);
   const robots = await readFile(resolve(root, "dist/client/robots.txt"), "utf8");
   assert.equal(robots, "User-agent: *\nAllow: /\nSitemap: https://www.eventanalysis.org/sitemap.xml\nHost: https://www.eventanalysis.org\n");
 });

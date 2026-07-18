@@ -209,6 +209,21 @@ test("one authorised official source can satisfy the core fact gate when policy 
   assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
 });
 
+test("deterministic audit can pass without legal packs when policy disables legal validation", () => {
+  const fixture = auditableFixture();
+  fixture.policy = { ...fixture.policy, disableLegalPackValidation: true };
+  fixture.legalRegistry = { operatorJurisdictions: ["ZZ"], packs: [] };
+  fixture.agentReport = {
+    ...fixture.agentReport,
+    policyHash: policyHash(fixture.policy),
+    legalPackHashes: [],
+    jurisdictionDecisions: [],
+  };
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
+});
+
 test("agent preaudit accepts operator-jurisdiction decisions when explicitly expected", () => {
   const fixture = auditableFixture();
   const report = {

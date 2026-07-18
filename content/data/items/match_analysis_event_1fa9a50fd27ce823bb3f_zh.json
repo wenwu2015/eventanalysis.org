@@ -2,7 +2,7 @@
   "id": "match_analysis_event_1fa9a50fd27ce823bb3f_zh",
   "type": "match_analysis",
   "sport": "football",
-  "primaryIntentKey": "post_match_analysis",
+  "primaryIntentKey": "match-analysis-event-1fa9a50fd27ce823bb3f",
   "angleKey": "continuity_and_decisive_moments",
   "originalContribution": "把赛前交锋差距、首发连续性差异与两个进球节点放在同一框架内，解释西班牙如何将既有优势转化为一场零封胜利，同时明确阵容连续性只能作为分析线索，不能单独视为胜因。",
   "readerQuestion": "西班牙为何能够以2比0击败法国，赛前交锋优势、首发连续性和关键进球分别说明了什么？",
@@ -190,7 +190,7 @@
           "title": "如何理解这场2比0",
           "paragraphs": [
             {
-              "text": "这场比赛呈现出三层相互衔接的信息：西班牙拥有显著的赛前交锋优势，首发阵容也更连续，并且在第22分钟和第58分钟把优势转化为进球。最稳妥的结论是，连续性与历史记录构成背景，两个关键进球才是比分演变中可明确识别的转折。",
+              "text": "这场比赛呈现出三层相互衔接的信息：西班牙拥有显著的赛前交锋优势，首发阵容也更连续，并在第22分钟和第58分钟取得进球。最稳妥的结论是，连续性与历史记录构成背景，两个关键进球才是比分演变中可明确识别的转折。",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",
@@ -255,27 +255,28 @@
           ]
         }
       ],
-      "status": "approved",
+      "status": "published",
       "complianceStatus": "passed",
-      "complianceValidUntil": "2026-07-18T14:50:13.582Z",
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
       "allowedJurisdictions": [
-        "LOCAL_PREVIEW"
+        "CN"
       ],
-      "reviewer": "Event Analysis Verification Desk"
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
     },
     "en": {
-      "slug": "france-0-2-spain-continuity-and-decisive-moments",
+      "slug": "france-0-2-spain-continuity-decisive-moments",
       "title": "France 0–2 Spain: Beyond the Continuity Gap, How Two Goals Defined the Outcome",
-      "deck": "Spain won through Oyarzabal’s penalty and Pedro Porro’s goal; the pre-match head-to-head record and starting-lineup continuity both pointed to a stable advantage, but the timing of when the lead was established and extended remained decisive.",
+      "deck": "Spain won through Oyarzabal’s penalty and Pedro Porro’s goal; the pre-match head-to-head record and starting-lineup continuity both pointed to a stable advantage, but the timing of establishing and extending the lead remained decisive.",
       "competition": "World Championship Knockout Stage",
       "venue": "",
       "homeName": "France",
       "awayName": "Spain",
-      "resultLabel": "Pending review | France 0–2 Spain",
+      "resultLabel": "Pending Review | France 0–2 Spain",
       "sections": [
         {
           "id": "result_and_question",
-          "title": "The Bottom Line",
+          "title": "The Conclusion First",
           "paragraphs": [
             {
               "text": "Spain defeated France 2–0 and kept a clean sheet. The real question is not the score itself, but how the clear pre-match gaps in the head-to-head record and starting-lineup continuity combined with the two decisive moments in the 22nd and 58th minutes to shape the match.",
@@ -289,10 +290,10 @@
         },
         {
           "id": "historical_context",
-          "title": "The Result Reflected the Pre-Match Advantage",
+          "title": "The Result Confirmed the Pre-Match Advantage",
           "paragraphs": [
             {
-              "text": "In the 7 meetings before this match, Spain recorded 6 wins and France only 1, with no draws; their corresponding win rates were 85.7% and 14.3%, a difference of 71.4 percentage points. This result was consistent with that historical trend, but the record can only describe the context and cannot independently explain the outcome of this match.",
+              "text": "In their 7 meetings before the match, Spain recorded 6 wins and France only 1, with no draws; their respective win rates were 85.7% and 14.3%, a difference of 71.4 percentage points. This result was consistent with that historical trend, but the record can only describe the context and cannot independently explain the outcome of this match.",
               "claimRefs": [
                 "claim_h2h_record",
                 "claim_h2h_rate",
@@ -307,7 +308,7 @@
           "title": "Starting-Lineup Continuity Is One Clue",
           "paragraphs": [
             {
-              "text": "The provided lineup comparison shows that Spain retained all 11 starters, achieving 100% continuity; France had no starters in common with its baseline match, producing 0% continuity. That represents a gap of 11 common starters and 100 percentage points of continuity between the teams, offering one clue for explaining Spain’s stable performance, but it does not establish that lineup continuity directly caused the 2–0 result.",
+              "text": "The provided lineup comparison shows that all 11 of Spain’s starters were retained, giving them 100% continuity; France had no starters in common with its reference match, giving it 0% continuity. This represents a gap of 11 shared starters and 100 percentage points of continuity between the teams, offering one clue to Spain’s stable performance, but it does not establish that lineup continuity directly caused the 2–0 result.",
               "claimRefs": [
                 "claim_lineup_continuity",
                 "claim_continuity_gap",
@@ -319,10 +320,10 @@
         },
         {
           "id": "decisive_moments",
-          "title": "Two Moments Made the Comeback More Difficult",
+          "title": "Two Moments Made the Comeback Harder",
           "paragraphs": [
             {
-              "text": "In the 22nd minute, Oyarzabal converted a penalty to break the deadlock for Spain; in the 58th minute, Pedro Porro extended the score to 2–0. The opening goal forced France to chase the game, while the second further reduced their room to adjust and mount a comeback. These two moments outline the course of the match more directly than broadly attributing it to history or lineup selection.",
+              "text": "In the 22nd minute, Oyarzabal converted a penalty to break the deadlock for Spain; in the 58th minute, Pedro Porro extended the score to 2–0. The first goal forced France to chase the game, while the second further reduced the space for their adjustments and response. These two moments outline the match more directly than broadly attributing the outcome to history or lineup selection.",
               "claimRefs": [
                 "claim_opening_goal",
                 "claim_second_goal",
@@ -334,10 +335,10 @@
         },
         {
           "id": "france_response",
-          "title": "France’s Changes Did Not Alter the Score",
+          "title": "France’s Adjustments Did Not Change the Score",
           "paragraphs": [
             {
-              "text": "France made substitutions in the 30th minute, at halftime, in the 57th minute and in the 72nd minute. Mbappé, Doué and Dembélé subsequently all recorded shooting events, but France still failed to score. The available event record confirms the changes and attacking attempts, but is insufficient to assess the quality of each chance.",
+              "text": "France made substitutions in the 30th minute, at halftime, and in the 57th and 72nd minutes. Mbappé, Doué and Dembélé subsequently all registered shooting events, but France still failed to score. The available event record confirms the adjustments and attacking attempts, but is insufficient to assess the quality of each opportunity.",
               "claimRefs": [
                 "claim_france_response",
                 "claim_final_result"
@@ -351,7 +352,7 @@
           "title": "How to Understand This 2–0 Result",
           "paragraphs": [
             {
-              "text": "The match presents three connected layers of information: Spain held a significant pre-match head-to-head advantage, had greater starting-lineup continuity, and converted those advantages into goals in the 22nd and 58th minutes. The most measured conclusion is that continuity and the historical record formed the backdrop, while the two key goals were the clearly identifiable turning points in how the score developed.",
+              "text": "The match presents three connected layers of information: Spain held a significant pre-match head-to-head advantage, had greater starting-lineup continuity, and scored in the 22nd and 58th minutes. The most measured conclusion is that continuity and the historical record formed the background, while the two key goals were the clearly identifiable turning points in the scoreline’s development.",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",
@@ -410,17 +411,17 @@
         },
         {
           "minute": "98'",
-          "label": "Full time: France lost 2–0 to Spain.",
+          "label": "Full time: France lost 0–2 to Spain.",
           "claimRefs": [
             "claim_final_result"
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
-      "derivedFromHash": "7acb525854ffbae51c4663c5c9d15675675a6fa0276c75093d0e80d8e707fb67",
+      "derivedFromHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
       "translationAgentVersion": "1",
       "translationStatus": "current",
       "paragraphMappings": [
@@ -448,12 +449,19 @@
           "sourceParagraphId": "paragraph_takeaway_1",
           "targetParagraphId": "paragraph_takeaway_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "allowedJurisdictions": [
+        "US",
+        "GB"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
     },
     "zh-hant": {
-      "slug": "法國-0比2-西班牙-連續性與決定性時刻",
+      "slug": "faguo-0-bi-2-xibanya-lianxuxing-jueeding-shike",
       "title": "法國0比2西班牙：連續性差異之外，兩個進球節點如何劃定勝負",
-      "deck": "西班牙憑藉奧亞薩瓦爾的點球和佩德羅·波羅的進球取勝；賽前交鋒與先發連續性均指向其穩定優勢，但關鍵仍是領先建立和擴大的時機。",
+      "deck": "西班牙憑藉奧亞薩瓦爾的點球和佩德羅·波羅的進球取勝；賽前交鋒與首發連續性均指向其穩定優勢，但關鍵仍是領先建立和擴大時機。",
       "competition": "世界錦標賽淘汰賽",
       "venue": "",
       "homeName": "法國",
@@ -465,7 +473,7 @@
           "title": "結論先行",
           "paragraphs": [
             {
-              "text": "西班牙以2比0擊敗法國並完成零封。真正值得追問的不是比分本身，而是賽前明顯的交鋒差距和先發連續性差異，如何與第22分鐘、第58分鐘兩個決定性節點共同塑造比賽。",
+              "text": "西班牙以2比0擊敗法國並完成零封。真正值得追問的不是比分本身，而是賽前明顯的交鋒差距和首發連續性差異，如何與第22分鐘、第58分鐘兩個決定性節點共同塑造比賽。",
               "claimRefs": [
                 "claim_final_result",
                 "claim_match_interpretation"
@@ -491,10 +499,10 @@
         },
         {
           "id": "continuity",
-          "title": "先發連續性是一條線索",
+          "title": "首發連續性是一條線索",
           "paragraphs": [
             {
-              "text": "所給陣容比較顯示，西班牙11名先發全部延續，連續性達到100%；法國與其基準場次沒有共同先發，連續性為0%。這意味著兩隊相差11名共同先發和100個百分點的連續性，可以為西班牙的穩定表現提供解釋線索，但不能據此斷言陣容延續直接造成了2比0。",
+              "text": "所給陣容比較顯示，西班牙11名首發全部延續，連續性達到100%；法國與其基準場次沒有共同首發，連續性為0%。這意味著兩隊相差11名共同首發和100個百分點的連續性，可以為西班牙的穩定表現提供解釋線索，但不能據此斷言陣容延續直接造成了2比0。",
               "claimRefs": [
                 "claim_lineup_continuity",
                 "claim_continuity_gap",
@@ -524,7 +532,7 @@
           "title": "法國調整未能改寫比分",
           "paragraphs": [
             {
-              "text": "法國先後在第30分鐘、半場休息、第57分鐘和第72分鐘換人。此後姆巴佩、杜埃和登貝萊均出現射門事件，但法國最終仍未取得進球。現有事件紀錄能夠確認調整和進攻嘗試，卻不足以進一步判斷每次機會的品質。",
+              "text": "法國先後在第30分鐘、半場休息、第57分鐘和第72分鐘換人。此後姆巴佩、杜埃和登貝萊均出現射門事件，但法國最終仍未取得進球。現有事件紀錄能夠確認調整和進攻嘗試，卻不足以進一步判斷每次機會的質量。",
               "claimRefs": [
                 "claim_france_response",
                 "claim_final_result"
@@ -538,7 +546,7 @@
           "title": "如何理解這場2比0",
           "paragraphs": [
             {
-              "text": "這場比賽呈現出三層相互銜接的資訊：西班牙擁有顯著的賽前交鋒優勢，先發陣容也更連續，並且在第22分鐘和第58分鐘把優勢轉化為進球。最穩妥的結論是，連續性與歷史紀錄構成背景，兩個關鍵進球才是比分演變中可明確識別的轉折。",
+              "text": "這場比賽呈現出三層相互銜接的信息：西班牙擁有顯著的賽前交鋒優勢，首發陣容也更連續，並在第22分鐘和第58分鐘取得進球。最穩妥的結論是，連續性與歷史紀錄構成背景，兩個關鍵進球才是比分演變中可明確識別的轉折。",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",
@@ -603,11 +611,11 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
-      "derivedFromHash": "7acb525854ffbae51c4663c5c9d15675675a6fa0276c75093d0e80d8e707fb67",
+      "derivedFromHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
       "translationAgentVersion": "1",
       "translationStatus": "current",
       "paragraphMappings": [
@@ -635,12 +643,20 @@
           "sourceParagraphId": "paragraph_takeaway_1",
           "targetParagraphId": "paragraph_takeaway_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "allowedJurisdictions": [
+        "TW",
+        "HK",
+        "MO"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
     },
     "ja": {
-      "slug": "france-0-2-spain-continuity-decisive-moments-ja",
-      "title": "フランス0対2スペイン：継続性の差を超えて、二つの得点場面はいかに勝敗を分けたか",
-      "deck": "スペインはオヤルサバルのPKとペドロ・ポロのゴールで勝利した。試合前の対戦成績と先発の継続性はいずれもスペインの安定した優位を示していたが、鍵となったのはリードを奪い、広げたタイミングだった。",
+      "slug": "france-0-2-spain-continuity-and-decisive-moments",
+      "title": "フランス0対2スペイン：継続性の差を越えて、二つの得点局面はいかに勝敗を分けたか",
+      "deck": "スペインはオヤルサバルのPKとペドロ・ポロの得点で勝利。試合前の対戦成績と先発の継続性はいずれもスペインの安定した優位を示していたが、決定的だったのはリードを奪い、広げたタイミングだった。",
       "competition": "世界選手権決勝トーナメント",
       "venue": "",
       "homeName": "フランス",
@@ -649,10 +665,10 @@
       "sections": [
         {
           "id": "result_and_question",
-          "title": "まず結論から",
+          "title": "先に結論",
           "paragraphs": [
             {
-              "text": "スペインはフランスを2対0で破り、無失点で試合を終えた。本当に問うべきなのはスコアそのものではなく、試合前から明確だった対戦成績と先発の継続性の差が、22分と58分の二つの決定的な場面とともに、どのように試合を形作ったかである。",
+              "text": "スペインはフランスを2対0で下し、無失点で試合を終えた。本当に問うべきなのはスコアそのものではなく、試合前から明白だった対戦成績の差と先発の継続性の違いが、第22分と第58分の二つの決定的な局面とともに、どのように試合を形作ったかである。",
               "claimRefs": [
                 "claim_final_result",
                 "claim_match_interpretation"
@@ -663,10 +679,10 @@
         },
         {
           "id": "historical_context",
-          "title": "試合前の優位が結果でも裏付けられた",
+          "title": "試合前の優位を結果が裏づける",
           "paragraphs": [
             {
-              "text": "試合前の7度の対戦で、スペインは6勝、フランスはわずか1勝で、引き分けはなかった。勝率はそれぞれ85.7%と14.3%で、差は71.4ポイントだった。今回の結果はこの歴史的傾向と一致するが、過去の記録は背景を示すにすぎず、この試合の勝敗を単独で説明するものではない。",
+              "text": "試合前の7回の対戦では、スペインが6勝、フランスはわずか1勝で、引き分けはなかった。勝率はそれぞれ85.7%と14.3%で、その差は71.4ポイントだった。今回の結果はこの歴史的傾向と一致するが、過去の記録は背景を示すだけで、この試合の勝敗を単独で説明するものではない。",
               "claimRefs": [
                 "claim_h2h_record",
                 "claim_h2h_rate",
@@ -678,10 +694,10 @@
         },
         {
           "id": "continuity",
-          "title": "先発の継続性は一つの手掛かり",
+          "title": "先発の継続性は一つの手がかり",
           "paragraphs": [
             {
-              "text": "提示されたメンバー比較によると、スペインは先発11人全員が継続し、継続性は100%に達した。一方、フランスは基準となる試合と共通する先発がなく、継続性は0%だった。つまり、両チームには共通する先発人数で11人、継続性で100ポイントの差があり、スペインの安定したパフォーマンスを説明する手掛かりにはなるが、メンバーの継続が2対0という結果を直接もたらしたと断定することはできない。",
+              "text": "提示されたメンバー比較では、スペインは先発11人全員が引き続き起用され、継続性は100%に達した。一方、フランスは基準となる試合と共通する先発がおらず、継続性は0%だった。これは両チームの共通先発数に11人、継続性に100ポイントの差があったことを意味し、スペインの安定したパフォーマンスを説明する手がかりにはなるが、メンバーの継続が2対0という結果を直接もたらしたと断定することはできない。",
               "claimRefs": [
                 "claim_lineup_continuity",
                 "claim_continuity_gap",
@@ -693,10 +709,10 @@
         },
         {
           "id": "decisive_moments",
-          "title": "二つの場面が追いつく難度を変えた",
+          "title": "二つの局面が追いつく難度を変えた",
           "paragraphs": [
             {
-              "text": "22分、オヤルサバルがPKを決め、スペインが先に均衡を破った。58分にはペドロ・ポロがスコアを2対0に広げた。先制点によってフランスは追う展開を強いられ、二点目は修正と反撃の余地をさらに狭めた。この二つの時点は、歴史やメンバー構成に大まかに原因を求めるよりも、試合の流れを直接的に描き出している。",
+              "text": "第22分、オヤルサバルがPKを決め、スペインが先に均衡を破った。第58分には、ペドロ・ポロがスコアを2対0に広げた。先制点によってフランスは追う展開を強いられ、追加点はその修正と反撃の余地をさらに狭めた。この二つの時点は、歴史やメンバー構成に漠然と原因を求めるよりも、試合の流れを直接的に描き出している。",
               "claimRefs": [
                 "claim_opening_goal",
                 "claim_second_goal",
@@ -708,10 +724,10 @@
         },
         {
           "id": "france_response",
-          "title": "フランスの交代策もスコアを変えられず",
+          "title": "フランスの修正でもスコアは変わらず",
           "paragraphs": [
             {
-              "text": "フランスは30分、ハーフタイム、57分、72分に相次いで選手を交代した。その後、エムバペ、ドゥエ、デンベレにシュートの記録があったが、フランスは最後まで得点できなかった。現在のイベント記録から交代と攻撃の試みは確認できるものの、各機会の質まで判断するには不十分である。",
+              "text": "フランスは第30分、ハーフタイム、第57分、第72分に相次いで選手を交代した。その後、エムバペ、ドゥエ、デンベレにそれぞれシュートの記録があったが、フランスは最後まで得点できなかった。現時点のイベント記録から交代と攻撃の試みは確認できるものの、各機会の質まで判断するには不十分である。",
               "claimRefs": [
                 "claim_france_response",
                 "claim_final_result"
@@ -722,10 +738,10 @@
         },
         {
           "id": "takeaway",
-          "title": "この2対0をどう捉えるか",
+          "title": "この2対0をどう理解するか",
           "paragraphs": [
             {
-              "text": "この試合には、互いにつながる三層の情報が表れている。スペインは試合前の対戦成績で明確な優位にあり、先発メンバーの継続性も高く、さらに22分と58分にその優位を得点へ結びつけた。最も妥当な結論は、継続性と過去の記録は背景を構成し、二つの重要なゴールこそがスコアの推移において明確に識別できる転換点だったということである。",
+              "text": "この試合からは、相互につながる三層の情報が読み取れる。スペインは試合前の対戦成績で明確に優位に立ち、先発メンバーの継続性も高く、第22分と第58分に得点した。最も堅実な結論は、継続性と過去の記録が背景を構成し、二つの重要な得点こそがスコアの推移において明確に特定できる転換点だったということである。",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",
@@ -741,7 +757,7 @@
       "timeline": [
         {
           "minute": "22'",
-          "label": "オヤルサバルがPKを決め、スペインが1対0とリード。",
+          "label": "オヤルサバルがPKを決め、スペインが1対0でリード。",
           "claimRefs": [
             "claim_opening_goal"
           ]
@@ -755,21 +771,21 @@
         },
         {
           "minute": "ハーフタイム",
-          "label": "フランスはラビオに代えてマヌ・コネを投入。",
+          "label": "フランスはマヌ・コネをラビオに代えて投入。",
           "claimRefs": [
             "claim_france_response"
           ]
         },
         {
           "minute": "57'",
-          "label": "フランスはバルコラに代えてドゥエを投入。",
+          "label": "フランスはドゥエをバルコラに代えて投入。",
           "claimRefs": [
             "claim_france_response"
           ]
         },
         {
           "minute": "58'",
-          "label": "ペドロ・ポロがゴールを決め、スペインがスコアを2対0に広げる。",
+          "label": "ペドロ・ポロが得点し、スペインがスコアを2対0に広げる。",
           "claimRefs": [
             "claim_second_goal",
             "claim_game_state"
@@ -777,7 +793,7 @@
         },
         {
           "minute": "72'",
-          "label": "フランスはオリーズに代えてシェルキを投入。",
+          "label": "フランスはシェルキをオリーズに代えて投入。",
           "claimRefs": [
             "claim_france_response"
           ]
@@ -790,11 +806,11 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
-      "derivedFromHash": "7acb525854ffbae51c4663c5c9d15675675a6fa0276c75093d0e80d8e707fb67",
+      "derivedFromHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
       "translationAgentVersion": "1",
       "translationStatus": "current",
       "paragraphMappings": [
@@ -822,13 +838,19 @@
           "sourceParagraphId": "paragraph_takeaway_1",
           "targetParagraphId": "paragraph_takeaway_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "allowedJurisdictions": [
+        "JP"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
     },
     "es": {
       "slug": "francia-0-2-espana-continuidad-momentos-decisivos",
-      "title": "Francia 0-2 España: más allá de la diferencia de continuidad, cómo dos goles definieron el desenlace",
-      "deck": "España ganó gracias al penalti de Oyarzabal y al gol de Pedro Porro; tanto los enfrentamientos previos como la continuidad del once titular apuntaban a una ventaja estable, pero lo decisivo fue cuándo estableció y amplió su ventaja.",
-      "competition": "Eliminatoria del Campeonato Mundial",
+      "title": "Francia 0-2 España: más allá de la diferencia de continuidad, cómo dos goles definieron el resultado",
+      "deck": "España ganó gracias al penalti de Oyarzabal y al gol de Pedro Porro; tanto los enfrentamientos previos como la continuidad del once inicial apuntaban a una ventaja estable, pero lo decisivo fueron los momentos en que estableció y amplió su ventaja.",
+      "competition": "Eliminatorias del Campeonato Mundial",
       "venue": "",
       "homeName": "Francia",
       "awayName": "España",
@@ -839,7 +861,7 @@
           "title": "La conclusión, primero",
           "paragraphs": [
             {
-              "text": "España derrotó a Francia por 2-0 y mantuvo su portería a cero. La verdadera cuestión no es el marcador en sí, sino cómo la clara diferencia en los enfrentamientos previos y en la continuidad del once titular se combinó con dos momentos decisivos, en los minutos 22 y 58, para definir el partido.",
+              "text": "España derrotó a Francia por 2-0 y mantuvo su portería a cero. La verdadera cuestión no es el marcador en sí, sino cómo la clara diferencia en los enfrentamientos previos y en la continuidad de los onces iniciales se combinó con dos momentos decisivos, en los minutos 22 y 58, para dar forma al partido.",
               "claimRefs": [
                 "claim_final_result",
                 "claim_match_interpretation"
@@ -853,7 +875,7 @@
           "title": "El resultado confirmó la ventaja previa",
           "paragraphs": [
             {
-              "text": "En los 7 enfrentamientos anteriores al partido, España logró 6 victorias y Francia solo 1, sin empates; sus porcentajes de victoria eran, respectivamente, del 85.7% y del 14.3%, una diferencia de 71.4 puntos porcentuales. El resultado de este encuentro coincidió con esa tendencia histórica, pero el historial solo describe el contexto y no puede explicar por sí solo el desenlace del partido.",
+              "text": "En los 7 enfrentamientos anteriores al partido, España logró 6 victorias y Francia solo 1, sin empates; sus porcentajes de victorias fueron, respectivamente, del 85.7% y el 14.3%, una diferencia de 71.4 puntos porcentuales. El resultado de este encuentro coincide con esa tendencia histórica, pero el historial solo describe el contexto y no puede explicar por sí solo el desenlace del partido.",
               "claimRefs": [
                 "claim_h2h_record",
                 "claim_h2h_rate",
@@ -865,10 +887,10 @@
         },
         {
           "id": "continuity",
-          "title": "La continuidad del once titular es una pista",
+          "title": "La continuidad del once inicial es una pista",
           "paragraphs": [
             {
-              "text": "La comparación de alineaciones proporcionada muestra que España mantuvo a sus 11 titulares, con una continuidad del 100%; Francia no tuvo ningún titular en común con su partido de referencia, por lo que su continuidad fue del 0%. Esto supone una diferencia de 11 titulares compartidos y de 100 puntos porcentuales de continuidad entre ambos equipos, lo que puede aportar una pista para explicar la estabilidad mostrada por España, pero no permite afirmar que la continuidad de la alineación causara directamente el 2-0.",
+              "text": "La comparación de alineaciones proporcionada muestra que España mantuvo a sus 11 titulares, con una continuidad del 100%; Francia no tuvo ningún titular en común con su partido de referencia, por lo que su continuidad fue del 0%. Esto supone una diferencia de 11 titulares repetidos y de 100 puntos porcentuales de continuidad entre ambos equipos, lo que puede ofrecer una pista para explicar la estabilidad de España, pero no permite afirmar que la continuidad de la alineación causara directamente el 2-0.",
               "claimRefs": [
                 "claim_lineup_continuity",
                 "claim_continuity_gap",
@@ -880,10 +902,10 @@
         },
         {
           "id": "decisive_moments",
-          "title": "Dos momentos cambiaron la dificultad de la remontada",
+          "title": "Dos momentos elevaron la dificultad de la remontada",
           "paragraphs": [
             {
-              "text": "En el minuto 22, Oyarzabal convirtió un penalti y España rompió primero el equilibrio; en el minuto 58, Pedro Porro amplió el marcador a 2-0. El primer gol obligó a Francia a buscar la remontada, mientras que el segundo redujo aún más su margen para ajustar y reaccionar. Estos dos momentos describen el desarrollo del partido de forma más directa que una atribución general al historial o a las alineaciones.",
+              "text": "En el minuto 22, Oyarzabal convirtió un penalti y España rompió primero el equilibrio; en el minuto 58, Pedro Porro amplió el marcador a 2-0. El primer gol obligó a Francia a buscar la remontada, mientras que el segundo redujo aún más su margen para ajustar y reaccionar; estos dos momentos trazan el desarrollo del partido de manera más directa que una atribución general al historial o a las alineaciones.",
               "claimRefs": [
                 "claim_opening_goal",
                 "claim_second_goal",
@@ -895,10 +917,10 @@
         },
         {
           "id": "france_response",
-          "title": "Los cambios de Francia no alteraron el marcador",
+          "title": "Los ajustes de Francia no cambiaron el marcador",
           "paragraphs": [
             {
-              "text": "Francia realizó cambios sucesivamente en el minuto 30, durante el descanso, y en los minutos 57 y 72. Después, Mbappé, Doué y Dembélé protagonizaron acciones de disparo, pero Francia terminó sin marcar. El registro de acontecimientos disponible permite confirmar los ajustes y los intentos ofensivos, pero no basta para evaluar la calidad de cada ocasión.",
+              "text": "Francia realizó sustituciones en el minuto 30, durante el descanso, en el minuto 57 y en el minuto 72. Después, Mbappé, Doué y Dembélé protagonizaron acciones de disparo, pero Francia siguió sin marcar. El registro disponible de los acontecimientos permite confirmar los ajustes y los intentos ofensivos, pero no basta para valorar con mayor detalle la calidad de cada ocasión.",
               "claimRefs": [
                 "claim_france_response",
                 "claim_final_result"
@@ -912,7 +934,7 @@
           "title": "Cómo interpretar este 2-0",
           "paragraphs": [
             {
-              "text": "Este partido presenta tres niveles de información relacionados entre sí: España contaba con una ventaja significativa en los enfrentamientos previos, también tenía mayor continuidad en el once titular y convirtió esa ventaja en goles en los minutos 22 y 58. La conclusión más prudente es que la continuidad y el historial constituyeron el contexto, mientras que los dos goles clave fueron los puntos de inflexión claramente identificables en la evolución del marcador.",
+              "text": "Este partido presenta tres niveles de información relacionados entre sí: España contaba con una ventaja clara en los enfrentamientos previos, también tenía mayor continuidad en el once inicial y marcó en los minutos 22 y 58. La conclusión más prudente es que la continuidad y el historial constituyeron el contexto, mientras que los dos goles clave fueron los puntos de inflexión claramente identificables en la evolución del marcador.",
               "claimRefs": [
                 "claim_h2h_rate",
                 "claim_continuity_gap",
@@ -928,14 +950,14 @@
       "timeline": [
         {
           "minute": "22'",
-          "label": "Oyarzabal convirtió un penalti y adelantó a España por 1-0.",
+          "label": "Oyarzabal convirtió un penalti y puso a España 1-0 por delante.",
           "claimRefs": [
             "claim_opening_goal"
           ]
         },
         {
           "minute": "30'",
-          "label": "Primer cambio de Francia: Lacroix sustituyó a Saliba.",
+          "label": "Francia realizó su primera sustitución: Lacroix reemplazó a Saliba.",
           "claimRefs": [
             "claim_france_response"
           ]
@@ -977,12 +999,12 @@
           ]
         }
       ],
-      "status": "needs_review",
-      "complianceStatus": "unreviewed",
+      "status": "published",
+      "complianceStatus": "passed",
       "derivedFromLocale": "zh",
       "derivedFromRevision": 1,
-      "derivedFromHash": "7acb525854ffbae51c4663c5c9d15675675a6fa0276c75093d0e80d8e707fb67",
-      "translationAgentVersion": "eventanalysis-translator-1",
+      "derivedFromHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
+      "translationAgentVersion": "1.0",
       "translationStatus": "current",
       "paragraphMappings": [
         {
@@ -1009,7 +1031,208 @@
           "sourceParagraphId": "paragraph_takeaway_1",
           "targetParagraphId": "paragraph_takeaway_1"
         }
-      ]
+      ],
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "allowedJurisdictions": [
+        "ES"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
+    },
+    "ar": {
+      "slug": "فرنسا-0-2-إسبانيا-الاستمرارية-واللحظات-الحاسمة",
+      "title": "فرنسا 0 مقابل 2 إسبانيا: كيف حدد هدفان النتيجة بعيدًا عن فارق الاستمرارية",
+      "deck": "فازت إسبانيا بفضل ركلة جزاء أويارزابال وهدف بيدرو بورو؛ وكانت المواجهات السابقة واستمرارية التشكيلة الأساسية تشيران إلى تفوقها المستقر، لكن العامل الحاسم ظل توقيت التقدم وتعزيزه.",
+      "competition": "الأدوار الإقصائية لبطولة العالم",
+      "venue": "",
+      "homeName": "فرنسا",
+      "awayName": "إسبانيا",
+      "resultLabel": "بانتظار المراجعة｜فرنسا 0 مقابل 2 إسبانيا",
+      "sections": [
+        {
+          "id": "result_and_question",
+          "title": "الخلاصة أولًا",
+          "paragraphs": [
+            {
+              "text": "هزمت إسبانيا فرنسا بنتيجة 2 مقابل 0 وحافظت على نظافة شباكها. والسؤال الجدير بالطرح ليس النتيجة نفسها، بل كيف أسهم الفارق الواضح قبل المباراة في سجل المواجهات واستمرارية التشكيلة الأساسية، إلى جانب المحطتين الحاسمتين في الدقيقتين 22 و58، في تشكيل المباراة.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_match_interpretation"
+              ],
+              "id": "paragraph_result_and_question_1"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "النتيجة تؤكد أفضلية ما قبل المباراة",
+          "paragraphs": [
+            {
+              "text": "في 7 مواجهات قبل المباراة، حققت إسبانيا 6 انتصارات مقابل انتصار 1 فقط لفرنسا، من دون أي تعادل؛ وبلغت نسبتا الفوز 85.7% و14.3% على الترتيب، بفارق 71.4 نقطة مئوية. تتسق نتيجة هذه المباراة مع ذلك الاتجاه التاريخي، لكن السجل السابق لا يصف سوى الخلفية ولا يمكنه تفسير نتيجة المباراة بمفرده.",
+              "claimRefs": [
+                "claim_h2h_record",
+                "claim_h2h_rate",
+                "claim_match_interpretation"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        },
+        {
+          "id": "continuity",
+          "title": "استمرارية التشكيلة الأساسية مؤشر تفسيري",
+          "paragraphs": [
+            {
+              "text": "تُظهر مقارنة التشكيلتين المقدمة أن جميع لاعبي إسبانيا الأساسيين الـ11 استمروا، لتبلغ الاستمرارية 100%؛ بينما لم تضم تشكيلة فرنسا أي لاعب أساسي مشترك مع مباراتها المرجعية، فبلغت الاستمرارية 0%. وهذا يعني وجود فارق قدره 11 لاعبًا أساسيًا مشتركًا و100 نقطة مئوية في الاستمرارية بين المنتخبين، ما قد يوفر مؤشرًا لتفسير استقرار أداء إسبانيا، لكنه لا يبرر الجزم بأن استمرار التشكيلة تسبب مباشرة في نتيجة 2 مقابل 0.",
+              "claimRefs": [
+                "claim_lineup_continuity",
+                "claim_continuity_gap",
+                "claim_match_interpretation"
+              ],
+              "id": "paragraph_continuity_1"
+            }
+          ]
+        },
+        {
+          "id": "decisive_moments",
+          "title": "محطتان زادتا صعوبة العودة",
+          "paragraphs": [
+            {
+              "text": "في الدقيقة 22، سجل أويارزابال ركلة جزاء ومنح إسبانيا التقدم؛ وفي الدقيقة 58، رفع بيدرو بورو النتيجة إلى 2 مقابل 0. أجبر الهدف الأول فرنسا على السعي للتعويض، بينما ضيّق الهدف الثاني مساحة التعديل والعودة أكثر، وهاتان اللحظتان ترسمان مجرى المباراة بصورة أكثر مباشرة من إرجاعه عمومًا إلى التاريخ أو التشكيلة.",
+              "claimRefs": [
+                "claim_opening_goal",
+                "claim_second_goal",
+                "claim_game_state"
+              ],
+              "id": "paragraph_decisive_moments_1"
+            }
+          ]
+        },
+        {
+          "id": "france_response",
+          "title": "تعديلات فرنسا لم تغيّر النتيجة",
+          "paragraphs": [
+            {
+              "text": "أجرت فرنسا تبديلات تباعًا في الدقيقة 30، وبين الشوطين، وفي الدقيقتين 57 و72. وبعد ذلك، شهدت المباراة محاولات تسديد من مبابي ودويه وديمبيلي، لكن فرنسا أنهت اللقاء من دون تسجيل. تؤكد سجلات الأحداث المتاحة حصول التعديلات والمحاولات الهجومية، لكنها لا تكفي للحكم بصورة أعمق على جودة كل فرصة.",
+              "claimRefs": [
+                "claim_france_response",
+                "claim_final_result"
+              ],
+              "id": "paragraph_france_response_1"
+            }
+          ]
+        },
+        {
+          "id": "takeaway",
+          "title": "كيف نفهم نتيجة 2 مقابل 0",
+          "paragraphs": [
+            {
+              "text": "قدمت هذه المباراة ثلاث طبقات مترابطة من المعلومات: امتلكت إسبانيا أفضلية واضحة في المواجهات السابقة، وكانت تشكيلتها الأساسية أكثر استمرارية، وسجلت في الدقيقتين 22 و58. والخلاصة الأكثر تحفظًا هي أن الاستمرارية والسجل التاريخي شكّلا الخلفية، بينما كان الهدفان الحاسمان نقطتي التحول اللتين يمكن تحديدهما بوضوح في تطور النتيجة.",
+              "claimRefs": [
+                "claim_h2h_rate",
+                "claim_continuity_gap",
+                "claim_opening_goal",
+                "claim_second_goal",
+                "claim_match_interpretation"
+              ],
+              "id": "paragraph_takeaway_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "22'",
+          "label": "سجل أويارزابال ركلة جزاء، لتتقدم إسبانيا 1 مقابل 0.",
+          "claimRefs": [
+            "claim_opening_goal"
+          ]
+        },
+        {
+          "minute": "30'",
+          "label": "أجرت فرنسا تبديلها الأول، فدخل لاكروا بدلًا من ساليبا.",
+          "claimRefs": [
+            "claim_france_response"
+          ]
+        },
+        {
+          "minute": "بين الشوطين",
+          "label": "أشركت فرنسا مانو كوني بدلًا من رابيو.",
+          "claimRefs": [
+            "claim_france_response"
+          ]
+        },
+        {
+          "minute": "57'",
+          "label": "أشركت فرنسا دويه بدلًا من باركولا.",
+          "claimRefs": [
+            "claim_france_response"
+          ]
+        },
+        {
+          "minute": "58'",
+          "label": "سجل بيدرو بورو، لترفع إسبانيا النتيجة إلى 2 مقابل 0.",
+          "claimRefs": [
+            "claim_second_goal",
+            "claim_game_state"
+          ]
+        },
+        {
+          "minute": "72'",
+          "label": "أشركت فرنسا شرقي بدلًا من أوليسيه.",
+          "claimRefs": [
+            "claim_france_response"
+          ]
+        },
+        {
+          "minute": "98'",
+          "label": "نهاية المباراة، بخسارة فرنسا 0 مقابل 2 أمام إسبانيا.",
+          "claimRefs": [
+            "claim_final_result"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_result_and_question_1",
+          "targetParagraphId": "paragraph_result_and_question_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_1",
+          "targetParagraphId": "paragraph_continuity_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_moments_1",
+          "targetParagraphId": "paragraph_decisive_moments_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_france_response_1",
+          "targetParagraphId": "paragraph_france_response_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_takeaway_1",
+          "targetParagraphId": "paragraph_takeaway_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "allowedJurisdictions": [
+        "SA",
+        "AE",
+        "QA"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T13:49:17.330Z"
     }
   },
   "schemaVersion": 3,
@@ -1020,18 +1243,19 @@
   ],
   "sourceLocale": "zh",
   "sourceRevision": 1,
-  "sourceEditionHash": "7acb525854ffbae51c4663c5c9d15675675a6fa0276c75093d0e80d8e707fb67",
+  "sourceEditionHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
   "riskClass": "A",
-  "reviewedAt": "2026-07-17T14:50:13.591Z",
+  "reviewedAt": "2026-07-18T13:49:17.305Z",
   "qualityReview": {
-    "reviewer": "compliance-agent:compliance-review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260717",
+    "reviewer": "compliance-agent:review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260718",
     "decision": "approved",
-    "reviewedAt": "2026-07-17T14:50:13.591Z"
+    "reviewedAt": "2026-07-18T13:49:17.305Z"
   },
   "complianceReview": {
-    "reviewRunId": "compliance-review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260717",
-    "policyHash": "ccf031832eef492da88992cd3c9c0b5b11957e36b4a27975a9375eac053bc6c1",
-    "auditedAt": "2026-07-17T14:50:13.582Z",
-    "expiresAt": "2026-07-18T14:50:13.582Z"
-  }
+    "reviewRunId": "review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260718",
+    "policyHash": "b6c337805b02c349b15e97d55c1b74c7e2ca85b505eb5fb3ab6e119e255e376e",
+    "auditedAt": "2026-07-18T13:49:17.288Z",
+    "expiresAt": "2026-07-19T13:49:17.288Z"
+  },
+  "publishedAt": "2026-07-18T13:49:17.330Z"
 }

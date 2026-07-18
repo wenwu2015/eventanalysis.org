@@ -25,10 +25,10 @@ const PROHIBITED_PATTERNS = [
 
 const HIGH_RISK_HINTS = [
   { category: "health", pattern: /(?:伤病|受伤|康复|医疗|injury|injured|medical|health|blessure|lesión|Verletzung|infortunio|травм|부상|けが|إصاب|آسیب)/iu },
-  { category: "discipline", pattern: /(?:纪律处分|停赛|禁赛|disciplin|suspension|ban|sanción|suspensi|Sperre|squalifica|дисквалиф|징계|出場停止|إيقاف)/iu },
+  { category: "discipline", pattern: /(?:纪律处分|停赛|禁赛|\bdisciplin(?:e|ary)?\b|\bsuspension\b|\bban\b|sanción|suspensi|Sperre|squalifica|дисквалиф|징계|出場停止|إيقاف)/iu },
   { category: "transfer", pattern: /(?:转会|合同|transfer|contract|traspaso|contrat|Wechsel|Vertrag|trasferimento|contratto|трансфер|контракт|이적|계약|移籍|契約|انتقال|عقد)/iu },
   { category: "private_life", pattern: /(?:私生活|家庭纠纷|恋情|private life|family dispute|relationship|vie privée|vida privada|Privatleben|vita privata|личн(?:ая|ой) жизн|사생활|私生活|الحياة الخاصة)/iu },
-  { category: "politics", pattern: /(?:政治立场|政党|选举|politic|election|gouvernement|política|Regierung|politica|политик|정치|政治|سياس)/iu },
+  { category: "politics", pattern: /(?:政治立场|政党|选举|\bpolitic(?:s|al)?\b|\belections?\b|gouvernement|política|Regierung|politica|политик|정치|政治|سياس)/iu },
 ];
 
 function normalize(value) {
@@ -71,6 +71,10 @@ export function targetJurisdictions(policy, requestedLocales = null) {
     jurisdictions.push(...(countries || []));
   }
   return [...new Set(jurisdictions)].sort();
+}
+
+export function legalValidationDisabled(policy = null) {
+  return Boolean(policy?.disableLegalPackValidation);
 }
 
 export function paragraphId(sectionId, index) {
@@ -283,6 +287,7 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
   const findings = [];
   const localeScope = requestedLocales ? new Set(requestedLocales) : null;
   const targetCountries = targetJurisdictions(policy, requestedLocales);
+  const bypassLegalValidation = legalValidationDisabled(policy);
   const entityMap = new Map(data.entities.map((entity) => [entity.id, entity]));
   const factMap = new Map(data.facts.map((fact) => [fact.id, fact]));
   const evidenceMap = new Map(evidenceRecords.map((record) => [record.id, record]));
@@ -328,18 +333,20 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
   }
   const nexus = [...new Set([...(item.nexusJurisdictions || []), ...inferredNexus, ...(legalRegistry?.operatorJurisdictions || [])])];
   const nexusPacks = [];
-  for (const jurisdiction of nexus) {
-    const pack = packMap.get(jurisdiction);
-    const validation = validateLegalPack(pack, policy, now);
-    if (!validation.ok) findings.push({ code: "nexus_legal_pack_invalid", jurisdiction, reasons: validation.findings, severity: "BLOCK" });
-    else nexusPacks.push(pack);
+  if (!bypassLegalValidation) {
+    for (const jurisdiction of nexus) {
+      const pack = packMap.get(jurisdiction);
+      const validation = validateLegalPack(pack, policy, now);
+      if (!validation.ok) findings.push({ code: "nexus_legal_pack_invalid", jurisdiction, reasons: validation.findings, severity: "BLOCK" });
+      else nexusPacks.push(pack);
+    }
   }
-  const targetPacks = targetCountries.map((country) => packMap.get(country)).filter(Boolean);
+  const targetPacks = bypassLegalValidation ? [] : targetCountries.map((country) => packMap.get(country)).filter(Boolean);
   const reportValidation = validateAgentPreAudit(agentReport, {
     item,
     policy,
-    legalPacks: [...nexusPacks, ...targetPacks.filter((pack) => validateLegalPack(pack, policy, now).ok)],
-    expectedJurisdictions: [...new Set([...targetCountries, ...(item.nexusJurisdictions || []), ...(legalRegistry?.operatorJurisdictions || [])])],
+    legalPacks: bypassLegalValidation ? [] : [...nexusPacks, ...targetPacks.filter((pack) => validateLegalPack(pack, policy, now).ok)],
+    expectedJurisdictions: bypassLegalValidation ? [] : [...new Set([...targetCountries, ...(item.nexusJurisdictions || []), ...(legalRegistry?.operatorJurisdictions || [])])],
     now,
   });
   for (const code of reportValidation.findings) findings.push({ code, severity: "BLOCK" });
@@ -348,10 +355,14 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
   if (riskClass === "C") findings.push({ code: "risk_class_c", severity: "BLOCK" });
   const agentJurisdictions = new Map((agentReport?.jurisdictionDecisions || []).map((decision) => [decision.jurisdiction, decision.decision]));
   const allowedJurisdictions = [];
-  for (const country of targetCountries) {
-    const pack = packMap.get(country);
-    if (!validateLegalPack(pack, policy, now).ok) continue;
-    if (agentJurisdictions.get(country) === "PASS") allowedJurisdictions.push(country);
+  if (bypassLegalValidation) {
+    if (agentReport?.decision === "PASS") allowedJurisdictions.push(...targetCountries);
+  } else {
+    for (const country of targetCountries) {
+      const pack = packMap.get(country);
+      if (!validateLegalPack(pack, policy, now).ok) continue;
+      if (agentJurisdictions.get(country) === "PASS") allowedJurisdictions.push(country);
+    }
   }
   const hasBlock = findings.some(({ severity }) => severity === "BLOCK");
   const decision = hasBlock ? "BLOCK" : riskClass === "B" || agentReport?.decision === "REVIEW" ? "REVIEW" : agentReport?.decision === "PASS" && allowedJurisdictions.length ? "PASS" : "BLOCK";
