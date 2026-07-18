@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { access, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
-import { basename, resolve } from "node:path";
+import { basename, relative, resolve } from "node:path";
 import { runCommand } from "./lib/command-runner.mjs";
+import { deriveReviewLifecycle, setReviewWorkflowStatus } from "./lib/review-workflow.mjs";
 
 const input = process.argv[2];
 if (!input) throw new Error("Usage: npm run content:publish -- content/review-packets/<content>.json");
@@ -26,5 +27,18 @@ try {
   await rm(destination, { force: true });
   throw error;
 }
+await setReviewWorkflowStatus(root, item, "published", "稿件已正式发布，后续可继续跟踪改版。", {
+  lifecycle: deriveReviewLifecycle(item, {
+    current: null,
+    sourceItem: item,
+    sourceItemPath: relative(root, destination),
+    forceStatus: "published",
+    now: item.publishedAt,
+  }),
+  release: {
+    destination: relative(root, destination),
+    decisionAt: item.reviewedAt,
+  },
+});
 await rename(inputPath, resolve(root, "content/review-packets", `${basename(inputPath, ".json")}.published.json`)).catch(() => {});
 console.log(`Published approved editions for ${item.id}; unapproved languages remain private.`);

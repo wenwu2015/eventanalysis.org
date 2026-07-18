@@ -75,7 +75,10 @@ if (!sofa) {
           collectionErrors.push({ sourceId: source.id, code: error.code || "collection_failed" });
         }
       }
-      const facts = buildFactBundle(evidence, config.policy.minimumIndependentCoreSources);
+      const facts = buildFactBundle(evidence, config.policy.minimumIndependentCoreSources, {
+        sourceRegistry: sources,
+        allowSingleOfficialCoreSource: Boolean(config.policy.allowSingleOfficialCoreSource),
+      });
       facts.collectionErrors = collectionErrors;
       if (flags.has("--dry-run")) return { kind: "dry-run", facts };
       return createReviewArtifact({ facts, aiConfig: config.ai, job, root: config.root });

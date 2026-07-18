@@ -49,6 +49,7 @@ await withEphemeralJob({ root, articleId: `translate-${item.id}`, diskLimitBytes
       "Localize title, deck, section titles, slug and prose naturally; never use an English placeholder.",
       "Do not add predictions, mental-state claims, insults, allegations, health speculation or national stereotypes.",
       "Preserve every number and limiting phrase from the Chinese source.",
+      "Keep the numeric token sequence identical to the Chinese source. Do not introduce Arabic numerals when the Chinese source used words such as 两个, 一次 or 三次.",
     ],
     claims: item.claims,
     sourceEdition: item.editions.zh,

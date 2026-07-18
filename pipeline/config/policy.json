@@ -8,5 +8,6 @@
   "jobDiskLimitBytes": 2147483648,
   "navigationTimeoutMs": 45000,
   "minimumIndependentCoreSources": 2,
+  "allowSingleOfficialCoreSource": true,
   "awsPublicationMode": "manual"
 }

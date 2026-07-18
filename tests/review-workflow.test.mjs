@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { defaultReviewWorkflow, loadReviewWorkflow, mutateReviewWorkflow, reviewHtmlRoute, setReviewWorkflowStatus } from "../pipeline/lib/review-workflow.mjs";
+import { defaultReviewWorkflow, deriveReviewLifecycle, loadReviewWorkflow, mutateReviewWorkflow, reviewHtmlRoute, setReviewWorkflowStatus } from "../pipeline/lib/review-workflow.mjs";
 import { renderReviewPreviewHtml } from "../pipeline/lib/review-preview.mjs";
 
 test("review workflow derives default state from edition status", () => {
@@ -27,6 +27,40 @@ test("review workflow persists preview metadata and status", async () => {
   assert.equal(workflow.preview.reviewHtmlRoute, "/private-review/match-2/");
   const stored = JSON.parse(await readFile(join(root, "private-review/workflows/match-2.json"), "utf8"));
   assert.equal(stored.preview.reviewHtmlPath, "private-review/html/match-2/index.html");
+});
+
+test("review workflow lifecycle derives edited pending publish from an existing staged item", () => {
+  const lifecycle = deriveReviewLifecycle({
+    id: "match-4",
+    editions: { zh: { title: "标题", competition: "赛事", homeName: "主队", awayName: "客队", status: "needs_review" } },
+  }, {
+    current: null,
+    sourceItem: {
+      revision: 3,
+      publishedAt: "2026-07-18T01:00:00Z",
+      editions: { zh: { status: "published" } },
+    },
+    sourceItemPath: "content/data/items/match-4.json",
+    now: "2026-07-18T02:00:00Z",
+  });
+  assert.equal(lifecycle.status, "edited_pending_publish");
+  assert.equal(lifecycle.sourceRevision, 3);
+  assert.equal(lifecycle.sourceItemPath, "content/data/items/match-4.json");
+  assert.equal(lifecycle.pendingSince, "2026-07-18T02:00:00Z");
+  assert.equal(lifecycle.publishedAt, "2026-07-18T01:00:00Z");
+});
+
+test("review workflow lifecycle derives deleted terminal state", () => {
+  const lifecycle = deriveReviewLifecycle({
+    id: "match-5",
+    editions: { zh: { title: "标题", competition: "赛事", homeName: "主队", awayName: "客队", status: "quarantined" } },
+  }, {
+    current: null,
+    forceStatus: "deleted",
+    now: "2026-07-18T03:00:00Z",
+  });
+  assert.equal(lifecycle.status, "deleted");
+  assert.equal(lifecycle.deletedAt, "2026-07-18T03:00:00Z");
 });
 
 test("review preview html contains workflow and findings summary", async () => {
@@ -55,7 +89,7 @@ test("review preview html contains workflow and findings summary", async () => {
     workflow: {
       ...workflow,
       status: "release_blocked",
-      summary: "需要 legal pack。",
+      summary: "后台流程中断。",
       release: {
         ...workflow.release,
         decision: "BLOCK",
@@ -63,7 +97,7 @@ test("review preview html contains workflow and findings summary", async () => {
       },
     },
   });
-  assert.match(html, /申请被阻断（未发布）/);
+  assert.match(html, /系统中断（未发布）/);
   assert.match(html, /发布申请已经真实执行过，但没有公开发布成功/);
   assert.match(html, /nexus_legal_pack_invalid/);
   assert.match(html, /阿根廷2比1逆转英格兰/);

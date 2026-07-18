@@ -10,6 +10,16 @@ const root = resolve(import.meta.dirname, "..");
 const contentFilter = process.argv.find((value) => value.startsWith("--content="))?.slice("--content=".length);
 const locales = JSON.parse(await readFile(resolve(root, "content/locales.json"), "utf8")).map(({ code }) => code);
 const targetLocales = locales.filter((code) => code !== "zh");
+const TRANSLATION_BATCH_SIZE = 1;
+
+function chunk(values = [], size = 1) {
+  const items = Array.isArray(values) ? values : [];
+  const width = Math.max(1, Number(size) || 1);
+  const batches = [];
+  for (let index = 0; index < items.length; index += width) batches.push(items.slice(index, index + width));
+  return batches;
+}
+
 const data = await loadContentData(root);
 const candidates = data.items
   .filter((item) => !contentFilter || item.id === contentFilter)
@@ -25,7 +35,12 @@ for (const candidate of candidates) {
     return !edition || edition.translationStatus !== "current" || edition.derivedFromHash !== currentHash;
   });
   if (missingOrStale.length) {
-    await runCommand(["npm", "run", "content:translate", "--", `--content=${candidate.id}`, `--locales=${missingOrStale.join(",")}`], { cwd: root, timeoutMs: 1_800_000 });
+    for (const batch of chunk(missingOrStale, TRANSLATION_BATCH_SIZE)) {
+      await runCommand(["npm", "run", "content:translate", "--", `--content=${candidate.id}`, `--locales=${batch.join(",")}`], {
+        cwd: root,
+        timeoutMs: 1_800_000,
+      });
+    }
   }
   await runCommand(["npm", "run", "publish:automatic", "--", `--content=${candidate.id}`], { cwd: root, timeoutMs: 1_800_000 });
   const found = await findContentItemFile(root, candidate.id);

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { mkdir, rm, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import { sha256 } from "./lib/compliance.mjs";
 import { findContentItemFile, writePrivateJson } from "./lib/compliance-store.mjs";
 import { loadContentData, routeKeyForType, routePath } from "./lib/data-store.mjs";
 import { runCommand } from "./lib/command-runner.mjs";
+import { deriveReviewLifecycle, setReviewWorkflowStatus } from "./lib/review-workflow.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const contentFlag = process.argv.find((value) => value.startsWith("--content="));
@@ -75,6 +76,17 @@ if (deleteBody && allLocaleScope && !found.wrapper) await rm(found.path);
 else {
   const output = found.wrapper ? found.packet : found.records[0];
   await writeFile(found.path, `${JSON.stringify(output, null, 2)}\n`);
+}
+if (deleteBody && allLocaleScope) {
+  await setReviewWorkflowStatus(root, item, "deleted", "稿件已删除，保留状态记录供后续会话继续跟踪。", {
+    lifecycle: deriveReviewLifecycle(item, {
+      current: null,
+      sourceItem: null,
+      sourceItemPath: found?.path ? relative(root, found.path) : null,
+      forceStatus: "deleted",
+      now,
+    }),
+  });
 }
 if (publishedRoutes.length && !localOnly) {
   const remaining = (await loadContentData(root)).items.some((candidate) => Object.values(candidate.editions || {}).some(({ status }) => status === "published"));

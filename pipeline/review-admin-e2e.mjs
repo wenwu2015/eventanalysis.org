@@ -192,13 +192,13 @@ try {
   await clickButtonIn(page, page.locator("main"), "隔离稿件", "标记为 quarantined");
   workflow = await workflowState();
   assert.equal(workflow.status, "quarantined");
-  await waitForText(page, "编辑状态: 已隔离");
+  await waitForText(page, "发布申请状态: 已隔离");
   recordCheck("detail_quarantine", { ok: true, workflowStatus: workflow.status });
 
   await clickButtonIn(page, page.locator("main"), "退回待审", "退回 needs_review");
   workflow = await workflowState();
   assert.equal(workflow.status, "review_pending");
-  await waitForText(page, "编辑状态: 待编辑一键通过");
+  await waitForText(page, "发布申请状态: 待编辑一键通过");
   recordCheck("detail_reset", { ok: true, workflowStatus: workflow.status });
 
   await clickButtonIn(page, page.locator("main"), "一键审稿通过", "正在后台执行中文发布检查");
@@ -207,7 +207,7 @@ try {
   workflow = await waitForWorkflowStatus(["release_blocked", "release_review_required", "release_ready"]);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForLoadState("networkidle").catch(() => {});
-  await waitForText(page, `发布申请状态: ${workflow.status === "release_blocked" ? "申请被阻断（未发布）" : workflow.status === "release_review_required" ? "发布待人工复核" : "已完成本地预发"}`);
+  await waitForText(page, `发布申请状态: ${workflow.status === "release_blocked" ? "系统中断（未发布）" : workflow.status === "release_review_required" ? "发布待人工复核" : "本地预发完成（未公开发布）"}`);
   recordCheck("detail_one_click_review_pass", { ok: true, workflowStatus: workflow.status, decision: workflow.release.decision });
 
   await openLinkIn(page, page.locator("main"), "返回审稿队列", "审稿队列");

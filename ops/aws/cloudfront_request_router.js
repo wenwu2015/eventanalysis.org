@@ -30,6 +30,20 @@ function redirect(location, permanent) {
   };
 }
 
+function querySuffix(querystring) {
+  if (!querystring) return "";
+  if (typeof querystring === "string") return querystring ? "?" + querystring : "";
+  var parts = [];
+  for (var key in querystring) {
+    var entry = querystring[key] || {};
+    var values = entry.multiValue && entry.multiValue.length ? entry.multiValue : [entry];
+    for (var index = 0; index < values.length; index += 1) {
+      parts.push(key + "=" + (values[index].value || ""));
+    }
+  }
+  return parts.length ? "?" + parts.join("&") : "";
+}
+
 function blocked(statusCode, incidentId) {
   var gone = statusCode === 410;
   var body = gone ? "This publication has been withdrawn." : "This publication is not available in your jurisdiction.";
@@ -85,12 +99,13 @@ async function handler(event) {
   var request = event.request;
   var host = (request.headers.host || { value: "" }).value.toLowerCase();
   var uri = request.uri || "/";
+  var suffix = querySuffix(request.querystring);
 
-  if (host === "www.eventanalysis.org") return redirect("https://eventanalysis.org" + uri, true);
-  if (uri === "/index.html" || uri.slice(-11) === "/index.html") return redirect(uri.replace(/index\.html$/, ""), true);
+  if (host === "eventanalysis.org") return redirect("https://www.eventanalysis.org" + uri + suffix, true);
+  if (uri === "/index.html" || uri.slice(-11) === "/index.html") return redirect(uri.replace(/index\.html$/, "") + suffix, true);
   if (uri === "/") {
     var acceptLanguage = (request.headers["accept-language"] || { value: "" }).value;
-    return redirect("/" + chooseLocale(acceptLanguage) + "/football/", false);
+    return redirect("/" + chooseLocale(acceptLanguage) + "/football/" + suffix, false);
   }
   if (isAlwaysAvailable(uri)) return request;
 

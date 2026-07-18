@@ -152,6 +152,10 @@ function normalizedNumbers(text) {
   return [...translated.matchAll(/\d+(?:[.,]\d+)?%?/g)].map(([value]) => value.replace(",", ".")).sort();
 }
 
+function isOfficialAuthorisedSource(source = null) {
+  return Boolean(source?.official && source?.license?.authorised);
+}
+
 export function scanProhibitedLanguage(edition) {
   const text = allText(edition).normalize("NFKC");
   const findings = [];
@@ -282,6 +286,7 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
   const entityMap = new Map(data.entities.map((entity) => [entity.id, entity]));
   const factMap = new Map(data.facts.map((fact) => [fact.id, fact]));
   const evidenceMap = new Map(evidenceRecords.map((record) => [record.id, record]));
+  const sourceMap = new Map(sourceRegistry.map((source) => [source.id, source]));
   const sourceGroups = new Map(sourceRegistry.map((source) => [source.id, source.independenceGroup || source.id]));
   const packMap = new Map((legalRegistry?.packs || []).map((pack) => [pack.jurisdiction, pack]));
   if (item.sourceLocale !== "zh" || !item.editions?.zh) findings.push({ code: "missing_chinese_master", severity: "BLOCK" });
@@ -311,8 +316,14 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
     if (!fact || fact.status !== "confirmed") findings.push({ code: "fact_not_confirmed", factId, severity: "BLOCK" });
     if (containsSubjectiveMetric(fact?.value)) findings.push({ code: "subjective_metric", factId, severity: "BLOCK" });
     if (fact && CORE_FACT_PREDICATES.has(fact.predicate)) {
-      const groups = new Set((fact.evidenceRefs || []).map((id) => evidenceMap.get(id)?.sourceId).filter(Boolean).map((id) => sourceGroups.get(id) || id));
-      if (groups.size < Number(policy.minimumIndependentCoreSources || 2)) findings.push({ code: "insufficient_independent_sources", factId, groups: [...groups], severity: "BLOCK" });
+      const sourceIds = new Set((fact.evidenceRefs || []).map((id) => evidenceMap.get(id)?.sourceId).filter(Boolean));
+      const groups = new Set([...sourceIds].map((id) => sourceGroups.get(id) || id));
+      const officialSingleSourceAllowed = Boolean(policy.allowSingleOfficialCoreSource)
+        && sourceIds.size === 1
+        && [...sourceIds].every((sourceId) => isOfficialAuthorisedSource(sourceMap.get(sourceId)));
+      if (groups.size < Number(policy.minimumIndependentCoreSources || 2) && !officialSingleSourceAllowed) {
+        findings.push({ code: "insufficient_independent_sources", factId, groups: [...groups], severity: "BLOCK" });
+      }
     }
   }
   const nexus = [...new Set([...(item.nexusJurisdictions || []), ...inferredNexus, ...(legalRegistry?.operatorJurisdictions || [])])];

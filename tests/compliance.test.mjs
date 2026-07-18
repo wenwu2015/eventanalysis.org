@@ -197,6 +197,18 @@ test("one evidence organization posing as two sources is not independent", () =>
   assert.ok(result.findings.some(({ code }) => code === "insufficient_independent_sources"));
 });
 
+test("one authorised official source can satisfy the core fact gate when policy allows it", () => {
+  const fixture = auditableFixture();
+  fixture.policy = { ...fixture.policy, allowSingleOfficialCoreSource: true };
+  fixture.agentReport = { ...fixture.agentReport, policyHash: policyHash(fixture.policy) };
+  fixture.data.facts[0].evidenceRefs = ["ev-1"];
+  fixture.evidenceRecords = [{ id: "ev-1", sourceId: "fifa" }];
+  fixture.sourceRegistry = [{ id: "fifa", independenceGroup: "fifa", official: true, license: { authorised: true } }];
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
+});
+
 test("agent preaudit accepts operator-jurisdiction decisions when explicitly expected", () => {
   const fixture = auditableFixture();
   const report = {

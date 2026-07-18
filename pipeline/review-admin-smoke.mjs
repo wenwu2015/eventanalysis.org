@@ -16,7 +16,6 @@ const testFile = `__review-admin-smoke-${now}.json`;
 const testPath = resolve(root, "content/review-packets", testFile);
 const stagedItemPath = resolve(root, "content/data/items", `${testId}.json`);
 const reportPath = resolve(root, "private-compliance/reports", `${testId}-r1.json`);
-const previewRoute = `/zh/football/match-analysis/${sourcePacket.editions?.zh?.slug || ""}/`;
 const reviewHtmlPath = resolve(root, "private-review/html", testId, "index.html");
 const reviewHtmlDir = resolve(root, "private-review/html", testId);
 const workflowPath = resolve(root, "private-review/workflows", `${testId}.json`);
@@ -135,13 +134,13 @@ try {
   summary.workflowStatus = workflow?.status || null;
   summary.workflowReleaseDecision = workflow?.release?.decision || null;
   const detailAfterRelease = await fetchText(detailPath);
-  summary.releaseBlockedVisible = detailAfterRelease.text.includes("发布申请状态: 申请被阻断（未发布）");
+  summary.releaseBlockedVisible = detailAfterRelease.text.includes("发布申请状态: 系统中断（未发布）");
   summary.releaseReviewVisible = detailAfterRelease.text.includes("发布申请状态: 发布待人工复核");
-  summary.releaseReadyVisible = detailAfterRelease.text.includes("发布申请状态: 已完成本地预发");
+  summary.releaseReadyVisible = detailAfterRelease.text.includes("发布申请状态: 本地预发完成（未公开发布）");
   summary.previewVisible = detailAfterRelease.text.includes("打开中文预发页");
   summary.previewDetailStatus = /发布申请状态: ([^<]+)/.exec(detailAfterRelease.text)?.[1] || null;
   if (summary.previewVisible) {
-    const previewPage = await fetchText(`/preview${previewRoute}`);
+    const previewPage = await fetchText(`/preview${workflow?.release?.previewPath || ""}`);
     summary.previewPageStatus = previewPage.status;
     summary.previewContainsHeadline = previewPage.text.includes(packet.editions.zh.title);
   } else {
@@ -159,11 +158,11 @@ try {
 
   await postAction("quarantine_zh", testFile, detailPath);
   const detailQuarantined = await fetchText(detailPath);
-  summary.quarantinedVisible = detailQuarantined.text.includes("编辑状态: 已隔离");
+  summary.quarantinedVisible = detailQuarantined.text.includes("发布申请状态: 已隔离");
 
   await postAction("reset_zh", testFile, detailPath);
   const detailReset = await fetchText(detailPath);
-  summary.resetVisible = detailReset.text.includes("编辑状态: 待编辑一键通过");
+  summary.resetVisible = detailReset.text.includes("发布申请状态: 待编辑一键通过");
 
   const releaseClosedLoop = ["release_blocked", "release_review_required", "release_ready"].includes(summary.workflowStatus);
   summary.result = summary.dashboardLoaded

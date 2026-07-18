@@ -4,7 +4,7 @@ import { routeKeyForType, routePath } from "./data-store.mjs";
 import { loadCompliancePolicy, loadLegalRegistry, readJson } from "./compliance-store.mjs";
 import { validateLegalPack } from "./compliance.mjs";
 import { summarizeAutomationReadiness } from "./automation-readiness.mjs";
-import { loadReviewWorkflow } from "./review-workflow.mjs";
+import { deriveReviewLifecycle, loadReviewWorkflow, mutateReviewWorkflow } from "./review-workflow.mjs";
 
 function canonicalText(value) {
   return String(value || "")
@@ -265,14 +265,27 @@ function resolvedMetrics(eventId, evidence, factMap) {
 async function summarizePacket(root, packet, routes, eventMap, entityMap, evidencePackets, factMap) {
   const relatedEvidence = findRelatedEvidence(packet.value, evidencePackets, eventMap, entityMap);
   const previewPath = previewRouteForItem(packet.value, routes, "zh");
-  const workflow = await loadReviewWorkflow(root, packet.value);
+  let workflow = await loadReviewWorkflow(root, packet.value);
   const eventId = packet.value.eventRefs?.[0];
   const stagedPath = resolve(root, "content/data/items", `${packet.value.id}.json`);
   let staged = false;
+  let stagedItem = null;
   try {
     await access(stagedPath);
     staged = true;
+    stagedItem = JSON.parse(await readFile(stagedPath, "utf8"));
   } catch {}
+  const lifecycle = deriveReviewLifecycle(packet.value, {
+    current: workflow.lifecycle,
+    sourceItem: stagedItem,
+    sourceItemPath: staged ? `content/data/items/${packet.value.id}.json` : null,
+  });
+  if (JSON.stringify(lifecycle) !== JSON.stringify(workflow.lifecycle || {})) {
+    workflow = await mutateReviewWorkflow(root, packet.value, (current) => ({
+      ...current,
+      lifecycle,
+    }));
+  }
   const metrics = resolvedMetrics(eventId, relatedEvidence?.value || null, factMap);
   const entityJurisdictions = [...new Set((packet.value.entityRefs || [])
     .map((entityId) => entityMap.get(entityId))
@@ -300,7 +313,7 @@ async function summarizePacket(root, packet, routes, eventMap, entityMap, eviden
 }
 
 function comparePackets(left, right) {
-  const statusOrder = ["review_pending", "editorial_approved", "release_requested", "release_review_required", "release_blocked", "release_ready", "quarantined"];
+  const statusOrder = ["review_pending", "editorial_approved", "release_requested", "release_review_required", "release_blocked", "release_ready", "published", "deleted", "quarantined"];
   const leftStatus = left.workflow?.status || left.edition.status;
   const rightStatus = right.workflow?.status || right.edition.status;
   const leftIndex = statusOrder.indexOf(leftStatus);
@@ -799,6 +812,12 @@ function blockedPackSequenceText(jurisdictions = []) {
   return `先补 ${codes[0]} legal pack，再依次补 ${codes.slice(1).join("、")} legal pack`;
 }
 
+function editorBlockedSummary(item, missingFacts = []) {
+  if (missingFacts.length) return `事实上次检查没有通过，仍缺：${missingFacts.join("、")}。`;
+  if (item.workflow?.release?.commandError) return "上一次后台执行没有完成，需要重新触发一次检查。";
+  return "上一次后台发布检查没有通过，但公开站点仍未发布。";
+}
+
 export function buildItemWorkflowGuidance(item, registry = {}, { packValidation = new Map(), operatorJurisdictionReport = null, supportByJurisdiction = new Map() } = {}) {
   const status = item.workflow?.status || "review_pending";
   const missingFacts = item.metrics?.missing || [];
@@ -846,76 +865,28 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
     return {
       ...base,
       stateLabel: "发布申请处理中",
-      why: "后台正在执行独立预审、合规审计和中文本地预发。",
+      why: "后台正在执行独立预审和中文本地预发。",
       nextStep: "等待后台结果自动刷新。",
       resolveHref: `/items/${encodeURIComponent(item.id)}`,
     };
   }
 
   if (status === "release_blocked") {
-    const retryReady = !operatorJurisdictionUnconfirmed && !blockedLegalJurisdictions.length && !missingFacts.length;
-    if (retryReady) {
-      return {
-        ...base,
-        stateLabel: "阻断已解除，待重新提交",
-        why: resolvedLegalJurisdictions.length
-          ? `上次阻断涉及的 legal pack 已补齐：${resolvedLegalJurisdictions.join("、")}。`
-          : "上次发布申请的阻断条件已经解除。",
-        nextStep: "重新提交中文发布申请，重新跑独立预审与本地预发。",
-        resolveHref: `/items/${encodeURIComponent(item.id)}`,
-        primaryAction: { type: "form", action: "submit_release_zh", label: "重新提交中文发布申请" },
-        secondaryActions: [],
-        blockers: [],
-      };
-    }
-    const primaryBlockedPack = blockedLegalJurisdictions[0] || "";
     const factsResolveHref = `/items/${encodeURIComponent(item.id)}`;
-    const legalResolveHref = `/legal?content=${encodeURIComponent(item.id)}${primaryBlockedPack ? `&pack=${encodeURIComponent(primaryBlockedPack)}` : ""}`;
-    const missingDraftCodes = blockedLegalJurisdictions.filter((jurisdiction) => !packValidation.get(jurisdiction));
-    const missingSupportCodes = blockedLegalJurisdictions.filter((jurisdiction) => !supportByJurisdiction.has(jurisdiction));
-    const importableSupportCodes = blockedLegalJurisdictions.filter((jurisdiction) => supportByJurisdiction.get(jurisdiction)?.hasMaterial);
-    const primaryPack = primaryBlockedPack ? registry.packs?.find((entry) => entry.jurisdiction === primaryBlockedPack) || null : null;
-    const refreshableOfficialSources = Boolean(primaryPack?.officialSources?.some((entry) => entry?.url && (!entry.checkedAt || !entry.contentHash)));
-    const canAutoAdvance = operatorJurisdictionUnconfirmed
-      || missingDraftCodes.length > 0
-      || missingSupportCodes.length > 0
-      || importableSupportCodes.length > 0
-      || refreshableOfficialSources;
     const blockers = [];
-    if (operatorJurisdictionUnconfirmed) blockers.push("发布主体辖区未确认，private-legal/packs.json 里仍是 ZZ 或为空。");
-    if (blockedLegalJurisdictions.length) blockers.push(`这些辖区的 legal pack 缺失或无效：${blockedLegalJurisdictions.join("、")}。`);
+    blockers.push(editorBlockedSummary(item, missingFacts));
     if (missingFacts.length) blockers.push(`事实包缺口仍未补齐：${missingFacts.join("、")}。`);
     return {
       ...base,
-      stateLabel: "申请被阻断（未发布）",
-      why: blockers[0]
-        ? `这次只是发布申请被阻断，公开站点并未新增发布。${blockers[0]}`
-        : "发布申请经过预审后被 fail-closed 阻断，公开站点并未发布该页面。",
-      nextStep: canAutoAdvance
-        ? (missingFacts.length
-          ? "先自动处理当前阻断；自动步骤完成后，再回稿件详情补齐事实包并重新一键通过。"
-          : "先自动处理当前阻断。系统会尝试自动确认发布主体辖区、补 draft/support、导入可用材料并刷新官方来源。")
-        : missingFacts.length
-          ? "先回稿件详情补齐事实包，补完后再重新一键通过。"
-          : operatorJurisdictionUnconfirmed
-            ? "当前没有更多可安全自动执行的动作。先去确认发布主体辖区，再继续补当前 legal pack。"
-            : primaryBlockedPack
-              ? `当前没有更多可安全自动执行的动作。先补 ${primaryBlockedPack} legal pack 的真实字段，保存后系统会自动切到下一辖区。`
-              : "当前没有更多可安全自动执行的动作。先进入阻断处理页补齐当前发布条件。",
-      resolveHref: canAutoAdvance ? factsResolveHref : (missingFacts.length ? factsResolveHref : legalResolveHref),
-      primaryAction: canAutoAdvance
-        ? { type: "form", action: "autofix_release_blockers", label: primaryBlockedPack ? `先自动处理 ${primaryBlockedPack} 阻断` : "先自动处理当前阻断" }
-        : {
-          type: "link",
-          href: missingFacts.length ? factsResolveHref : legalResolveHref,
-          label: missingFacts.length
-            ? "去补事实包"
-            : operatorJurisdictionUnconfirmed
-              ? "去确认发布主体辖区"
-              : primaryBlockedPack
-                ? `去补 ${primaryBlockedPack} legal pack`
-                : "去处理当前阻断",
-        },
+      stateLabel: "系统中断（未发布）",
+      why: `这次只是后台发布申请被系统中断，公开站点并未新增发布。${blockers[0]}`,
+      nextStep: missingFacts.length
+        ? "先回稿件详情补齐事实包，随后直接重新一键审核通过。"
+        : "直接重新一键审核通过，系统会重跑后台预审与中文本地预发。",
+      resolveHref: factsResolveHref,
+      primaryAction: missingFacts.length
+        ? { type: "link", href: factsResolveHref, label: "去补事实包" }
+        : { type: "form", action: "approve_and_submit_zh", label: "重新一键审核通过" },
       secondaryActions: [],
       blockers,
     };
@@ -942,6 +913,30 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
       primaryAction: { type: "form", action: "review_pr", label: "创建草稿 PR" },
       secondaryActions: previewBuilt ? [] : [{ type: "form", action: "build_review_html", label: "补生成审稿 HTML" }],
       blockers: missingFacts.length ? [`事实包缺口：${missingFacts.join("、")}`] : [],
+    };
+  }
+
+  if (status === "published") {
+    return {
+      ...base,
+      stateLabel: "已发布",
+      why: item.workflow?.summary || "稿件已经正式发布，后续可继续跟踪改版。",
+      nextStep: "如需更新内容，重新生成或编辑草稿并再次提交发布链路。",
+      primaryAction: null,
+      secondaryActions: [],
+      blockers: [],
+    };
+  }
+
+  if (status === "deleted") {
+    return {
+      ...base,
+      stateLabel: "已删除",
+      why: item.workflow?.summary ? `稿件已删除。${item.workflow.summary}` : "稿件已删除，当前保留状态记录供后续会话继续跟踪。",
+      nextStep: "如需恢复发布，重新生成新草稿并走完整发布链路。",
+      primaryAction: null,
+      secondaryActions: [],
+      blockers: [],
     };
   }
 
@@ -1005,9 +1000,23 @@ export async function loadReviewAdminState(root) {
     release_review_required: 0,
     release_blocked: 0,
     release_ready: 0,
+    published: 0,
+    deleted: 0,
     quarantined: 0,
   });
-  return { readiness, counts, workflowCounts, items, registry, policy, packValidation, operatorJurisdictionReport, supportSummary };
+  const lifecycleCounts = items.reduce((accumulator, item) => {
+    accumulator.total += 1;
+    const status = item.workflow?.lifecycle?.status || "draft";
+    accumulator[status] = (accumulator[status] || 0) + 1;
+    return accumulator;
+  }, {
+    total: 0,
+    draft: 0,
+    edited_pending_publish: 0,
+    published: 0,
+    deleted: 0,
+  });
+  return { readiness, counts, workflowCounts, lifecycleCounts, items, registry, policy, packValidation, operatorJurisdictionReport, supportSummary };
 }
 
 export async function loadReviewAdminItem(root, id) {

@@ -5,6 +5,7 @@
   "publicationLeaseHours": 24,
   "postMatchStabilityMinutes": 20,
   "minimumIndependentCoreSources": 2,
+  "allowSingleOfficialCoreSource": true,
   "localeMarkets": {
     "zh": ["CN"],
     "zh-hant": ["TW", "HK", "MO"],

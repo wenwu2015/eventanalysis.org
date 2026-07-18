@@ -61,3 +61,49 @@ test("fact bundle normalizes cross-source team ids before calculating head-to-he
   assert.equal(bundle.headToHeadBeforeMatch.matches, 1);
   assert.equal(bundle.missing.includes("head_to_head_history"), false);
 });
+
+test("fact bundle accepts one authorised official source for core confirmation", () => {
+  const bundle = buildFactBundle([
+    {
+      sourceId: "fifa",
+      evidenceId: "evidence-fifa",
+      event: {
+        id: "match-2",
+        sport: "Football",
+        competition: "FIFA World Cup™",
+        startTimestamp: 1_784_632_800,
+        homeTeamId: "43942",
+        awayTeamId: "43922",
+        homeTeam: "England",
+        awayTeam: "Argentina",
+        homeJurisdiction: "ENG",
+        awayJurisdiction: "ARG",
+        homeScore: 1,
+        awayScore: 2,
+      },
+      h2hEvents: [{
+        id: "old-2",
+        status: "finished",
+        homeTeamId: "43922",
+        awayTeamId: "43942",
+        homeTeam: "Argentina",
+        awayTeam: "England",
+        homeScore: 2,
+        awayScore: 1,
+      }],
+      personnelChanges: [{ teamName: "England" }],
+      keyEvents: [],
+    },
+  ], 2, {
+    allowSingleOfficialCoreSource: true,
+    sourceRegistry: [{
+      id: "fifa",
+      official: true,
+      license: { authorised: true },
+    }],
+  });
+
+  assert.equal(bundle.coreSourceConfirmations, 1);
+  assert.equal(bundle.missing.includes("independent_core_source_confirmation"), false);
+  assert.equal(bundle.status, "needs_review");
+});
