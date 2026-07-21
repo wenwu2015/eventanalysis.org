@@ -257,7 +257,7 @@
       ],
       "status": "published",
       "complianceStatus": "passed",
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "CN"
       ],
@@ -450,7 +450,7 @@
           "targetParagraphId": "paragraph_takeaway_1"
         }
       ],
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "US",
         "GB"
@@ -644,7 +644,7 @@
           "targetParagraphId": "paragraph_takeaway_1"
         }
       ],
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "TW",
         "HK",
@@ -839,7 +839,7 @@
           "targetParagraphId": "paragraph_takeaway_1"
         }
       ],
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "JP"
       ],
@@ -1032,7 +1032,7 @@
           "targetParagraphId": "paragraph_takeaway_1"
         }
       ],
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "ES"
       ],
@@ -1225,7 +1225,7 @@
           "targetParagraphId": "paragraph_takeaway_1"
         }
       ],
-      "complianceValidUntil": "2026-07-19T13:49:17.288Z",
+      "complianceValidUntil": "2026-07-21T04:05:07.621Z",
       "allowedJurisdictions": [
         "SA",
         "AE",
@@ -1245,17 +1245,17 @@
   "sourceRevision": 1,
   "sourceEditionHash": "004933ece97c61fe2e7d9a3d5a1708f39e423fe608f11fdb62725fc9f8e56aa4",
   "riskClass": "A",
-  "reviewedAt": "2026-07-18T13:49:17.305Z",
+  "reviewedAt": "2026-07-20T04:05:07.650Z",
   "qualityReview": {
-    "reviewer": "compliance-agent:review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260718",
+    "reviewer": "compliance-agent:review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260720",
     "decision": "approved",
-    "reviewedAt": "2026-07-18T13:49:17.305Z"
+    "reviewedAt": "2026-07-20T04:05:07.650Z"
   },
   "complianceReview": {
-    "reviewRunId": "review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260718",
+    "reviewRunId": "review-match_analysis_event_1fa9a50fd27ce823bb3f_zh-r1-20260720",
     "policyHash": "b6c337805b02c349b15e97d55c1b74c7e2ca85b505eb5fb3ab6e119e255e376e",
-    "auditedAt": "2026-07-18T13:49:17.288Z",
-    "expiresAt": "2026-07-19T13:49:17.288Z"
+    "auditedAt": "2026-07-20T04:05:07.621Z",
+    "expiresAt": "2026-07-21T04:05:07.621Z"
   },
   "publishedAt": "2026-07-18T13:49:17.330Z"
 }

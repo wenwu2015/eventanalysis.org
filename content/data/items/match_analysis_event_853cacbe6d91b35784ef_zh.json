@@ -1,0 +1,372 @@
+{
+  "id": "match_analysis_event_853cacbe6d91b35784ef_zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "match-analysis-event-853cacbe6d91b35784ef",
+  "angleKey": "early_lead_survives_second_half_comeback",
+  "originalContribution": "以比分进程、赛前交锋结构和双方同为36.4%的首发延续率为框架，解释英格兰如何凭借上半场建立的四球优势，承受法国下半场追赶并以6比4取胜。",
+  "readerQuestion": "英格兰为何能在法国下半场连追四球的情况下，仍以6比4赢下这场淘汰赛？",
+  "author": "EventAnalysis",
+  "confidence": 96,
+  "entityRefs": [
+    "team_0702f2cee3c1b2321d1a",
+    "team_65189e47a75eca903fca"
+  ],
+  "eventRefs": [
+    "event_853cacbe6d91b35784ef"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_final_result"
+      ],
+      "summary": "英格兰以6比4击败法国。"
+    },
+    {
+      "id": "claim_early_four_goal_lead",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "英格兰由赖斯、孔萨和萨卡在上半场取得四个进球，建立0比4领先。"
+    },
+    {
+      "id": "claim_france_comeback",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "法国下半场由姆巴佩两次破门，并由巴尔科拉和登贝莱各入一球。"
+    },
+    {
+      "id": "claim_late_england_goals",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "萨卡第87分钟罚入点球，贝林厄姆第90+8分钟进球。"
+    },
+    {
+      "id": "claim_h2h_calculation",
+      "kind": "calculation",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_head_to_head_before_match"
+      ],
+      "summary": "赛前六次交锋中，英格兰五胜，对应胜率83.3%；法国一胜，对应胜率16.7%。"
+    },
+    {
+      "id": "claim_continuity_calculation",
+      "kind": "calculation",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_personnel_changes"
+      ],
+      "summary": "两队本场首发均只有4人延续自各自对照比赛，4除以11约为36.4%，各有7名首发发生变化。"
+    },
+    {
+      "id": "claim_game_state_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events",
+        "event_853cacbe6d91b35784ef_final_result"
+      ],
+      "summary": "英格兰的决定性优势来自上半场四球领先；法国虽然将差距缩小到一球，但第87分钟的点球重新扩大差距，阻断了追平路径。"
+    },
+    {
+      "id": "claim_volatility_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_personnel_changes",
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "较低的首发延续率只能作为理解本场环境的背景信息，现有事实不能把比赛波动或大量失球直接归因于人员变化。"
+    },
+    {
+      "id": "claim_h2h_context_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_head_to_head_before_match",
+        "event_853cacbe6d91b35784ef_final_result"
+      ],
+      "summary": "本场结果延续了英格兰在赛前交锋记录中的优势，但交锋记录只能提供背景，不能单独解释本场胜负。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "france-4-6-england-early-lead-comeback-analysis",
+      "title": "法国4比6英格兰：四球先手如何抵住下半场反扑",
+      "deck": "英格兰上半场建立0比4优势，法国下半场一度追至3比4；萨卡的第87分钟点球与贝林厄姆补时进球最终锁定胜局。",
+      "competition": "比赛分析",
+      "venue": "",
+      "homeName": "法国",
+      "awayName": "英格兰",
+      "resultLabel": "法国 4比6 英格兰",
+      "sections": [
+        {
+          "id": "section_decisive_sequence",
+          "title": "胜负先在上半场倾斜",
+          "paragraphs": [
+            {
+              "text": "英格兰开场第3分钟便由赖斯破门，第18分钟孔萨扩大比分。萨卡随后在第37分钟和上半场补时阶段连续得分，法国带着0比4的巨大缺口进入下半场。全场最终比分是法国4比6英格兰。",
+              "claimRefs": [
+                "claim_early_four_goal_lead",
+                "claim_final_result"
+              ],
+              "id": "paragraph_section_decisive_sequence_1"
+            },
+            {
+              "text": "这段进程构成比赛的决定性底盘：英格兰无需在下半场持续扩大优势，只要避免被追平即可；法国则必须连续进球，同时几乎不能再失球。",
+              "claimRefs": [
+                "claim_game_state_analysis"
+              ],
+              "id": "paragraph_section_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "section_france_response",
+          "title": "法国反扑把悬念拉回一球",
+          "paragraphs": [
+            {
+              "text": "姆巴佩第48分钟打入法国首球，巴尔科拉第54分钟再追一球，姆巴佩第66分钟梅开二度，比分变为3比4。法国在18分钟内连入三球，把四球劣势压缩到一球。",
+              "claimRefs": [
+                "claim_france_comeback",
+                "claim_game_state_analysis"
+              ],
+              "id": "paragraph_section_france_response_1"
+            },
+            {
+              "text": "法国直到第90+6分钟仍由登贝莱取得第四球，但此前萨卡已在第87分钟罚入点球。贝林厄姆第90+8分钟的进球随后把最终比分定格为4比6。",
+              "claimRefs": [
+                "claim_late_england_goals",
+                "claim_final_result"
+              ],
+              "id": "paragraph_section_france_response_2"
+            }
+          ]
+        },
+        {
+          "id": "section_personnel_context",
+          "title": "低延续率只是比赛背景",
+          "paragraphs": [
+            {
+              "text": "以各自对照比赛为基准，法国和英格兰都只保留了4名首发，首发延续率同为36.4%，也就是各有7个首发位置发生变化。双方都不是依靠高度固定的首发框架进入本场。",
+              "claimRefs": [
+                "claim_continuity_calculation"
+              ],
+              "id": "paragraph_section_personnel_context_1"
+            },
+            {
+              "text": "十个进球与大幅来回摆动显示比赛波动极高。不过，低首发延续率只能作为理解比赛环境的背景；在缺少更细致战术和表现数据的情况下，不能把大量失球直接归因于人员变化。",
+              "claimRefs": [
+                "claim_volatility_analysis"
+              ],
+              "id": "paragraph_section_personnel_context_2"
+            }
+          ]
+        },
+        {
+          "id": "section_h2h_context",
+          "title": "交锋优势得到延续，但不是答案本身",
+          "paragraphs": [
+            {
+              "text": "赛前六次交锋中，英格兰取得五胜，胜率为83.3%；法国仅一胜，胜率为16.7%，双方没有平局。本场英格兰获胜，使既有对阵优势继续体现在结果层面。",
+              "claimRefs": [
+                "claim_h2h_calculation",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_section_h2h_context_1"
+            },
+            {
+              "text": "真正解释本场胜负的仍是具体比分节点：英格兰上半场攒下四球缓冲，法国追到只差一球后，又在第87分钟失去缩小差距的窗口。交锋历史提供方向，本场的时间线才揭示英格兰如何把优势兑现。",
+              "claimRefs": [
+                "claim_game_state_analysis",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_section_h2h_context_2"
+            }
+          ]
+        }
+      ],
+      "timeline": [],
+      "status": "published",
+      "complianceStatus": "passed",
+      "complianceValidUntil": "2026-07-21T05:11:44.170Z",
+      "allowedJurisdictions": [
+        "CN"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T05:11:44.192Z"
+    },
+    "en": {
+      "slug": "france-4-6-england-how-an-early-four-goal-lead-survived-the-second-half-comeback",
+      "title": "France 4-6 England: How a Four-Goal Head Start Withstood the Second-Half Comeback",
+      "deck": "England established a 0-4 advantage in the first half before France pulled back to 3-4 in the second; Saka's 87th-minute penalty and Bellingham's stoppage-time goal ultimately sealed the win.",
+      "competition": "Match Analysis",
+      "venue": "",
+      "homeName": "France",
+      "awayName": "England",
+      "resultLabel": "France 4-6 England",
+      "sections": [
+        {
+          "id": "section_decisive_sequence",
+          "title": "The Balance Tipped in the First Half",
+          "paragraphs": [
+            {
+              "text": "Rice put England ahead in the 3rd minute, and Konsa extended the lead in the 18th. Saka then scored in the 37th minute and again in first-half stoppage time, leaving France to begin the second half with a huge 0-4 deficit. The final score was France 4-6 England.",
+              "claimRefs": [
+                "claim_early_four_goal_lead",
+                "claim_final_result"
+              ],
+              "id": "paragraph_section_decisive_sequence_1"
+            },
+            {
+              "text": "That sequence formed the decisive foundation of the match: England did not need to keep extending their advantage in the second half, only to avoid being caught; France had to score repeatedly while conceding virtually nothing more.",
+              "claimRefs": [
+                "claim_game_state_analysis"
+              ],
+              "id": "paragraph_section_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "section_france_response",
+          "title": "France's Comeback Reduced the Gap to One Goal",
+          "paragraphs": [
+            {
+              "text": "Mbappé scored France's first goal in the 48th minute, Barcola added another in the 54th, and Mbappé struck his second in the 66th to make it 3-4. France scored three goals within 18 minutes, cutting a four-goal deficit to one.",
+              "claimRefs": [
+                "claim_france_comeback",
+                "claim_game_state_analysis"
+              ],
+              "id": "paragraph_section_france_response_1"
+            },
+            {
+              "text": "Dembélé still managed France's fourth goal in the 90+6th minute, but Saka had already converted a penalty in the 87th. Bellingham's goal in the 90+8th minute then fixed the final score at 4-6.",
+              "claimRefs": [
+                "claim_late_england_goals",
+                "claim_final_result"
+              ],
+              "id": "paragraph_section_france_response_2"
+            }
+          ]
+        },
+        {
+          "id": "section_personnel_context",
+          "title": "Low Lineup Continuity Was Part of the Match Context",
+          "paragraphs": [
+            {
+              "text": "Compared with their respective reference matches, France and England each retained only 4 starters, giving both sides a starting-lineup continuity rate of 36.4% and meaning that 7 starting positions changed for each team. Neither side entered this match with a highly settled starting framework.",
+              "claimRefs": [
+                "claim_continuity_calculation"
+              ],
+              "id": "paragraph_section_personnel_context_1"
+            },
+            {
+              "text": "Ten goals and major swings in momentum show that the match was highly volatile. However, low starting-lineup continuity can serve only as context for understanding the match environment; without more detailed tactical and performance data, the high number of goals conceded cannot be attributed directly to personnel changes.",
+              "claimRefs": [
+                "claim_volatility_analysis"
+              ],
+              "id": "paragraph_section_personnel_context_2"
+            }
+          ]
+        },
+        {
+          "id": "section_h2h_context",
+          "title": "The Head-to-Head Advantage Continued, but Was Not the Answer Itself",
+          "paragraphs": [
+            {
+              "text": "In the six meetings before the match, England recorded five wins, a win rate of 83.3%; France had only one win, a win rate of 16.7%, with no draws between the sides. England's victory here meant that their existing head-to-head advantage continued to be reflected in the result.",
+              "claimRefs": [
+                "claim_h2h_calculation",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_section_h2h_context_1"
+            },
+            {
+              "text": "The result is still best explained by the specific scoring moments: England built a four-goal cushion in the first half, and after France pulled to within one, they lost their chance to narrow the gap again in the 87th minute. The head-to-head history provides context, but this match's timeline reveals how England converted their advantage into victory.",
+              "claimRefs": [
+                "claim_game_state_analysis",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_section_h2h_context_2"
+            }
+          ]
+        }
+      ],
+      "timeline": [],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "d4bc010e3b5f6e1c47b31cb5497fecfde7dd2baeff5752e9854787090a00613d",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_section_decisive_sequence_1",
+          "targetParagraphId": "paragraph_section_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_decisive_sequence_2",
+          "targetParagraphId": "paragraph_section_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_france_response_1",
+          "targetParagraphId": "paragraph_section_france_response_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_france_response_2",
+          "targetParagraphId": "paragraph_section_france_response_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_personnel_context_1",
+          "targetParagraphId": "paragraph_section_personnel_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_personnel_context_2",
+          "targetParagraphId": "paragraph_section_personnel_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_h2h_context_1",
+          "targetParagraphId": "paragraph_section_h2h_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_section_h2h_context_2",
+          "targetParagraphId": "paragraph_section_h2h_context_2"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T05:11:44.170Z",
+      "allowedJurisdictions": [
+        "US",
+        "GB"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T05:11:44.192Z"
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "EN",
+    "FR"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "d4bc010e3b5f6e1c47b31cb5497fecfde7dd2baeff5752e9854787090a00613d",
+  "riskClass": "A",
+  "qualityReview": {
+    "reviewer": "compliance-agent:d0b86116-6783-47d7-a2c9-13b71079142a",
+    "decision": "approved",
+    "reviewedAt": "2026-07-20T05:11:44.179Z"
+  },
+  "complianceReview": {
+    "reviewRunId": "d0b86116-6783-47d7-a2c9-13b71079142a",
+    "policyHash": "b6c337805b02c349b15e97d55c1b74c7e2ca85b505eb5fb3ab6e119e255e376e",
+    "auditedAt": "2026-07-20T05:11:44.170Z",
+    "expiresAt": "2026-07-21T05:11:44.170Z"
+  },
+  "reviewedAt": "2026-07-20T05:11:44.179Z",
+  "publishedAt": "2026-07-20T05:11:44.192Z"
+}

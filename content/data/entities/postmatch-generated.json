@@ -4,6 +4,7 @@
     {
       "id": "team_0702f2cee3c1b2321d1a",
       "kind": "Team",
+      "sport": "football",
       "names": {
         "zh": "France"
       },
@@ -12,12 +13,12 @@
       ],
       "attributes": {
         "jurisdiction": "FR"
-      },
-      "sport": "football"
+      }
     },
     {
       "id": "team_0f34b7bb2edb12d9b7d3",
       "kind": "Team",
+      "sport": "football",
       "names": {
         "zh": "Spain"
       },
@@ -26,8 +27,7 @@
       ],
       "attributes": {
         "jurisdiction": "ES"
-      },
-      "sport": "football"
+      }
     },
     {
       "id": "team_286dbc7f218c4768b458",

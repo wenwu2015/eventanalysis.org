@@ -32,6 +32,38 @@
       "awayTeamId": "team_286dbc7f218c4768b458",
       "homeScore": 1,
       "awayScore": 2
+    },
+    {
+      "id": "event_853cacbe6d91b35784ef",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-18T21:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_0702f2cee3c1b2321d1a",
+        "team_65189e47a75eca903fca"
+      ],
+      "homeTeamId": "team_0702f2cee3c1b2321d1a",
+      "awayTeamId": "team_65189e47a75eca903fca",
+      "homeScore": 4,
+      "awayScore": 6
+    },
+    {
+      "id": "event_ea7993453165e916736c",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-19T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_0f34b7bb2edb12d9b7d3",
+        "team_286dbc7f218c4768b458"
+      ],
+      "homeTeamId": "team_0f34b7bb2edb12d9b7d3",
+      "awayTeamId": "team_286dbc7f218c4768b458",
+      "homeScore": 1,
+      "awayScore": 0
     }
   ]
 }

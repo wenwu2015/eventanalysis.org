@@ -1,0 +1,204 @@
+{
+  "id": "match_analysis_12813005_zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "match-analysis-event-ea7993453165e916736c",
+  "angleKey": "lineup_continuity_and_extra_time_breakthrough",
+  "originalContribution": "把赛前交锋优势、两队首发延续率差异与加时赛唯一进球放在同一分析框架中，说明西班牙如何将稳定性转化为淘汰赛胜势，同时避免把阵容延续率直接解释为进球原因。",
+  "readerQuestion": "西班牙为何能在常规时间未分胜负后，于加时赛凭借唯一进球击败阿根廷？",
+  "author": "EventAnalysis",
+  "confidence": 92,
+  "entityRefs": [
+    "team_0f34b7bb2edb12d9b7d3",
+    "team_286dbc7f218c4768b458"
+  ],
+  "eventRefs": [
+    "event_ea7993453165e916736c"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "西班牙在世界杯淘汰赛中以1比0击败阿根廷。"
+    },
+    {
+      "id": "claim_winning_goal",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events"
+      ],
+      "summary": "费兰·托雷斯在第106分钟为西班牙攻入全场唯一进球。"
+    },
+    {
+      "id": "claim_h2h_record",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_head_to_head_before_match"
+      ],
+      "summary": "本场赛前双方四次交锋中，西班牙三胜、阿根廷一胜，没有平局。"
+    },
+    {
+      "id": "claim_h2h_calculation",
+      "kind": "calculation",
+      "factRefs": [
+        "event_ea7993453165e916736c_head_to_head_before_match"
+      ],
+      "summary": "西班牙赛前对阿根廷的交锋胜率为75%，比阿根廷的25%高50个百分点。"
+    },
+    {
+      "id": "claim_spain_continuity",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "与各自上一场比赛相比，西班牙本场11名首发全部保留，首发延续率为100%。"
+    },
+    {
+      "id": "claim_argentina_changes",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "阿根廷保留8名上一场首发，首发延续率为72.7%，蒙铁尔、德保罗和尼科·冈萨雷斯进入首发，莫利纳、帕雷德斯和朱利亚诺·西蒙尼退出首发。"
+    },
+    {
+      "id": "claim_continuity_gap",
+      "kind": "calculation",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "西班牙的首发延续率比阿根廷高27.3个百分点。"
+    },
+    {
+      "id": "claim_stability_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes",
+        "event_ea7993453165e916736c_key_events",
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "在比赛延长至加时赛的背景下，西班牙更高的阵容延续性为理解其最终胜出提供了一个合理角度，但现有数据不足以证明延续率差异直接伴随着进球。"
+    },
+    {
+      "id": "claim_late_pressure",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events"
+      ],
+      "summary": "失球后，阿根廷在第115分钟和补时第1分钟由梅西主罚角球，并在第117分钟由梅西完成一次射门尝试，但比分没有改变。"
+    },
+    {
+      "id": "claim_game_management",
+      "kind": "analysis",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events",
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "西班牙在第106分钟领先后守住1比0，比赛末段的事件序列显示阿根廷继续施压，而西班牙最终保住了最小领先优势。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "spain-1-0-argentina-extra-time-analysis",
+      "title": "费兰·托雷斯加时破局：西班牙1比0淘汰阿根廷",
+      "deck": "西班牙凭第106分钟的唯一进球取胜；100%的首发延续率与赛前交锋优势，为这场加时胜利提供了两条观察线索。",
+      "competition": "国际足联世界杯淘汰赛",
+      "venue": "未提供",
+      "homeName": "西班牙",
+      "awayName": "阿根廷",
+      "resultLabel": "西班牙 1比0 阿根廷",
+      "sections": [
+        {
+          "id": "decisive_moment",
+          "title": "决定比赛的一刻",
+          "paragraphs": [
+            {
+              "text": "这场淘汰赛直到加时赛才出现唯一进球。第106分钟，费兰·托雷斯为西班牙破门，将比分改写为1比0；这一比分随后保持到比赛结束。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_winning_goal"
+              ],
+              "id": "paragraph_decisive_moment_1"
+            }
+          ]
+        },
+        {
+          "id": "continuity",
+          "title": "阵容延续性的反差",
+          "paragraphs": [
+            {
+              "text": "西班牙沿用了上一场比赛的全部11名首发，延续率达到100%。阿根廷则保留8名首发，延续率为72.7%，两队相差27.3个百分点。",
+              "claimRefs": [
+                "claim_spain_continuity",
+                "claim_argentina_changes",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_1"
+            },
+            {
+              "text": "阿根廷的首发调整涉及三进三出：蒙铁尔、德保罗和尼科·冈萨雷斯进入首发，莫利纳、帕雷德斯和朱利亚诺·西蒙尼退出。阵容稳定性可以作为理解西班牙加时赛胜出的一个角度，但仅凭这些数据，不能认定它就是制胜进球的直接原因。",
+              "claimRefs": [
+                "claim_argentina_changes",
+                "claim_stability_analysis"
+              ],
+              "id": "paragraph_continuity_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "赛前交锋优势得到延续",
+          "paragraphs": [
+            {
+              "text": "本场之前，两队四次交锋没有平局，西班牙取得三胜，阿根廷一胜。对应胜率为75%对25%，西班牙高出50个百分点；本场1比0之后，赛前已经存在的对阵优势在结果层面得到延续。",
+              "claimRefs": [
+                "claim_h2h_record",
+                "claim_h2h_calculation",
+                "claim_final_result"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        },
+        {
+          "id": "closing_phase",
+          "title": "领先后的末段考验",
+          "paragraphs": [
+            {
+              "text": "落后之后，阿根廷继续寻找扳平机会：梅西在第115分钟和补时第1分钟两次主罚角球，并在第117分钟完成射门尝试。西班牙没有扩大比分，但守住了费兰·托雷斯带来的最小领先优势。",
+              "claimRefs": [
+                "claim_late_pressure",
+                "claim_game_management"
+              ],
+              "id": "paragraph_closing_phase_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "106'",
+          "label": "费兰·托雷斯进球，西班牙1比0领先。",
+          "claimRefs": [
+            "claim_winning_goal"
+          ]
+        }
+      ],
+      "status": "needs_review",
+      "complianceStatus": "unreviewed"
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "AR",
+    "ES"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "d2f13dd8d4782cb2eff08a40793afa1ec13c9b0d4334a06a28ffdd3b48eb5c67",
+  "riskClass": "A"
+}
