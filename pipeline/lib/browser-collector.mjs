@@ -10,6 +10,14 @@ export class AccessControlError extends Error {
   }
 }
 
+export class BrowserResponseTimeoutError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "BrowserResponseTimeoutError";
+    this.code = "BROWSER_RESPONSE_TIMEOUT";
+  }
+}
+
 const lastNavigationBySource = new Map();
 
 async function pace(source) {
@@ -30,6 +38,22 @@ function sha256(value) {
 
 function transientNavigationError(error) {
   return /ERR_(?:CONNECTION_RESET|CONNECTION_CLOSED|TIMED_OUT|NETWORK_CHANGED)|Timeout/i.test(String(error));
+}
+
+export async function waitForPendingBrowserResponses(pending, { timeoutMs = 15_000 } = {}) {
+  const deadline = timeoutMs > 0 ? Date.now() + timeoutMs : Number.POSITIVE_INFINITY;
+  while (pending.size > 0) {
+    if (Date.now() > deadline) {
+      throw new BrowserResponseTimeoutError(`Timed out waiting for ${pending.size} browser response(s) to finish.`);
+    }
+    const snapshot = [...pending];
+    if (!snapshot.length) continue;
+    const remaining = Math.max(1, deadline - Date.now());
+    await Promise.race([
+      Promise.allSettled(snapshot),
+      new Promise((_, reject) => setTimeout(() => reject(new BrowserResponseTimeoutError(`Timed out waiting for ${pending.size} browser response(s) to finish.`)), remaining)),
+    ]);
+  }
 }
 
 export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000, interact }) {
@@ -56,9 +80,12 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
   await mkdir(responseDirectory, { recursive: true, mode: 0o700 });
   const captured = [];
   const pending = new Set();
+  const responseErrors = [];
   let sequence = 0;
+  let captureClosed = false;
 
   page.on("response", (response) => {
+    if (captureClosed) return;
     const promise = (async () => {
       const responseUrl = new URL(response.url());
       if (!allowedOrigins.has(responseUrl.origin)) return;
@@ -73,9 +100,13 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
       if (Buffer.byteLength(body) > 20 * 1024 * 1024) return;
       const name = `${String(sequence++).padStart(4, "0")}-${safeFilePart(responseUrl.pathname)}.json`;
       const path = resolve(responseDirectory, name);
+      if (captureClosed) return;
       await writeFile(path, body, { mode: 0o600 });
       captured.push({ url: responseUrl.toString(), status: response.status(), path, body, hash: sha256(body) });
-    })();
+    })().catch((error) => {
+      if (captureClosed && error?.code === "ENOENT") return;
+      responseErrors.push(error);
+    });
     pending.add(promise);
     promise.finally(() => pending.delete(promise));
   });
@@ -110,7 +141,9 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
     }
     if (interact) await interact(page);
     await page.waitForLoadState("networkidle", { timeout: Math.min(timeoutMs, 12_000) }).catch(() => {});
-    await Promise.allSettled([...pending]);
+    await waitForPendingBrowserResponses(pending, { timeoutMs: Math.min(timeoutMs, 15_000) });
+    captureClosed = true;
+    if (responseErrors.length > 0) throw responseErrors[0];
 
     const title = await page.title();
     const visibleText = (await page.locator("body").innerText({ timeout: 5_000 }).catch(() => "")).slice(0, 200_000);
@@ -123,6 +156,7 @@ export async function collectBrowserPage({ source, url, job, timeoutMs = 45_000,
     await job.checkDisk();
     return { title, visibleText, htmlPath, pageHash: sha256(html), responses: captured };
   } finally {
+    captureClosed = true;
     await context.clearCookies().catch(() => {});
     await context.close().catch(() => {});
     await browser.close().catch(() => {});

@@ -12,7 +12,8 @@ const outputArgument = process.argv.find((value) => value.startsWith("--output="
 const includeApproved = process.argv.includes("--include-approved");
 const localeArgument = process.argv.find((value) => value.startsWith("--locales="))?.slice("--locales=".length);
 const clientOutput = outputArgument ? resolve(root, outputArgument) : resolve(root, "dist/client");
-const baseUrl = "https://eventanalysis.org";
+const baseUrl = "https://www.eventanalysis.org";
+const sitemapBaseUrl = baseUrl;
 const [data, locales, sports, adConfig] = await Promise.all([
   validateContentData(root),
   readJson("content/locales.json"),
@@ -27,6 +28,12 @@ const entityMap = new Map(data.entities.map((entity) => [entity.id, entity]));
 const eventMap = new Map(data.events.map((event) => [event.id, event]));
 const factMap = new Map(data.facts.map((fact) => [fact.id, fact]));
 const activeSports = sports.filter(({ status }) => status === "active");
+const visibleLocaleEntries = locales.filter(({ code }) => buildLocaleCodes.includes(code));
+const defaultLocaleForBuild = buildLocaleCodes.includes("en") ? "en" : buildLocaleCodes[0];
+
+function isBuildLocale(locale) {
+  return buildLocaleCodes.includes(locale);
+}
 
 async function readJson(path) {
   return JSON.parse(await readFile(resolve(root, path), "utf8"));
@@ -42,6 +49,10 @@ function escapeXml(value) {
 
 function encodedPath(path) {
   return path.split("/").map((part) => encodeURIComponent(part)).join("/");
+}
+
+function publicUrl(path) {
+  return absoluteUrl(path, baseUrl);
 }
 
 function titleCaseSegment(value) {
@@ -67,6 +78,10 @@ function publicationDate(item) {
 
 function isEditionVisible(item, locale) {
   return includeApproved ? isEditionLocallyPreviewable(item, locale) : isEditionPublishable(item, locale);
+}
+
+function isEditionVisibleInBuild(item, locale) {
+  return isBuildLocale(locale) && isEditionVisible(item, locale);
 }
 
 function publishedEntries(locale, sport = "football") {
@@ -104,8 +119,8 @@ function adRuntime() {
 }
 
 function alternateLinks(alternates, xDefault) {
-  const links = alternates.map(({ locale, path }) => `<link rel="alternate" hreflang="${escapeHtml(localeMap.get(locale).htmlLang)}" href="${absoluteUrl(path)}">`);
-  if (xDefault) links.push(`<link rel="alternate" hreflang="x-default" href="${absoluteUrl(xDefault)}">`);
+  const links = alternates.map(({ locale, path }) => `<link rel="alternate" hreflang="${escapeHtml(localeMap.get(locale).htmlLang)}" href="${publicUrl(path)}">`);
+  if (xDefault) links.push(`<link rel="alternate" hreflang="x-default" href="${publicUrl(xDefault)}">`);
   return links.join("\n  ");
 }
 
@@ -121,7 +136,7 @@ function documentPage({ locale = "en", title, description, canonical, alternates
   <meta name="robots" content="${robots}">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>${escapeHtml(title)} · Event Analysis</title>
-  <link rel="canonical" href="${absoluteUrl(canonical)}">
+  <link rel="canonical" href="${publicUrl(canonical)}">
   ${alternateLinks(alternates, xDefault)}
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -137,12 +152,11 @@ function documentPage({ locale = "en", title, description, canonical, alternates
 }
 
 function languageMenu(locale, linkForLocale) {
-  const visibleLocales = locales.filter(({ code }) => buildLocaleCodes.includes(code));
-  const links = visibleLocales.map((entry) => {
+  const links = visibleLocaleEntries.map((entry) => {
     const href = linkForLocale(entry.code);
     return `<a href="${encodedPath(href)}" hreflang="${escapeHtml(entry.htmlLang)}" lang="${escapeHtml(entry.htmlLang)}" dir="${entry.dir}"${entry.code === locale ? ' aria-current="page"' : ""}><span>${escapeHtml(entry.nativeName)}</span><small>${escapeHtml(entry.code.toUpperCase())}</small></a>`;
   }).join("");
-  return `<details class="locale-menu"><summary class="locale-switch" aria-label="${escapeHtml(ui[locale].nav.languages)}">${escapeHtml(localeMap.get(locale).nativeName)} · ${visibleLocales.length}</summary><div class="locale-menu-panel">${links}</div></details>`;
+  return `<details class="locale-menu"><summary class="locale-switch" aria-label="${escapeHtml(ui[locale].nav.languages)}">${escapeHtml(localeMap.get(locale).nativeName)} · ${visibleLocaleEntries.length}</summary><div class="locale-menu-panel">${links}</div></details>`;
 }
 
 function shell(locale, sport, content, { linkForLocale = (code) => homeRoute(code, sport) } = {}) {
@@ -172,9 +186,9 @@ function shell(locale, sport, content, { linkForLocale = (code) => homeRoute(cod
 function legalPage(locale, sport) {
   const copy = legalCopy[locale];
   const canonical = legalRoute(locale, sport);
-  const alternates = locales.map(({ code }) => ({ locale: code, path: legalRoute(code, sport) }));
+  const alternates = visibleLocaleEntries.map(({ code }) => ({ locale: code, path: legalRoute(code, sport) }));
   const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(copy.label)}</span></nav><header class="page-hero"><p class="eyebrow">EventAnalysis.org</p><h1>${escapeHtml(copy.title)}</h1><p>${escapeHtml(copy.intro)}</p></header><section class="section legal-contact"><p>${escapeHtml(copy.policy)}</p><p><a href="mailto:legal@eventanalysis.org">${escapeHtml(copy.contact)} · legal@eventanalysis.org</a></p></section></div>`;
-  return documentPage({ locale, title: copy.title, description: copy.intro, canonical, alternates, xDefault: legalRoute("en", sport), body: shell(locale, sport, content, { linkForLocale: (code) => legalRoute(code, sport) }), jsonLd: [{ "@type": "WebPage", name: copy.title, description: copy.intro, inLanguage: localeMap.get(locale).htmlLang, url: absoluteUrl(canonical) }] });
+  return documentPage({ locale, title: copy.title, description: copy.intro, canonical, alternates, xDefault: legalRoute(defaultLocaleForBuild, sport), body: shell(locale, sport, content, { linkForLocale: (code) => legalRoute(code, sport) }), jsonLd: [{ "@type": "WebPage", name: copy.title, description: copy.intro, inLanguage: localeMap.get(locale).htmlLang, url: publicUrl(canonical) }] });
 }
 
 function homePage(locale, sport) {
@@ -184,34 +198,46 @@ function homePage(locale, sport) {
   const lead = leadEntry ? leadStory(locale, leadEntry) : `<div class="editorial-principles">${copy.home.cards.map(([title, text], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></article>`).join("")}</div>`;
   const latestHeading = entries.length ? `<div class="section-heading"><h2>${escapeHtml(copy.home.latest)}</h2><a href="${encodedPath(route(locale, sport, "all-content"))}">${escapeHtml(titleCaseSegment(data.routes.locales[locale]["all-content"]))}</a></div>` : `<div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div>`;
   const additional = entries.length ? `<section class="section page-width"><div class="section-heading"><h2>${escapeHtml(copy.home.framework)}</h2></div><div class="brief-grid">${copy.home.cards.map(([title, text], index) => `<article class="brief-card"><span class="brief-card-index">0${index + 1}</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></article>`).join("")}</div></section>` : "";
-  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${copy.home.headline.split("\n").map(escapeHtml).join("<br>")}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span><span class="live-dot"></span>${escapeHtml(copy.home.desk)}</span><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width">${latestHeading}${lead}</section>${adSlot("content-mid")}${additional}`;
+  const content = `<section class="masthead page-width"><p class="eyebrow">${escapeHtml(copy.home.eyebrow)}</p><h1>${copy.home.headline.split("\n").map(escapeHtml).join("<br>")}</h1><div class="masthead-bottom"><p class="masthead-intro">${escapeHtml(copy.home.intro)}</p><div class="edition-stamp"><span>${escapeHtml(copy.home.scope)}</span></div></div></section><section id="latest" class="section page-width">${latestHeading}${lead}</section>${adSlot("content-mid")}${additional}`;
   const canonical = homeRoute(locale, sport);
-  const alternates = locales.map(({ code }) => ({ locale: code, path: homeRoute(code, sport) }));
-  return documentPage({ locale, title: copy.pageTitle, description: copy.pageDescription, canonical, alternates, xDefault: homeRoute("en", sport), body: shell(locale, sport, content), jsonLd: [{ "@type": "CollectionPage", name: copy.pageTitle, description: copy.pageDescription, inLanguage: localeMap.get(locale).htmlLang, url: absoluteUrl(canonical) }] });
+  const alternates = visibleLocaleEntries.map(({ code }) => ({ locale: code, path: homeRoute(code, sport) }));
+  return documentPage({ locale, title: copy.pageTitle, description: copy.pageDescription, canonical, alternates, xDefault: homeRoute(defaultLocaleForBuild, sport), body: shell(locale, sport, content), jsonLd: [{ "@type": "CollectionPage", name: copy.pageTitle, description: copy.pageDescription, inLanguage: localeMap.get(locale).htmlLang, url: publicUrl(canonical) }] });
+}
+
+function compactMeta(parts) {
+  return parts.map((value) => String(value || "").trim()).filter(Boolean).join(" · ");
+}
+
+function publicScoreLabel(locale, edition, event) {
+  const separator = locale === "zh" || locale === "zh-hant" ? "比" : "–";
+  return `${edition.homeName} ${event.homeScore}${separator}${event.awayScore} ${edition.awayName}`;
 }
 
 function leadStory(locale, { item, edition, path }) {
   const event = eventMap.get(item.eventRefs[0]);
-  return `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span class="story-status">${escapeHtml(ui[locale].home.reviewed)}</span><span>${escapeHtml(edition.competition)}</span></div><h2><a href="${encodedPath(path)}">${escapeHtml(edition.title)}</a></h2><p>${escapeHtml(edition.deck)}</p><a class="story-link" href="${encodedPath(path)}">${escapeHtml(ui[locale].home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(edition.resultLabel)}</span><div><div class="scoreline"><span>${escapeHtml(edition.homeName)}</span><strong>${event.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(edition.awayName)}</span><strong>${event.awayScore}</strong></div></div><span class="score-date">${escapeHtml(edition.venue)} · ${event.startedAt.slice(0, 10)}</span></div></article>`;
+  return `<article class="lead-story"><div class="lead-copy"><div class="story-kicker"><span>${escapeHtml(edition.competition)}</span></div><h2><a href="${encodedPath(path)}">${escapeHtml(edition.title)}</a></h2><p>${escapeHtml(edition.deck)}</p><a class="story-link" href="${encodedPath(path)}">${escapeHtml(ui[locale].home.read)} →</a></div><div class="score-panel"><span class="score-competition">${escapeHtml(publicScoreLabel(locale, edition, event))}</span><div><div class="scoreline"><span>${escapeHtml(edition.homeName)}</span><strong>${event.homeScore}</strong></div><div class="scoreline"><span>${escapeHtml(edition.awayName)}</span><strong>${event.awayScore}</strong></div></div><span class="score-date">${escapeHtml(compactMeta([edition.venue, event.startedAt.slice(0, 10)]))}</span></div></article>`;
 }
 
 function collectionPage(locale, sport, routeKey, entries) {
   const copy = ui[locale];
   const title = titleCaseSegment(data.routes.locales[locale][routeKey]);
-  const intro = routeKey === "all-content" ? copy.archive.intro : copy.pageDescription;
+  const intro = copy.pageDescription;
   const canonical = route(locale, sport, routeKey);
+  const hasCollectionForLocale = (code) => {
+    const candidates = publishedEntries(code, sport);
+    return routeKey === "all-content"
+      ? candidates.length > 0
+      : candidates.some(({ item }) => routeKeyForType(item.type) === routeKey);
+  };
   const rows = entries.map(({ item, edition, path }) => {
     const event = eventMap.get(item.eventRefs[0]);
     const dateValue = publicationDate(item);
     const date = new Intl.DateTimeFormat(localeMap.get(locale).htmlLang).format(new Date(dateValue));
-    return `<a class="archive-row" href="${encodedPath(path)}"><time datetime="${escapeHtml(dateValue)}">${escapeHtml(date)}</time><h2>${escapeHtml(edition.title)}</h2><span class="archive-meta">${escapeHtml(edition.competition || title)}</span><strong class="archive-score">${event ? `${event.homeScore}–${event.awayScore}` : "EA"}</strong></a>`;
+    return `<a class="archive-row" href="${encodedPath(path)}"><time datetime="${escapeHtml(dateValue)}">${escapeHtml(date)}</time><h2>${escapeHtml(edition.title)}</h2><p>${escapeHtml(edition.deck || intro)}</p><span class="archive-meta">${escapeHtml(edition.competition || title)}</span><strong class="archive-score">${event ? `${event.homeScore}–${event.awayScore}` : "EA"}</strong></a>`;
   }).join("");
-  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">Event Analysis · ${escapeHtml(sport)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
-  const alternateLocales = locales.filter(({ code }) => {
-    const candidates = publishedEntries(code, sport);
-    return routeKey === "all-content" ? candidates.length : candidates.some(({ item }) => routeKeyForType(item.type) === routeKey);
-  }).map(({ code }) => ({ locale: code, path: route(code, sport, routeKey) }));
-  return documentPage({ locale, title, description: intro, canonical, alternates: alternateLocales, xDefault: alternateLocales.find(({ locale: code }) => code === "en")?.path, body: shell(locale, sport, content, { linkForLocale: (code) => publishedEntries(code, sport).length ? route(code, sport, routeKey) : homeRoute(code, sport) }), jsonLd: [{ "@type": "CollectionPage", name: title, description: intro, inLanguage: localeMap.get(locale).htmlLang, url: absoluteUrl(canonical) }, breadcrumbJson(locale, sport, [{ name: title, path: canonical }])] });
+  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">${escapeHtml(copy.pageTitle)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(intro)}</p></header><section class="section"><div class="archive-list">${rows}</div></section>${adSlot("content-mid")}</div>`;
+  const alternateLocales = visibleLocaleEntries.filter(({ code }) => hasCollectionForLocale(code)).map(({ code }) => ({ locale: code, path: route(code, sport, routeKey) }));
+  return documentPage({ locale, title, description: intro, canonical, alternates: alternateLocales, xDefault: alternateLocales.find(({ locale: code }) => code === "en")?.path || alternateLocales[0]?.path, body: shell(locale, sport, content, { linkForLocale: (code) => hasCollectionForLocale(code) ? route(code, sport, routeKey) : homeRoute(code, sport) }), jsonLd: [{ "@type": "CollectionPage", name: title, description: intro, inLanguage: localeMap.get(locale).htmlLang, url: publicUrl(canonical) }, breadcrumbJson(locale, sport, [{ name: title, path: canonical }])] });
 }
 
 function searchPage(locale, sport, entries) {
@@ -227,12 +253,12 @@ function searchPage(locale, sport, entries) {
     const options = ids.map((id) => `<option value="${escapeHtml(id)}">${escapeHtml(entityMap.get(id).names?.[locale] || entityMap.get(id).canonicalName)}</option>`).join("");
     return `<label>${escapeHtml(label)}<select data-search-facet="entities"><option value="">${escapeHtml(labels.all)}</option>${options}</select></label>`;
   };
-  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">Event Analysis · Search</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(ui[locale].pageDescription)}</p></header><div class="search-controls"><label>${escapeHtml(labels.query)}<input type="search" data-search-query autocomplete="off"></label><label>${escapeHtml(labels.type)}<select data-search-facet="type"><option value="">${escapeHtml(labels.all)}</option>${types}</select></label>${facet("Person", labels.person)}${facet("Team", labels.team)}${facet("Competition", labels.competition)}${facet("Place", labels.place)}<label>${escapeHtml(labels.year)}<select data-search-facet="year"><option value="">${escapeHtml(labels.all)}</option>${years}</select></label></div><p class="search-empty" data-search-empty hidden>${escapeHtml(labels.noResults)}</p><section class="search-results">${cards}</section></div>`;
+  const content = `<div class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, sport))}">EA</a><span>·</span><span>${escapeHtml(title)}</span></nav><header class="page-hero"><p class="eyebrow">${escapeHtml(ui[locale].pageTitle)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(ui[locale].pageDescription)}</p></header><div class="search-controls"><label>${escapeHtml(labels.query)}<input type="search" data-search-query autocomplete="off"></label><label>${escapeHtml(labels.type)}<select data-search-facet="type"><option value="">${escapeHtml(labels.all)}</option>${types}</select></label>${facet("Person", labels.person)}${facet("Team", labels.team)}${facet("Competition", labels.competition)}${facet("Place", labels.place)}<label>${escapeHtml(labels.year)}<select data-search-facet="year"><option value="">${escapeHtml(labels.all)}</option>${years}</select></label></div><p class="search-empty" data-search-empty hidden>${escapeHtml(labels.noResults)}</p><section class="search-results">${cards}</section></div>`;
   return documentPage({ locale, title, description: ui[locale].pageDescription, canonical, robots: "noindex,follow", body: shell(locale, sport, content, { linkForLocale: (code) => publishedEntries(code, sport).length ? route(code, sport, "search") : homeRoute(code, sport) }), scripts: ["/assets/search.js"] });
 }
 
 function breadcrumbJson(locale, sport, tail) {
-  return { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Event Analysis", item: absoluteUrl(homeRoute(locale, sport)) }, ...tail.map((entry, index) => ({ "@type": "ListItem", position: index + 2, name: entry.name, item: absoluteUrl(entry.path) }))] };
+  return { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Event Analysis", item: publicUrl(homeRoute(locale, sport)) }, ...tail.map((entry, index) => ({ "@type": "ListItem", position: index + 2, name: entry.name, item: publicUrl(entry.path) }))] };
 }
 
 function articlePage(locale, item, edition) {
@@ -246,10 +272,10 @@ function articlePage(locale, item, edition) {
   const sections = edition.sections.map((section) => `<section><h2>${escapeHtml(section.title)}</h2>${section.id === "history" && h2h ? h2hTable(locale, edition, h2h) : ""}${section.id === "result" && edition.timeline?.length ? timeline(edition.timeline) : ""}${section.paragraphs.map((paragraph) => { const analysis = paragraph.claimRefs.some((id) => claims.get(id)?.kind === "analysis"); return `<p><span class="${analysis ? "analysis-label" : "fact-label"}">${escapeHtml(analysis ? labels.analysis : labels.fact)}</span>${escapeHtml(paragraph.text)}</p>`; }).join("")}</section>`).join("");
   const dateValue = publicationDate(item);
   const published = new Intl.DateTimeFormat(localeMap.get(locale).htmlLang, { dateStyle: "long" }).format(new Date(dateValue));
-  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.homeName)} – ${escapeHtml(edition.awayName)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.competition)}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(dateValue)}">${escapeHtml(published)}</time><span>${escapeHtml(labels.reviewed)}</span></div></header><div class="matchboard" aria-label="${escapeHtml(`${edition.homeName} ${event.homeScore}, ${edition.awayName} ${event.awayScore}`)}"><div class="matchboard-team"><strong>${escapeHtml(edition.homeName)}</strong><span>${escapeHtml(edition.venue)}</span></div><div class="matchboard-score">${event.homeScore}–${event.awayScore}</div><div class="matchboard-team"><strong>${escapeHtml(edition.awayName)}</strong><span>${escapeHtml(edition.resultLabel)}</span></div></div><div class="article-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(labels.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(labels.historicalSample)}</strong><span>${h2h?.matches || 0} ${escapeHtml(labels.matches)}</span></div><div class="rail-box"><strong>${escapeHtml(labels.contentType)}</strong><span>${escapeHtml(labels.postMatch)}</span></div></aside><div class="article-body">${sections}<div class="confidence"><div class="confidence-head"><span>${escapeHtml(labels.evidence)}</span><strong>${item.confidence}%</strong></div><div class="confidence-track"><div class="confidence-fill" style="width:${item.confidence}%"></div></div></div></div></div>${adSlot("content-mid")}</article>`;
-  const translations = Object.entries(item.editions).filter(([code]) => isEditionVisible(item, code)).map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
-  const graph = [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: dateValue, dateModified: item.reviewedAt || dateValue, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: absoluteUrl(path) }, { "@type": "SportsEvent", name: `${edition.homeName} ${event.homeScore}–${event.awayScore} ${edition.awayName}`, sport: "Football", startDate: event.startedAt, location: { "@type": "Place", name: edition.venue }, homeTeam: { "@type": "SportsTeam", name: edition.homeName }, awayTeam: { "@type": "SportsTeam", name: edition.awayName } }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])];
-  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => isEditionVisible(item, code) ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: graph });
+  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.homeName)} – ${escapeHtml(edition.awayName)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.competition)}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(dateValue)}">${escapeHtml(published)}</time></div></header><div class="matchboard" aria-label="${escapeHtml(`${edition.homeName} ${event.homeScore}, ${edition.awayName} ${event.awayScore}`)}"><div class="matchboard-team"><strong>${escapeHtml(edition.homeName)}</strong><span>${escapeHtml(compactMeta([edition.venue, event.startedAt.slice(0, 10)]))}</span></div><div class="matchboard-score">${event.homeScore}–${event.awayScore}</div><div class="matchboard-team"><strong>${escapeHtml(edition.awayName)}</strong><span>${escapeHtml(publicScoreLabel(locale, edition, event))}</span></div></div><div class="article-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(labels.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(labels.historicalSample)}</strong><span>${h2h?.matches || 0} ${escapeHtml(labels.matches)}</span></div><div class="rail-box"><strong>${escapeHtml(labels.contentType)}</strong><span>${escapeHtml(labels.postMatch)}</span></div></aside><div class="article-body">${sections}<div class="confidence"><div class="confidence-head"><span>${escapeHtml(labels.evidence)}</span><strong>${item.confidence}%</strong></div><div class="confidence-track"><div class="confidence-fill" style="width:${item.confidence}%"></div></div></div></div></div>${adSlot("content-mid")}</article>`;
+  const translations = Object.entries(item.editions).filter(([code]) => isEditionVisibleInBuild(item, code)).map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
+  const graph = [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: dateValue, dateModified: item.reviewedAt || dateValue, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: publicUrl(path) }, { "@type": "SportsEvent", name: `${edition.homeName} ${event.homeScore}–${event.awayScore} ${edition.awayName}`, sport: "Football", startDate: event.startedAt, location: { "@type": "Place", name: edition.venue }, homeTeam: { "@type": "SportsTeam", name: edition.homeName }, awayTeam: { "@type": "SportsTeam", name: edition.awayName } }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])];
+  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path || translations[0]?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => isEditionVisibleInBuild(item, code) ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: graph });
 }
 
 function editorialPage(locale, item, edition) {
@@ -258,9 +284,9 @@ function editorialPage(locale, item, edition) {
   const claims = new Map(item.claims.map((claim) => [claim.id, claim]));
   const sections = edition.sections.map((section) => `<section><h2>${escapeHtml(section.title)}</h2>${section.paragraphs.map((paragraph) => { const analysis = paragraph.claimRefs.some((id) => claims.get(id)?.kind === "analysis"); return `<p><span class="${analysis ? "analysis-label" : "fact-label"}">${escapeHtml(analysis ? ui[locale].article.analysis : ui[locale].article.fact)}</span>${escapeHtml(paragraph.text)}</p>`; }).join("")}</section>`).join("");
   const dateValue = publicationDate(item);
-  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.title)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.kicker || titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(dateValue)}">${escapeHtml(new Intl.DateTimeFormat(localeMap.get(locale).htmlLang, { dateStyle: "long" }).format(new Date(dateValue)))}</time><span>${escapeHtml(ui[locale].article.reviewed)}</span></div></header><div class="article-layout editorial-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(ui[locale].article.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(ui[locale].article.contentType)}</strong><span>${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</span></div></aside><div class="article-body">${sections}</div></div>${adSlot("content-mid")}</article>`;
-  const translations = Object.entries(item.editions).filter(([code]) => isEditionVisible(item, code)).map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
-  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => isEditionVisible(item, code) ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: dateValue, dateModified: item.reviewedAt || dateValue, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: absoluteUrl(path) }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])] });
+  const content = `<article class="page-width"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="${encodedPath(homeRoute(locale, item.sport))}">EA</a><span>·</span><a href="${encodedPath(sectionPath)}">${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</a><span>·</span><span>${escapeHtml(edition.title)}</span></nav><header class="article-header"><p class="eyebrow">${escapeHtml(edition.kicker || titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</p><h1>${escapeHtml(edition.title)}</h1><p class="article-deck">${escapeHtml(edition.deck)}</p><div class="article-byline"><span>${escapeHtml(item.author)}</span><time datetime="${escapeHtml(dateValue)}">${escapeHtml(new Intl.DateTimeFormat(localeMap.get(locale).htmlLang, { dateStyle: "long" }).format(new Date(dateValue)))}</time></div></header><div class="article-layout editorial-layout"><aside class="article-rail"><div class="rail-box"><strong>${escapeHtml(ui[locale].article.confidence)}</strong><span>${item.confidence}/100</span></div><div class="rail-box"><strong>${escapeHtml(ui[locale].article.contentType)}</strong><span>${escapeHtml(titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]))}</span></div></aside><div class="article-body">${sections}</div></div>${adSlot("content-mid")}</article>`;
+  const translations = Object.entries(item.editions).filter(([code]) => isEditionVisibleInBuild(item, code)).map(([code, candidate]) => ({ locale: code, path: route(code, item.sport, routeKeyForType(item.type), candidate.slug) }));
+  return documentPage({ locale, title: edition.title, description: edition.deck, canonical: path, alternates: translations, xDefault: translations.find(({ locale: code }) => code === "en")?.path || translations[0]?.path, body: shell(locale, item.sport, content, { linkForLocale: (code) => isEditionVisibleInBuild(item, code) ? route(code, item.sport, routeKeyForType(item.type), item.editions[code].slug) : homeRoute(code, item.sport) }), jsonLd: [{ "@type": "Article", headline: edition.title, description: edition.deck, datePublished: dateValue, dateModified: item.reviewedAt || dateValue, inLanguage: localeMap.get(locale).htmlLang, author: { "@type": "Organization", name: item.author }, publisher: { "@type": "Organization", name: "Event Analysis" }, mainEntityOfPage: publicUrl(path) }, breadcrumbJson(locale, item.sport, [{ name: titleCaseSegment(data.routes.locales[locale][routeKeyForType(item.type)]), path: sectionPath }, { name: edition.title, path }])] });
 }
 
 function h2hTable(locale, edition, value) {
@@ -282,8 +308,8 @@ export const templateRegistry = Object.freeze({
 });
 
 function feed(locale, sport, entries) {
-  const items = entries.map(({ item, edition, path }) => { const url = absoluteUrl(path); return `<item><title>${escapeXml(edition.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(publicationDate(item)).toUTCString()}</pubDate><description>${escapeXml(edition.deck)}</description></item>`; }).join("");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(localeMap.get(locale).nativeName)}</title><link>${absoluteUrl(homeRoute(locale, sport))}</link><description>${escapeXml(ui[locale].pageDescription)}</description><language>${localeMap.get(locale).htmlLang}</language>${items}</channel></rss>\n`;
+  const items = entries.map(({ item, edition, path }) => { const url = publicUrl(path); return `<item><title>${escapeXml(edition.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(publicationDate(item)).toUTCString()}</pubDate><description>${escapeXml(edition.deck)}</description></item>`; }).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Event Analysis · ${escapeXml(localeMap.get(locale).nativeName)}</title><link>${publicUrl(homeRoute(locale, sport))}</link><description>${escapeXml(ui[locale].pageDescription)}</description><language>${localeMap.get(locale).htmlLang}</language>${items}</channel></rss>\n`;
 }
 
 function rootPage() {
@@ -343,12 +369,12 @@ for (const sport of activeSports) for (const locale of buildLocaleCodes) {
 }
 
 for (const group of sitemapGroups) {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${group.paths.map((path) => `<url><loc>${absoluteUrl(path)}</loc><lastmod>${new Date(group.lastModified).toISOString()}</lastmod></url>`).join("")}</urlset>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${group.paths.map((path) => `<url><loc>${absoluteUrl(path, sitemapBaseUrl)}</loc><lastmod>${new Date(group.lastModified).toISOString()}</lastmod></url>`).join("")}</urlset>\n`;
   await writeFileEnsured(resolve(clientOutput, "sitemaps", `${group.name}.xml`), xml);
 }
-const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapGroups.map(({ name, lastModified }) => `<sitemap><loc>${baseUrl}/sitemaps/${name}.xml</loc><lastmod>${new Date(lastModified).toISOString()}</lastmod></sitemap>`).join("")}</sitemapindex>\n`;
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapGroups.map(({ name, lastModified }) => `<sitemap><loc>${sitemapBaseUrl}/sitemaps/${name}.xml</loc><lastmod>${new Date(lastModified).toISOString()}</lastmod></sitemap>`).join("")}</sitemapindex>\n`;
 await writeFileEnsured(resolve(clientOutput, "sitemap.xml"), sitemapIndex);
-await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\nHost: ${baseUrl}\n`);
+await writeFileEnsured(resolve(clientOutput, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${sitemapBaseUrl}/sitemap.xml\nHost: ${sitemapBaseUrl}\n`);
 const notFoundLocale = buildLocaleCodes.includes("en") ? "en" : buildLocaleCodes[0];
 await writeFileEnsured(resolve(clientOutput, "404.html"), documentPage({ locale: notFoundLocale, title: notFoundLocale === "zh" ? "页面不存在" : "Page not found", description: notFoundLocale === "zh" ? "请求的页面不存在。" : "The requested page does not exist.", canonical: "/404.html", robots: "noindex,follow", body: shell(notFoundLocale, "football", `<div class="not-found"><div><strong>404</strong><h1>${notFoundLocale === "zh" ? "页面不存在" : "Page not found"}</h1><a href="${homeRoute(notFoundLocale)}">Event Analysis</a></div></div>`) }));
 

@@ -3,6 +3,7 @@ import { basename, relative, resolve } from "node:path";
 import { auditContentItem } from "./lib/compliance.mjs";
 import { agentReportPath, loadAgentReport, loadCompliancePolicy, loadEvidenceRecords, loadLegalRegistry, loadSourceRegistry } from "./lib/compliance-store.mjs";
 import { loadContentData } from "./lib/data-store.mjs";
+import { summarizeEditorialReleaseReport } from "./lib/editorial-release.mjs";
 import { loadReviewAdminItem, loadReviewAdminItemByFile } from "./lib/review-admin.mjs";
 import { runCommand } from "./lib/command-runner.mjs";
 import { removeReviewJob } from "./lib/review-jobs.mjs";
@@ -25,7 +26,7 @@ const state = contentFlag
 if (!state) throw new Error("Review item not found");
 
 const reviewItem = state.current;
-const sourceRef = contentFlag ? `--content=${reviewItem.id}` : `content/review-packets/${reviewItem.file}`;
+const sourceRef = `content/review-packets/${reviewItem.file}`;
 const requestAt = new Date().toISOString();
 try {
   await setReviewWorkflowStatus(root, reviewItem, "release_requested", "已提交中文发布申请，正在执行独立预审与本地预发检查。", {
@@ -51,7 +52,7 @@ try {
     loadAgentReport(root, reviewItem.item),
   ]);
 
-  const report = auditContentItem({
+  const report = summarizeEditorialReleaseReport(auditContentItem({
     item: reviewItem.item,
     data,
     policy,
@@ -60,7 +61,7 @@ try {
     sourceRegistry,
     agentReport,
     requestedLocales,
-  });
+  }), requestedLocales);
 
   const releaseMeta = {
     requestedAt: requestAt,
@@ -69,12 +70,13 @@ try {
     decision: report.decision,
     riskClass: report.riskClass,
     findings: report.findings,
+    ignoredFindings: report.ignoredFindings,
     reportPath: relative(root, agentReportPath(root, reviewItem.item)),
     previewPath: reviewItem.readiness.previewPath,
   };
 
   if (report.decision === "BLOCK") {
-    const workflow = await setReviewWorkflowStatus(root, reviewItem, "release_blocked", "发布申请已被阻断，需先补齐 legal pack、辖区或事实证据。", {
+    const workflow = await setReviewWorkflowStatus(root, reviewItem, "release_blocked", "发布申请已被系统中断，需先补齐事实证据或检查本地命令。", {
       release: releaseMeta,
     });
     console.log(JSON.stringify({
@@ -102,7 +104,7 @@ try {
   }
 
   try {
-    await runCommand(["npm", "run", "publish:automatic", "--", sourceRef, `--locales=${requestedLocales.join(",")}`], {
+    await runCommand(["npm", "run", "publish:automatic", "--", sourceRef, `--locales=${requestedLocales.join(",")}`, "--skip-preaudit"], {
       cwd: root,
       timeoutMs: 900_000,
     });

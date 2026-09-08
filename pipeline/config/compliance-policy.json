@@ -5,6 +5,10 @@
   "publicationLeaseHours": 24,
   "postMatchStabilityMinutes": 20,
   "minimumIndependentCoreSources": 2,
+  "disableLegalPackValidation": true,
+  "allowSingleOfficialCoreSource": true,
+  "allowSingleAuthorisedCoreSource": true,
+  "automaticPublicationLocales": ["zh", "zh-hant", "en", "ja", "es", "ar"],
   "localeMarkets": {
     "zh": ["CN"],
     "zh-hant": ["TW", "HK", "MO"],

@@ -5,7 +5,7 @@ import { dirname, extname, resolve, sep } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const publicRoot = resolve(root, "dist/client");
-const baseUrl = "https://eventanalysis.org";
+const baseUrl = "https://www.eventanalysis.org";
 const failures = [];
 const warnings = [];
 

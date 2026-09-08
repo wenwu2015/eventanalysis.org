@@ -3,7 +3,7 @@
   "type": "object",
   "required": ["id", "type", "sport", "primaryIntentKey", "angleKey", "originalContribution", "readerQuestion", "author", "confidence", "entityRefs", "eventRefs", "claims", "editions"],
   "properties": {
-    "id": { "type": "string" }, "type": { "type": "string", "const": "match_analysis" }, "sport": { "type": "string", "const": "football" },
+    "id": { "type": "string" }, "type": { "type": "string", "enum": ["match_analysis", "moment_analysis"] }, "sport": { "type": "string", "const": "football" },
     "primaryIntentKey": { "type": "string" }, "angleKey": { "type": "string" }, "originalContribution": { "type": "string" }, "readerQuestion": { "type": "string" }, "author": { "type": "string" },
     "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
     "entityRefs": { "type": "array", "items": { "type": "string" } }, "eventRefs": { "type": "array", "items": { "type": "string" } },

@@ -20,7 +20,52 @@ Examples:
 
 The root request redirects from `Accept-Language` to `/{locale}/football/`; unsupported languages use English. A language menu is present on every page. Missing editions link to that language's football homepage and never display English replacement text.
 
-Twenty-one locale homes are built: simplified and traditional Chinese, English, Japanese, Korean, Russian, Spanish, Portuguese, French, German, Italian, Arabic, Swedish, Dutch, Turkish, Polish, Croatian, Serbian, Ukrainian, Persian and Indonesian. Arabic and Persian render RTL. Football is the only active sport; basketball, volleyball and badminton are registered but do not generate routes until enabled.
+Twenty-one locale homes are built: simplified and traditional Chinese, English, Japanese, Korean, Russian, Spanish, Portuguese, French, German, Italian, Arabic, Swedish, Dutch, Turkish, Polish, Croatian, Serbian, Ukrainian, Persian and Indonesian. Arabic and Persian render RTL. The current public build baseline is still football-first; basketball, volleyball and badminton are registered and reserved for independent channels when the broader multi-sport rollout is enabled.
+
+## Confirmed product requirements
+
+The repository baseline and the long-term product target are intentionally documented separately. The rules below describe the confirmed operating direction for future automation and publication work, even where the current build still exposes a narrower football-first surface.
+
+### Channel and locale rules
+
+- Each sport is an independent publication channel with its own homepage, taxonomy, feeds, sitemaps and review queue.
+- The first-wave sports are `football`, `basketball`, `volleyball` and `badminton`.
+- Chinese is the only editable master edition. All non-Chinese editions are derived translations and must stay traceable to the current Chinese source revision.
+- The first-wave multilingual publication target for automated editorial and trend workflows is `zh`, `zh-hant`, `en`, `ja`, `es` and `ar`.
+- Every article and static HTML page must expose publication time, content category, associated person or major event when that field exists deterministically.
+
+### Editorial and factual rules
+
+- The editor-facing workflow is now autopilot-first: new packets enter the editorial agent chain automatically, and the visible recovery action is `重新触发自动审稿`.
+- Lawyer review, legal-pack completion and jurisdiction-material review are removed from the editorial workflow. They are not blocking requirements for routine article approval.
+- Core match facts may publish when either two independent authorised sources confirm them, or one authorised official source confirms them and the source registry marks it as official.
+- Single-source publication is never permission to invent supporting facts. If extra facts cannot be confirmed deterministically, the article must stay narrow and describe only what the authorised source actually supports.
+- No fabricated data, no synthetic statistics, no subjective judgement, no personal attacks and no invented background colour.
+- For post-match articles, result, head-to-head win rate and lineup continuity remain deterministic program outputs rather than free-form writing claims.
+
+### Trends and roundup rules
+
+- The trends workflow uses Google Trends active data for the previous 24 hours from `https://trends.google.com/trending?geo=US&hl=zh-CN&hours=24&status=active`.
+- It runs at least twice per day, morning and evening local scheduler time, and writes durable checkpoints before and after each major step.
+- Trend-derived articles must be grounded in visible page data, page-embedded data or normal page-load responses only. Do not depend on undocumented APIs, challenge bypasses or invented enrichment.
+- If a trend cannot be deterministically assigned to one of the active sports channels, skip it rather than forcing it into a category.
+- The system may generate both per-trend factual pages and morning/evening roundup pages, but only from confirmed real-time inputs.
+- If no independently confirmed supporting context is available beyond the trend signal itself, publish only a narrowly described factual trend note or skip the item.
+
+### Workflow, state and recovery rules
+
+- Every draft and edition must keep durable workflow state on disk so work can resume after network loss, computer restart, editor switch, session switch or interrupted automation.
+- The minimum cross-session lifecycle states are `draft`, `edited_pending_publish`, `published` and `deleted`.
+- Review, translation, release preparation and publish jobs must checkpoint progress, inputs, outputs, timestamps and failure reasons in durable local files rather than ephemeral process memory.
+- Automation must resume from the last durable checkpoint and must not require the originating Codex session, browser tab or editor process to still exist.
+- The system should separate draft generation, review approval, translation generation, local static preview, release preparation and public release so each phase can be retried independently.
+
+### Publication and SEO rules
+
+- The Chinese master is the publication source of truth. Other locales are produced by deterministic translation and release preparation from that master.
+- All published pages must complete the standard SEO contract before release: canonical URL, hreflang, structured data, sitemap coverage, feed inclusion, internal linking, valid metadata and crawl-safe static HTML.
+- Each article must land in the correct sport channel and category so later automation can generate channel indexes, archives, roundups and related-content links without manual sorting.
+- Public release automation must preserve status traceability: an operator must be able to tell whether an item is unpublished, edited and waiting to republish, already published or deliberately deleted.
 
 ## Structured content boundaries
 
@@ -96,32 +141,28 @@ Advertising is disabled in `site/ad-config.json`; disabled builds emit no advert
 
 ## Review and publication
 
-Drafts are private review packets. Routine editing and post-match automation approve only the Chinese master for local preview. Derived languages are generated later, during the explicit production-release preparation step, so local copy changes do not spend translation/compliance work until publication is intended.
+Drafts are private review packets. New packets go straight into the editorial autopilot chain: editor review, up to three Chinese rewrites, full-locale translation, production publish and live verification. Legacy PR and one-click local-preview tools remain in the repo for manual fallback only; they are no longer the official entry point.
 
 ```bash
-npm run review:pr
 npm run review:admin
 npm run review:html -- content/review-packets/<content>.json
-npm run release:request -- content/review-packets/<content>.json --locales=zh
-npm run publish:automatic -- --content=<id> --locales=zh
+npm run editorial:autopilot -- --content=<id>
+npm run editorial:autopilot -- --resume-pending
+npm run publish:agent -- --content=<id>
 npm run build:zh
 npm run release:prepare-locales
-npm run content:publish -- content/review-packets/<content>.json
 npm run release:aws -- --confirm-production
 ```
 
-`npm run review:admin` starts a local review console on `http://127.0.0.1:3210`. It reads `content/review-packets` directly, renders the Chinese draft without requiring a public static page, shows automation/legal blockers, and splits the workflow into two explicit steps:
+`npm run review:admin` starts a local monitoring console on `http://127.0.0.1:3210`. It reads `content/review-packets` directly, renders the Chinese draft without requiring a public static page, and centers the editor-facing workflow on autopilot state, logs, retry count, quarantine, and `重新触发自动审稿`.
 
-1. `生成审稿 HTML`
-2. `提交中文发布申请`
+`npm run editorial:autopilot -- --content=<id>` is the single automatic editorial entry point. It consumes the current review packet, structured facts and claims, workflow state, deterministic findings and preaudit output, then runs the `editor` agent. If the decision is `rewrite`, the `rewriter` agent may update only `editions.zh`, and the loop can run at most three times. If the decision is `approve`, the system records the override decision, stages the Chinese master, derives all non-`zh` locales, runs `npm run release:aws -- --confirm-production`, and verifies the live result. Content-class deterministic `BLOCK` or `REVIEW` findings stay as audit inputs and do not veto publication by themselves.
 
-The first step writes a private static review page to `private-review/html/<content-id>/index.html`, exposes a dynamic review page at `/review-preview/<content-id>` and a static review page at `/private-review/<content-id>/`, and keeps the draft suitable for editor and distribution review without generating a public page.
+Only execution failures remain hard stops: invalid schema, missing commands or config, agent timeout, translation failure, AWS credential or upload failure, and live verification failure. AWS-side failures also trigger `npm run emergency:freeze -- --reason=autopilot_release_failure`.
 
-The second step runs `compliance:preaudit`, deterministic audit, and if the result is PASS, `publish:automatic --locales=zh` plus `build:zh`. If legal packs, jurisdictions or facts are incomplete, the console records `release_blocked` or `release_review_required` instead of failing with an untracked error. It never triggers AWS release.
+`npm run review:smoke` now exercises the same autopilot chain end to end. It triggers `editorial:autopilot`, waits for `published`, `autopilot_failed`, or `quarantined`, then resets the packet. The smoke run uses `pipeline/config/ai.smoke.json`; routine work continues to use `pipeline/config/ai.local.json`.
 
-`npm run review:smoke` exercises the same state machine end to end. It generates a private Chinese review HTML page, submits a release request, verifies that the workflow lands in `release_ready`, `release_review_required`, or `release_blocked`, and then resets the packet. The smoke run uses the local deterministic reviewer config in `pipeline/config/ai.smoke.json`; routine work continues to use `pipeline/config/ai.local.json`.
-
-The AWS release repeats data, quality, test, editorial and prepublish gates, derives missing non-Chinese editions from the Chinese master, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. See `doc/AWS_Deployment_Guide.md`.
+The AWS release repeats data, quality, test, editorial and prepublish gates, derives missing non-Chinese editions from the Chinese master, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. In the official flow, this step is invoked by `publish:agent`, not by PR review. See `doc/AWS_Deployment_Guide.md`.
 
 Search Console access stays local. Copy `pipeline/config/search-console.example.json` to the ignored `search-console.local.json`, set a short-lived `GOOGLE_SEARCH_CONSOLE_TOKEN`, then run:
 

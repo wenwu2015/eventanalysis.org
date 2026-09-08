@@ -2,11 +2,14 @@
   "activeSports": ["football"],
   "lookbackHours": 48,
   "postMatchStabilityMinutes": 20,
-  "maxCandidates": 20,
-  "maxDraftsPerRun": 3,
+  "maxCandidates": 40,
+  "maxDraftsPerRun": 10,
   "orphanMaxAgeMinutes": 60,
   "jobDiskLimitBytes": 2147483648,
   "navigationTimeoutMs": 45000,
   "minimumIndependentCoreSources": 2,
+  "allowSingleOfficialCoreSource": true,
+  "allowSingleAuthorisedCoreSource": true,
+  "automaticPublicationLocales": ["zh", "zh-hant", "en", "ja", "es", "ar"],
   "awsPublicationMode": "manual"
 }

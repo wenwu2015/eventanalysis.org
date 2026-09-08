@@ -1,0 +1,209 @@
+{
+  "id": "match-12813005-analysis-zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "match-analysis-event-ea7993453165e916736c",
+  "angleKey": "extra_time_breakthrough_and_lineup_continuity",
+  "originalContribution": "以加时赛第106分钟的唯一进球为转折点，结合双方首发延续率及赛前交锋结构，分析西班牙如何把阵容稳定性转化为淘汰赛胜势，并区分可确认事实与有限证据下的解释。",
+  "readerQuestion": "西班牙为何能在加时赛打破僵局并守住1比0，双方不同的首发延续程度能够说明什么？",
+  "author": "EventAnalysis",
+  "confidence": 90,
+  "entityRefs": [
+    "team_0f34b7bb2edb12d9b7d3",
+    "team_286dbc7f218c4768b458"
+  ],
+  "eventRefs": [
+    "event_ea7993453165e916736c"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "西班牙以1比0击败阿根廷。"
+    },
+    {
+      "id": "claim_winning_goal",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events"
+      ],
+      "summary": "费兰·托雷斯在第106分钟为西班牙攻入全场唯一进球。"
+    },
+    {
+      "id": "claim_h2h_record",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_head_to_head_before_match"
+      ],
+      "summary": "本场赛前四次交锋中，西班牙3胜、阿根廷1胜，没有平局。"
+    },
+    {
+      "id": "claim_h2h_rates",
+      "kind": "calculation",
+      "factRefs": [
+        "event_ea7993453165e916736c_head_to_head_before_match"
+      ],
+      "summary": "赛前四次交锋对应西班牙胜率75%、阿根廷胜率25%、平局率0%。"
+    },
+    {
+      "id": "claim_spain_continuity",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "西班牙本场11名首发全部延续自上一场，首发延续率为100%。"
+    },
+    {
+      "id": "claim_argentina_changes",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "阿根廷有8名首发延续自上一场，延续率为72.7%，蒙铁尔、德保罗和尼科·冈萨雷斯进入首发，莫利纳、帕雷德斯和朱利亚诺·西蒙尼退出首发。"
+    },
+    {
+      "id": "claim_continuity_gap",
+      "kind": "calculation",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes"
+      ],
+      "summary": "两队首发延续率相差27.3个百分点，西班牙比阿根廷多保留3名上场比赛的首发球员。"
+    },
+    {
+      "id": "claim_continuity_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_ea7993453165e916736c_personnel_changes",
+        "event_ea7993453165e916736c_key_events",
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "阵容稳定性为理解西班牙在加时赛取得并守住领先提供了一个合理角度，但现有事实不足以证明它是胜负的单一原因。"
+    },
+    {
+      "id": "claim_late_response",
+      "kind": "fact",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events"
+      ],
+      "summary": "第106分钟失球后，阿根廷未能将比分扳平。"
+    },
+    {
+      "id": "claim_game_management",
+      "kind": "analysis",
+      "factRefs": [
+        "event_ea7993453165e916736c_key_events",
+        "event_ea7993453165e916736c_final_result"
+      ],
+      "summary": "西班牙在第106分钟取得领先后守住了1比0结果，但现有事实不足以证明某一种防守方式单独决定了结局。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "spain-argentina-1-0-extra-time-analysis",
+      "title": "费兰·托雷斯加时制胜：西班牙1比0淘汰阿根廷",
+      "deck": "第106分钟的唯一进球决定比赛；西班牙100%的首发延续率与阿根廷72.7%的延续率，为理解这场加时赛胜负提供了清晰但非唯一的分析线索。",
+      "competition": "比赛分析",
+      "venue": "",
+      "homeName": "西班牙",
+      "awayName": "阿根廷",
+      "resultLabel": "西班牙 1比0 阿根廷",
+      "sections": [
+        {
+          "id": "decisive_moment",
+          "title": "加时赛的决定性一击",
+          "paragraphs": [
+            {
+              "text": "比赛在常规时间后仍未分出胜负。第106分钟，费兰·托雷斯为西班牙破门，这粒进球最终成为全场唯一进球，西班牙以1比0取胜。",
+              "claimRefs": [
+                "claim_winning_goal",
+                "claim_final_result"
+              ],
+              "id": "paragraph_decisive_moment_1"
+            },
+            {
+              "text": "第106分钟失球后，阿根廷未能将比分扳平，这意味着西班牙的领先一直保持到终场。",
+              "claimRefs": [
+                "claim_late_response"
+              ],
+              "id": "paragraph_decisive_moment_2"
+            }
+          ]
+        },
+        {
+          "id": "lineup_continuity",
+          "title": "两种首发延续策略",
+          "paragraphs": [
+            {
+              "text": "西班牙沿用了上一场比赛的全部11名首发，延续率达到100%。阿根廷则保留8名首发，延续率为72.7%；蒙铁尔、德保罗和尼科·冈萨雷斯进入首发，莫利纳、帕雷德斯和朱利亚诺·西蒙尼退出首发。",
+              "claimRefs": [
+                "claim_spain_continuity",
+                "claim_argentina_changes"
+              ],
+              "id": "paragraph_lineup_continuity_1"
+            },
+            {
+              "text": "由此计算，两队首发延续率相差27.3个百分点，西班牙比阿根廷多保留3名上一场的首发球员。这一差距让阵容稳定性成为解释比赛走势的合理切口，但仅凭首发变化与结果，不能断定它直接造成了胜负。",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_continuity_analysis"
+              ],
+              "id": "paragraph_lineup_continuity_2"
+            }
+          ]
+        },
+        {
+          "id": "closing_phase",
+          "title": "领先后的比赛管理",
+          "paragraphs": [
+            {
+              "text": "更稳妥的结论是：西班牙在第106分钟取得领先后成功守住了1比0，而现有事实不足以证明某一种防守方式完全压制了对手。",
+              "claimRefs": [
+                "claim_game_management",
+                "claim_final_result"
+              ],
+              "id": "paragraph_closing_phase_1"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "赛前交锋背景",
+          "paragraphs": [
+            {
+              "text": "本场之前双方共交锋4次，西班牙3胜、阿根廷1胜，没有平局；对应胜率分别为75%和25%。本场1比0延续了西班牙在这组有限交锋记录中的优势，但四场样本不足以单独预测淘汰赛结果。",
+              "claimRefs": [
+                "claim_h2h_record",
+                "claim_h2h_rates"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "106'",
+          "label": "费兰·托雷斯破门，西班牙1比0领先。",
+          "claimRefs": [
+            "claim_winning_goal"
+          ]
+        }
+      ],
+      "status": "needs_review",
+      "complianceStatus": "unreviewed"
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "AR",
+    "ES"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "8af32a449d7377aa1dd5a6d6b381907eaff310defe1c2975120e2da3139031dc",
+  "riskClass": "A"
+}

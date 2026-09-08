@@ -17,13 +17,29 @@ function formatDate(value) {
 
 function workflowStatusText(status) {
   return {
-    editorial_approved: "编辑已批准",
+    autopilot_failed: "自动流程失败",
+    autopilot_publishing: "自动发布中",
+    autopilot_queued: "自动排队中",
+    autopilot_reviewing: "自动审稿中",
+    autopilot_rewriting: "自动改稿中",
+    deleted: "已删除",
+    editorial_approved: "已批准待自动流转",
+    published: "已发布",
     quarantined: "已隔离",
-    release_blocked: "申请被阻断（未发布）",
-    release_ready: "已完成本地预发",
-    release_requested: "发布申请处理中",
-    release_review_required: "发布待人工复核",
-    review_pending: "待编辑一键通过",
+    release_blocked: "旧流程中断",
+    release_ready: "旧流程本地预发完成",
+    release_requested: "旧流程处理中",
+    release_review_required: "旧流程待人工复核",
+    review_pending: "待自动审稿",
+  }[status] || status;
+}
+
+function lifecycleStatusText(status) {
+  return {
+    draft: "新草稿",
+    edited_pending_publish: "已编辑待发布",
+    published: "已发布",
+    deleted: "已删除",
   }[status] || status;
 }
 
@@ -54,12 +70,12 @@ function blockedJurisdictions(findings = []) {
 function blockedWorkflowMeaning(workflow) {
   const jurisdictions = blockedJurisdictions(workflow?.release?.findings);
   if (!jurisdictions.length) {
-    return "这表示发布申请已经真实执行过，但没有公开发布成功；当前只需查看阻断摘要并等待后台修复发布条件。";
+    return "这表示发布申请已经真实执行过，但没有公开发布成功；当前只需查看中断摘要并重新触发一键审核通过。";
   }
   if (jurisdictions.length === 1) {
-    return `这表示发布申请已经真实执行过，但没有公开发布成功；后台当前卡在 ${jurisdictions[0]} 对应的发布条件，公开站点没有放行。`;
+    return `这表示发布申请已经真实执行过，但没有公开发布成功；后台曾记录到 ${jurisdictions[0]} 相关中断，编辑侧只需要回当前稿件继续下一步。`;
   }
-  return `这表示发布申请已经真实执行过，但没有公开发布成功；后台当前卡在 ${jurisdictions.join("、")} 对应的发布条件，公开站点没有放行。`;
+  return `这表示发布申请已经真实执行过，但没有公开发布成功；后台曾记录到 ${jurisdictions.join("、")} 相关中断，编辑侧只需要回当前稿件继续下一步。`;
 }
 
 export function renderReviewPreviewHtml(reviewItem) {
@@ -81,7 +97,13 @@ export function renderReviewPreviewHtml(reviewItem) {
   const workflowMeaning = workflow.status === "release_blocked"
     ? blockedWorkflowMeaning(workflow)
     : workflow.status === "release_requested"
-      ? "后台正在执行独立预审、合规审计与中文本地预发，本页稍后刷新状态即可。"
+      ? "后台正在执行独立预审与中文本地预发，本页稍后刷新状态即可。"
+      : workflow.status === "autopilot_reviewing"
+        ? "自动编辑部正在审稿，当前还没有进入正式生产发布。"
+        : workflow.status === "autopilot_rewriting"
+          ? "自动编辑部正在根据审稿意见重写中文主稿。"
+          : workflow.status === "autopilot_publishing"
+            ? "自动编辑部正在执行全量翻译、正式生产发布与线上验收。"
       : "";
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>${escapeHtml(edition.title)} - 审稿预览</title><style>
   :root {
@@ -129,7 +151,7 @@ export function renderReviewPreviewHtml(reviewItem) {
   </section>
   <section class="grid summary">
     <article class="panel"><h3>审稿状态</h3><p class="pill">${escapeHtml(workflowStatusText(workflow.status))}</p><p class="meta">${escapeHtml(workflow.summary || "未记录")}</p>${workflowMeaning ? `<p class="meta">${escapeHtml(workflowMeaning)}</p>` : ""}</article>
-    <article class="panel"><h3>编辑状态</h3><p class="meta">Edition: ${escapeHtml(edition.status)}</p><p class="meta">Compliance: ${escapeHtml(edition.complianceStatus)}</p><p class="meta">最近更新: ${escapeHtml(formatDate(workflow.updatedAt))}</p></article>
+    <article class="panel"><h3>编辑状态</h3><p class="meta">Edition: ${escapeHtml(edition.status)}</p><p class="meta">Compliance: ${escapeHtml(edition.complianceStatus)}</p><p class="meta">生命周期: ${escapeHtml(lifecycleStatusText(workflow.lifecycle?.status || "draft"))}</p><p class="meta">最近更新: ${escapeHtml(formatDate(workflow.updatedAt))}</p></article>
     <article class="panel"><h3>事实完整度</h3><p class="meta">双源确认数: ${escapeHtml(reviewItem.metrics.coreSourceConfirmations ?? "未记录")}</p><p class="meta">交锋样本: ${escapeHtml(reviewItem.metrics.h2hMatches ?? "未记录")}</p><p class="meta">缺口: ${escapeHtml(factGapText(reviewItem.metrics.missing))}</p></article>
     <article class="panel"><h3>发布申请</h3><p class="meta">请求语言: ${escapeHtml((release.requestedLocales || []).join(", ") || "未提交")}</p><p class="meta">最近决策: ${escapeHtml(release.decision || "未记录")}</p><p class="meta">决策时间: ${escapeHtml(formatDate(release.decisionAt))}</p></article>
   </section>
@@ -153,7 +175,7 @@ export function renderReviewPreviewHtml(reviewItem) {
     : "<p class=\"meta\">未找到对应阵容延续数据。</p>"}
       </section>
       <section class="panel">
-        <h3>发布阻断记录</h3>
+        <h3>后台记录</h3>
         ${findingsHtml(release.findings)}
       </section>
     </aside>

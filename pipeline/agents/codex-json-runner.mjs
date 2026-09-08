@@ -4,7 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
 const role = process.argv[2];
-if (!new Set(["writer", "translator", "compliance-reviewer"]).has(role)) throw new Error("Usage: codex-json-runner.mjs <writer|translator|compliance-reviewer>");
+if (!new Set(["writer", "translator", "compliance-reviewer", "editor", "rewriter"]).has(role)) throw new Error("Usage: codex-json-runner.mjs <writer|translator|compliance-reviewer|editor|rewriter>");
 const promptPath = process.env.EA_PROMPT_PATH;
 const outputPath = process.env.EA_OUTPUT_PATH;
 if (!promptPath || !outputPath) throw new Error("EA_PROMPT_PATH and EA_OUTPUT_PATH are required");
@@ -22,7 +22,16 @@ const instruction = [
 await new Promise((resolveRun, reject) => {
   const child = spawn(codex, [
     "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--skip-git-repo-check",
-    "--sandbox", "read-only", "--cd", dirname(promptPath), "--output-schema", schemaPath,
+    "--sandbox", "read-only",
+    "--color", "never",
+    "-c", "model_reasoning_effort=\"low\"",
+    "-c", "features.memories=false",
+    "-c", "features.apps=false",
+    "-c", "features.plugins=false",
+    "-c", "features.multi_agent=false",
+    "-c", "features.tool_search=false",
+    "-c", "web_search=\"disabled\"",
+    "--cd", dirname(promptPath), "--output-schema", schemaPath,
     "--output-last-message", outputPath, "-",
   ], { cwd: dirname(promptPath), stdio: ["pipe", "pipe", "pipe"] });
   const stderr = [];

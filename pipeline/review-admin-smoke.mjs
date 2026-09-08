@@ -16,7 +16,6 @@ const testFile = `__review-admin-smoke-${now}.json`;
 const testPath = resolve(root, "content/review-packets", testFile);
 const stagedItemPath = resolve(root, "content/data/items", `${testId}.json`);
 const reportPath = resolve(root, "private-compliance/reports", `${testId}-r1.json`);
-const previewRoute = `/zh/football/match-analysis/${sourcePacket.editions?.zh?.slug || ""}/`;
 const reviewHtmlPath = resolve(root, "private-review/html", testId, "index.html");
 const reviewHtmlDir = resolve(root, "private-review/html", testId);
 const workflowPath = resolve(root, "private-review/workflows", `${testId}.json`);
@@ -107,47 +106,39 @@ try {
   summary.dashboardLoaded = dashboard.status === 200 && dashboard.text.includes(testId);
 
   const detailBefore = await fetchText(detailPath);
-  summary.detailBeforeLoaded = detailBefore.status === 200 && detailBefore.text.includes("待编辑一键通过");
+  summary.detailBeforeLoaded = detailBefore.status === 200 && detailBefore.text.includes("待自动审稿");
 
-  const reviewPassAction = await postAction("approve_and_submit_zh", testFile, detailPath);
-  summary.reviewPassActionRedirect = reviewPassAction.location;
-  summary.reviewPassActionSummary = summarizeRedirect(reviewPassAction.location);
-  summary.reviewPassActionErrored = reviewPassAction.location.includes("error=");
+  const autopilotAction = await postAction("rerun_autopilot", testFile, detailPath);
+  summary.autopilotActionRedirect = autopilotAction.location;
+  summary.autopilotActionSummary = summarizeRedirect(autopilotAction.location);
+  summary.autopilotActionErrored = autopilotAction.location.includes("error=");
 
-  const detailApproved = await fetchText(detailPath);
-  summary.approvedVisible = detailApproved.text.includes("编辑状态: 已批准")
-    || detailApproved.text.includes("发布申请状态: 发布申请处理中");
+  const detailQueued = await fetchText(detailPath);
+  summary.processingVisible = detailQueued.text.includes("发布申请状态: 自动排队中")
+    || detailQueued.text.includes("发布申请状态: 自动审稿中")
+    || detailQueued.text.includes("发布申请状态: 自动改稿中")
+    || detailQueued.text.includes("发布申请状态: 自动发布中")
+    || detailQueued.text.includes("发布申请状态: 自动流程失败")
+    || detailQueued.text.includes("发布申请状态: 已发布");
 
   const detailAfterReviewHtml = await fetchText(detailPath);
   summary.reviewHtmlVisible = detailAfterReviewHtml.text.includes("打开静态 HTML");
   summary.dynamicReviewVisible = detailAfterReviewHtml.text.includes("打开动态审稿页");
-
-  const reviewPage = await fetchText(`/private-review/${encodeURIComponent(testId)}/`);
-  summary.reviewPageStatus = reviewPage.status;
-  summary.reviewPageContainsHeadline = reviewPage.text.includes(packet.editions.zh.title);
   summary.reviewHtmlCreated = await readFile(reviewHtmlPath, "utf8").then(() => true).catch(() => false);
 
   const detailDuringRelease = await fetchText(detailPath);
-  summary.releaseRequestedVisible = detailDuringRelease.text.includes("发布申请状态: 发布申请处理中");
-  summary.releasePendingNoticeVisible = detailDuringRelease.text.includes("当前稿件的发布申请正在处理中");
+  summary.autopilotActiveVisible = detailDuringRelease.text.includes("自动编辑部")
+    || detailDuringRelease.text.includes("自动审稿中")
+    || detailDuringRelease.text.includes("自动发布中");
+  summary.autopilotPendingNoticeVisible = detailDuringRelease.text.includes("当前稿件正在自动编辑部链路中处理");
 
-  const workflow = await waitForWorkflowStatus(["release_blocked", "release_review_required", "release_ready"]);
+  const workflow = await waitForWorkflowStatus(["autopilot_failed", "published", "quarantined"], 120_000);
   summary.workflowStatus = workflow?.status || null;
-  summary.workflowReleaseDecision = workflow?.release?.decision || null;
+  summary.workflowReleaseDecision = workflow?.autopilot?.lastEditorDecision || null;
   const detailAfterRelease = await fetchText(detailPath);
-  summary.releaseBlockedVisible = detailAfterRelease.text.includes("发布申请状态: 申请被阻断（未发布）");
-  summary.releaseReviewVisible = detailAfterRelease.text.includes("发布申请状态: 发布待人工复核");
-  summary.releaseReadyVisible = detailAfterRelease.text.includes("发布申请状态: 已完成本地预发");
-  summary.previewVisible = detailAfterRelease.text.includes("打开中文预发页");
+  summary.autopilotFailedVisible = detailAfterRelease.text.includes("发布申请状态: 自动流程失败");
+  summary.publishedVisible = detailAfterRelease.text.includes("发布申请状态: 已发布");
   summary.previewDetailStatus = /发布申请状态: ([^<]+)/.exec(detailAfterRelease.text)?.[1] || null;
-  if (summary.previewVisible) {
-    const previewPage = await fetchText(`/preview${previewRoute}`);
-    summary.previewPageStatus = previewPage.status;
-    summary.previewContainsHeadline = previewPage.text.includes(packet.editions.zh.title);
-  } else {
-    summary.previewPageStatus = null;
-    summary.previewContainsHeadline = false;
-  }
   summary.stagedItemCreated = await readFile(stagedItemPath, "utf8").then(() => true).catch(() => false);
   summary.agentReportCreated = await readFile(reportPath, "utf8").then(() => true).catch(() => false);
 
@@ -159,23 +150,21 @@ try {
 
   await postAction("quarantine_zh", testFile, detailPath);
   const detailQuarantined = await fetchText(detailPath);
-  summary.quarantinedVisible = detailQuarantined.text.includes("编辑状态: 已隔离");
+  summary.quarantinedVisible = detailQuarantined.text.includes("发布申请状态: 已隔离");
 
   await postAction("reset_zh", testFile, detailPath);
   const detailReset = await fetchText(detailPath);
-  summary.resetVisible = detailReset.text.includes("编辑状态: 待编辑一键通过");
+  summary.resetVisible = detailReset.text.includes("发布申请状态: 待自动审稿");
 
-  const releaseClosedLoop = ["release_blocked", "release_review_required", "release_ready"].includes(summary.workflowStatus);
+  const autopilotClosedLoop = ["autopilot_failed", "published", "quarantined"].includes(summary.workflowStatus);
   summary.result = summary.dashboardLoaded
     && summary.detailBeforeLoaded
-    && summary.approvedVisible
-    && summary.reviewHtmlVisible
-    && summary.reviewHtmlCreated
-    && summary.reviewPageStatus === 200
-    && summary.releaseRequestedVisible
+    && summary.processingVisible
+    && summary.dynamicReviewVisible
+    && summary.autopilotActiveVisible
     && summary.quarantinedVisible
     && summary.resetVisible
-    ? releaseClosedLoop ? "PASS_WITH_WORKFLOW_STATE" : "BLOCK"
+    ? autopilotClosedLoop ? "PASS_WITH_WORKFLOW_STATE" : "BLOCK"
     : "BLOCK";
 
   console.log(JSON.stringify(summary, null, 2));

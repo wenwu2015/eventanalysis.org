@@ -67,7 +67,7 @@ function formatDate(value) {
 function editionStatusText(status) {
   return {
     approved: "已批准",
-    needs_review: "待编辑一键通过",
+    needs_review: "待自动审稿",
     published: "已入库",
     quarantined: "已隔离",
     withdrawn: "已撤回",
@@ -76,13 +76,29 @@ function editionStatusText(status) {
 
 function workflowStatusText(status) {
   return {
-    editorial_approved: "已批准待一键流转",
+    autopilot_failed: "自动流程失败",
+    autopilot_publishing: "自动发布中",
+    autopilot_queued: "自动排队中",
+    autopilot_reviewing: "自动审稿中",
+    autopilot_rewriting: "自动改稿中",
+    deleted: "已删除",
+    editorial_approved: "已批准待自动流转",
+    published: "已发布",
     quarantined: "已隔离",
-    release_blocked: "申请被阻断（未发布）",
-    release_ready: "本地预发完成（未公开发布）",
-    release_requested: "发布申请处理中（未公开发布）",
-    release_review_required: "发布待人工复核",
-    review_pending: "待编辑一键通过",
+    release_blocked: "旧流程中断",
+    release_ready: "旧流程本地预发完成",
+    release_requested: "旧流程处理中",
+    release_review_required: "旧流程待人工复核",
+    review_pending: "待自动审稿",
+  }[status] || status;
+}
+
+function lifecycleStatusText(status) {
+  return {
+    draft: "新草稿",
+    edited_pending_publish: "已编辑待发布",
+    published: "已发布",
+    deleted: "已删除",
   }[status] || status;
 }
 
@@ -92,7 +108,14 @@ function readinessTone(status) {
 
 function workflowTone(status) {
   return {
+    autopilot_failed: "warn",
+    autopilot_publishing: "ok",
+    autopilot_queued: "default",
+    autopilot_reviewing: "ok",
+    autopilot_rewriting: "ok",
+    deleted: "warn",
     editorial_approved: "ok",
+    published: "ok",
     quarantined: "warn",
     release_blocked: "warn",
     release_ready: "ok",
@@ -102,13 +125,73 @@ function workflowTone(status) {
   }[status] || "default";
 }
 
+function editorSurfaceStageText(item, guidance = null) {
+  const workflowStatus = item?.workflow?.status || "";
+  if (workflowStatus === "autopilot_queued") return "自动排队中";
+  if (workflowStatus === "autopilot_reviewing") return "自动审稿中";
+  if (workflowStatus === "autopilot_rewriting") return "自动改稿中";
+  if (workflowStatus === "autopilot_publishing") return "自动发布中";
+  if (workflowStatus === "autopilot_failed") return "自动流程失败";
+  if (workflowStatus === "release_requested") return "已进入系统发布检查";
+  if (workflowStatus === "release_blocked") return "已进入系统发布检查";
+  if (workflowStatus === "release_review_required") return "旧流程待人工复核";
+  if (workflowStatus === "release_ready") return "旧流程本地预发完成";
+  if (workflowStatus === "published") return "已正式发布";
+  if (workflowStatus === "deleted") return "已删除";
+  return guidance?.stateLabel === "待自动审稿" ? "待自动审稿" : editionStatusText(item?.edition?.status);
+}
+
 function publicSurfaceStatusText(status) {
   return {
+    autopilot_failed: "自动编辑部本轮失败，公开站点未追加发布。",
+    autopilot_publishing: "自动编辑部正在推进正式生产发布与线上验收。",
+    autopilot_queued: "自动编辑部尚未开始处理，公开站点未变更。",
+    autopilot_reviewing: "自动编辑部正在审稿，公开站点尚未变更。",
+    autopilot_rewriting: "自动编辑部正在改稿，公开站点尚未变更。",
     release_requested: "公开站点尚未变更，系统正在跑本地预审和本地预发。",
-    release_blocked: "公开站点未发布。这次只是申请被阻断，不是已经上线后回滚。",
+    release_blocked: "公开站点未发布。这次只是后台系统中断，不是已经上线后回滚。",
     release_review_required: "公开站点尚未变更，当前停在人工复核前。",
     release_ready: "公开站点尚未变更，目前只完成了中文本地预发。",
   }[status] || "当前页面不把这一步视为公开发布结果。";
+}
+
+function editorVisibleWorkflowSummary(item, guidance = null) {
+  const status = item?.workflow?.status || "";
+  const blockers = guidance?.blockers || [];
+  if (status === "autopilot_queued") return "稿件已进入自动编辑部队列，公开站点尚未变更。";
+  if (status === "autopilot_reviewing") return "自动编辑部正在审稿，公开站点还没有发布。";
+  if (status === "autopilot_rewriting") return "自动编辑部正在改稿，公开站点还没有发布。";
+  if (status === "autopilot_publishing") return "自动编辑部正在执行正式发布与线上验收。";
+  if (status === "autopilot_failed") return blockers[0] || "自动编辑部本轮失败，公开站点仍维持原状。";
+  if (status === "release_requested") return "后台正在执行检查，公开站点还没有发布。";
+  if (status === "release_ready") return "后台检查已通过，当前只完成了中文本地预发，公开站点还没有发布。";
+  if (status === "release_review_required") return "后台要求人工复核，公开站点还没有发布。";
+  if (status === "published") return "这篇稿件已经正式发布，后续改动应视为对线上版本的改版。";
+  if (status === "deleted") return "这篇稿件已删除，当前保留的是可恢复的状态记录。";
+  if (status === "release_blocked") {
+    if (blockers.length) {
+      if (blockers[0].includes("公开站点仍未发布")) return blockers[0];
+      return `${blockers[0]} 公开站点仍未发布。`;
+    }
+    return "后台这次没有通过，但公开站点仍未发布。";
+  }
+  if (status === "editorial_approved") return "中文主稿已批准，还没有进入后台检查。";
+  if (status === "review_pending") return "当前还停在编辑审稿阶段。";
+  if (status === "quarantined") return "稿件已隔离，公开站点不会继续流转。";
+  return "当前还没有进入公开发布结果。";
+}
+
+function editorVisibleQueueIssue(item, guidance = null) {
+  const blockers = guidance?.blockers || [];
+  if (blockers.length) {
+    if (item?.metrics?.missing?.length) return blockers[0];
+    return "打开稿件详情，看“为什么会卡在这里”，然后直接重跑一键审核通过。";
+  }
+  if (["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing"].includes(item?.workflow?.status)) return "自动编辑部处理中，暂时无需额外操作。";
+  if (item?.workflow?.status === "autopilot_failed") return "查看错误后可直接重新触发自动审稿。";
+  if (item?.workflow?.status === "release_requested") return "后台处理中，暂时无需额外操作。";
+  if (item?.workflow?.status === "release_ready") return "旧流程只完成了本地预发；建议切到自动编辑部链路。";
+  return "当前没有额外问题。";
 }
 
 function appendMessage(path, key, value) {
@@ -121,7 +204,7 @@ function actionErrorMessage(error) {
   const text = String(error?.message || error || "").trim();
   const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
   for (const line of [...lines].reverse()) {
-    if (/AgentPreAudit is invalid:|Automatic publication blocked and quarantined:|No locale has an approved publication jurisdiction|Requested locale is missing from content item:/.test(line) && !line.includes("${")) {
+    if (/AgentPreAudit is invalid:|Automatic publication blocked and quarantined:|No locale has an approved publication jurisdiction|Requested locale is missing from content item:|rewrite_limit_reached/.test(line) && !line.includes("${")) {
       return line.replace(/^Error:\s*/, "");
     }
   }
@@ -147,8 +230,33 @@ function routeForManualLegalTask(path = "") {
   return name ? `/private-legal-task/${encodeURIComponent(name)}` : "";
 }
 
+function retiredLegalEntryPage(state, notice, error, current = null) {
+  const guidance = current?.guidance || null;
+  const body = `
+    <section class="header">
+      <p class="eyebrow">EventAnalysis 审稿工作台</p>
+      <h1 class="title">旧法务入口已停用</h1>
+      <p class="subtitle">编辑侧不再单独处理律师、法务或资料包步骤。请回到当前稿件，直接执行页面提示的当前动作。</p>
+    </section>
+    <section class="panel tone-warn">
+      <h2>现在该怎么做</h2>
+      ${current ? `<p class="meta">当前稿件：${escapeHtml(current.edition.title)}</p>` : `<p class="meta">当前没有定位到具体稿件。</p>`}
+      ${guidance ? `<p class="meta">当前阶段：${escapeHtml(guidance.stateLabel)}</p><p class="meta">下一步：${escapeHtml(guidance.nextStep)}</p>` : `<p class="meta">请回审稿队列选择当前稿件。</p>`}
+      <div class="actions">
+        <a class="action-button primary" href="${escapeHtml(current ? routeForDetail(current.id) : "/")}">${escapeHtml(current ? "返回当前稿件" : "返回审稿队列")}</a>
+      </div>
+    </section>`;
+  return page({ title: "旧法务入口已停用", body, notice, error });
+}
+
 function actionButton({ action, file, label, returnTo, tone = "default" }) {
   return `<form method="post" action="/actions" class="action-form"><input type="hidden" name="action" value="${escapeHtml(action)}"><input type="hidden" name="file" value="${escapeHtml(file)}"><input type="hidden" name="returnTo" value="${escapeHtml(returnTo)}"><button class="action-button ${tone}" type="submit">${escapeHtml(label)}</button></form>`;
+}
+
+function itemPrimaryEntryAction(item, guidance, returnTo) {
+  if (guidance?.primaryAction) return guidanceActionButton(item, guidance.primaryAction, returnTo, "primary");
+  if (item?.workflow?.status === "release_blocked") return approveAndSubmitButton(item, returnTo);
+  return "";
 }
 
 function buildReviewHtmlButton(item, returnTo) {
@@ -188,7 +296,7 @@ function renderProblemEntryLinks({
   guidance = null,
   legalHref = "",
   packAnchor = "",
-  packLabel = "legal pack",
+  packLabel = "发布资料包",
   includeDetailLink = false,
   includeReviewPreview = false,
   includeOperatorAnchor = false,
@@ -205,12 +313,12 @@ function renderProblemEntryLinks({
 
 function renderWorkflowStageFlow(status = "") {
   const labels = [
-    ["review_pending", "一键通过"],
-    ["editorial_approved", "待流转"],
-    ["release_requested", "预审中"],
-    ["release_blocked", "阻断处理"],
-    ["release_review_required", "人工复核"],
-    ["release_ready", "本地预发完成"],
+    ["review_pending", "待审稿"],
+    ["autopilot_reviewing", "自动审稿"],
+    ["autopilot_rewriting", "自动改稿"],
+    ["autopilot_publishing", "自动发布"],
+    ["published", "已发布"],
+    ["autopilot_failed", "自动失败"],
   ];
   return `<div class="status-flow">${labels.map(([value, label]) => `<span class="status-step ${value === status ? "current" : ""}">${escapeHtml(label)}</span>`).join("")}</div>`;
 }
@@ -431,7 +539,7 @@ function page({ title, body, notice = "", error = "" }) {
   .code-pill { display: inline-flex; align-items: center; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.6); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; }
   .processing-note { color: var(--warn); font-size: 0.92rem; }
   .pack-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .detail { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr); gap: 18px; align-items: start; }
+  .detail { display: grid; grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.45fr); gap: 18px; align-items: start; }
   .article { display: grid; gap: 18px; }
   .article h2 { font-size: 1.25rem; margin: 0 0 10px; }
   .article h3 { font-size: 1rem; margin: 0 0 8px; }
@@ -468,7 +576,7 @@ function reviewLinks(item) {
 }
 
 function legalPackDefinition() {
-  return "legal pack 不是稿件正文，而是某个辖区的私有合规包，至少要有官方依据哈希、审阅时间、失效时间和本地律师签名哈希。只有校验通过并处于 active 的 pack，才会放行对应发布。";
+  return "这不是稿件正文，而是后台发布检查使用的私有发布资料包，内部字段名叫 legal pack。它至少要有官方依据哈希、审阅时间、失效时间和签名哈希；只有校验通过并处于 active，才会放行对应发布。";
 }
 
 function blockerReasonText(reason) {
@@ -477,8 +585,8 @@ function blockerReasonText(reason) {
     invalid_official_sources: "官方依据缺失",
     invalid_reviewed_at: "审阅时间无效",
     missing_counsel_signature: "缺本地律师签名",
-    pack_expired: "legal pack 已过期",
-    pack_not_active: "legal pack 未激活",
+    pack_expired: "发布资料包已过期",
+    pack_not_active: "发布资料包未激活",
     pack_too_long: "有效期超策略",
   }[reason] || reason;
 }
@@ -647,7 +755,7 @@ function buildBlockedItemResolutionStep({
         ? operatorManualRequired
           ? { type: "link", href: "#operator-jurisdiction-panel", label: "发布主体辖区" }
           : { type: "form", action: "autofix_release_blockers", file: item.file, label: "先自动处理当前阻断", returnTo: surfaceReturnTo }
-        : { type: "link", href: routeForLegal(item.id, currentPrimaryPackCode), label: "去填写发布主体辖区" },
+        : { type: "link", href: routeForDetail(item.id), label: "去当前稿件继续处理" },
     };
   }
   if (currentNeedsDrafts) {
@@ -700,11 +808,11 @@ function buildBlockedItemResolutionStep({
   }
   if (currentPrimaryPackCode) {
     return {
-      title: `当前真正下一步：先补 ${currentPrimaryPackCode} 的 legal pack`,
+      title: `当前真正下一步：先补 ${currentPrimaryPackCode} 的发布资料包`,
       detail: "系统已自动做到上限：draft 已有，但还缺真实的官方来源、日期或律师签名哈希。先补完当前焦点辖区，再回来重提。",
       primaryAction: surface === "legal"
-        ? { type: "link", href: `#pack-${currentPrimaryPackCode}`, label: `去补 ${currentPrimaryPackCode} legal pack` }
-        : { type: "link", href: routeForLegal(item.id, currentPrimaryPackCode), label: `去补 ${currentPrimaryPackCode} legal pack` },
+        ? { type: "link", href: `#pack-${currentPrimaryPackCode}`, label: `去补 ${currentPrimaryPackCode} 发布资料包` }
+        : { type: "link", href: routeForDetail(item.id), label: "去当前稿件继续处理" },
     };
   }
   return {
@@ -736,26 +844,35 @@ function dashboardNextStep(state) {
     const action = guidance.primaryAction || null;
     const actionKey = action?.type === "form" ? action.action : action?.type === "link" ? action.label : "";
     const rank = {
-      approve_and_submit_zh: 0,
-      autofix_release_blockers: 1,
-      submit_release_zh: 2,
-      review_pr: 3,
-      build_review_html: 4,
-      "去补事实包": 5,
-      "查看阻断详情": 6,
-      "": 7,
+      rerun_autopilot: 0,
+      "重新触发自动审稿": 0,
+      "去补事实包": 1,
+      quarantine_zh: 2,
+      build_review_html: 3,
+      submit_release_zh: 4,
+      approve_and_submit_zh: 5,
+      review_pr: 6,
+      "查看详情": 7,
+      "": 8,
     }[actionKey] ?? 7;
-    return { item, guidance, rank };
-  }).sort((left, right) => left.rank - right.rank);
+    const factGapCount = item.metrics?.missing?.length || 0;
+    return { item, guidance, rank, factGapCount };
+  }).sort((left, right) => {
+    if (left.rank !== right.rank) return left.rank - right.rank;
+    if (left.factGapCount !== right.factGapCount) return left.factGapCount - right.factGapCount;
+    return left.item.id.localeCompare(right.item.id);
+  });
   const current = scored[0];
   if (current) {
+    const fallbackAction = { type: "link", href: routeForDetail(current.item.id), label: "查看详情" };
+    const title = current.guidance.nextStep;
     return {
-      title: current.guidance.nextStep,
+      title,
       detail: current.guidance.why,
       item: current.item,
       action: current.guidance.primaryAction?.type === "form"
         ? { ...current.guidance.primaryAction, file: current.guidance.primaryAction.file || current.item.file, returnTo: current.guidance.primaryAction.returnTo || "/" }
-        : (current.guidance.primaryAction || { type: "link", href: routeForDetail(current.item.id), label: "查看详情" }),
+        : (current.guidance.primaryAction || fallbackAction),
     };
   }
   return null;
@@ -917,7 +1034,7 @@ async function fetchOperatorJurisdictionEvidenceFromUrls(urls = []) {
 }
 
 function dashboardPage(state, notice, error) {
-  const hasActiveProcessing = state.workflowCounts.release_requested > 0;
+  const hasActiveProcessing = (state.workflowCounts.autopilot_queued + state.workflowCounts.autopilot_reviewing + state.workflowCounts.autopilot_rewriting + state.workflowCounts.autopilot_publishing + state.workflowCounts.release_requested) > 0;
   const nextStep = dashboardNextStep(state);
   const focusItem = nextStep?.item || state.items[0] || null;
   const focusGuidance = focusItem
@@ -927,57 +1044,57 @@ function dashboardPage(state, notice, error) {
       supportByJurisdiction: state.supportSummary?.byJurisdiction,
     }))
     : null;
-  const focusLegalHref = focusItem?.workflow?.status === "release_blocked"
-    ? routeForLegal(focusItem.id, focusItem.legal?.blockedJurisdictions?.[0] || "")
-    : "";
   const focusProblemEntryLinks = focusItem
     ? renderProblemEntryLinks({
       item: focusItem,
       guidance: focusGuidance,
-      legalHref: focusLegalHref,
       includeDetailLink: true,
       includeReviewPreview: true,
     })
     : "";
   const blockedCount = state.workflowCounts.release_blocked;
   const queueCards = state.items.map((item) => {
+    const isFocus = focusItem?.id === item.id;
     const guidance = item.guidance || buildItemWorkflowGuidance(item, state.registry, {
       packValidation: state.packValidation,
       operatorJurisdictionReport: state.operatorJurisdictionReport,
       supportByJurisdiction: state.supportSummary?.byJurisdiction,
     });
+    const surfaceStage = editorSurfaceStageText(item, guidance);
     const reviewLinks = [
-      `<a class="action-button" href="${escapeHtml(dynamicReviewRoute(item.id))}">动态审稿页</a>`,
-      item.readiness.reviewHtmlBuilt ? `<a class="action-button" href="${escapeHtml(reviewHtmlRoute(item.id))}">静态 HTML</a>` : "",
-      item.readiness.previewBuilt ? `<a class="action-button" href="/preview${escapeHtml(item.readiness.previewPath)}">中文预发页</a>` : "",
-      `<a class="action-button" href="${escapeHtml(routeForDetail(item.id))}">稿件详情</a>`,
-    ].filter(Boolean).join("");
-    const actions = renderGuidanceActions(item, routeForDetail(item.id)) || `<a class="action-button primary" href="${escapeHtml(routeForDetail(item.id))}">查看详情</a>`;
-    return `<article class="queue-card">
+      `<a href="${escapeHtml(dynamicReviewRoute(item.id))}">动态审稿页</a>`,
+      item.readiness.reviewHtmlBuilt ? `<a href="${escapeHtml(reviewHtmlRoute(item.id))}">静态 HTML</a>` : "",
+      item.readiness.previewBuilt ? `<a href="/preview${escapeHtml(item.readiness.previewPath)}">中文预发页</a>` : "",
+      `<a href="${escapeHtml(routeForDetail(item.id))}">稿件详情</a>`,
+    ].filter(Boolean).join(" · ");
+    return `<article class="queue-card ${isFocus ? "current" : ""}">
         <div class="stack">
           <a class="queue-title" href="${routeForDetail(item.id)}">${escapeHtml(item.edition.title)}</a>
           <span class="meta">${escapeHtml(item.edition.homeName)} vs ${escapeHtml(item.edition.awayName)} · ${escapeHtml(item.edition.competition || "未标注赛事")}</span>
           <div class="queue-badges">
-            ${workflowBadge(editionStatusText(item.edition.status))}
+            ${workflowBadge(lifecycleStatusText(item.workflow?.lifecycle?.status || "draft"))}
+            ${workflowBadge(surfaceStage)}
             ${workflowBadge(workflowStatusText(item.workflow.status), workflowTone(item.workflow.status))}
           </div>
+          ${isFocus ? `<span class="meta">这是当前焦点稿件。主动作只保留在上方“当前建议动作”。</span>` : ""}
+          <span class="meta">生命周期状态: ${escapeHtml(lifecycleStatusText(item.workflow?.lifecycle?.status || "draft"))}</span>
           <span class="meta">当前阶段: ${escapeHtml(guidance.stateLabel)}</span>
           <span class="meta">下一步: ${escapeHtml(guidance.nextStep)}</span>
-          <span class="meta">工作流说明: ${escapeHtml(guidance.why)}</span>
+          <span class="meta">当前情况: ${escapeHtml(editorVisibleWorkflowSummary(item, guidance))}</span>
           <span class="meta">事实包缺口: ${escapeHtml(item.metrics.missing.length ? item.metrics.missing.join("、") : "无")}</span>
           <span class="meta">双源确认: ${escapeHtml(item.metrics.coreSourceConfirmations ?? "未记录")}</span>
-          <div class="review-materials">${reviewLinks}</div>
-          ${guidance.blockers?.length ? `<ul class="list">${guidance.blockers.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>` : ""}
-          <div class="actions">${actions}</div>
+          <span class="meta">问题入口: ${escapeHtml(editorVisibleQueueIssue(item, guidance))}</span>
+          <p class="meta">审稿材料: ${reviewLinks}</p>
+          ${isFocus ? "" : `<p class="meta"><a href="${escapeHtml(routeForDetail(item.id))}">查看这篇稿件详情</a></p>`}
         </div>
     </article>`;
   }).join("");
   const body = `
     <section class="header" ${hasActiveProcessing ? "data-auto-refresh=\"true\"" : ""}>
       <p class="eyebrow">EventAnalysis 审稿工作台</p>
-      <h1 class="title">中文审稿、一键通过、发布申请</h1>
-      <p class="subtitle">编辑侧现在只保留一个核心动作：<code>一键审稿通过</code>。点击后系统会自动批准中文、补生成私有审稿材料，并在后台继续做预审、审计和中文本地预发。<code>legal pack</code> 指的是某个辖区的私有发布合规包，不是文章正文；若后台条件不满足，会落成“申请被阻断（未发布）”，并优先给出当前还能安全自动执行的处理按钮。</p>
-      ${hasActiveProcessing ? `<p class="processing-note">检测到发布申请正在处理中，页面每 5 秒自动刷新一次。</p>` : ""}
+      <h1 class="title">自动编辑部监控台</h1>
+      <p class="subtitle">新稿会直接进入自动编辑部链路：自动审稿、最多 3 次自动改稿、全量翻译、正式生产发布与线上验收。主动作改为 <code>重新触发自动审稿</code>；旧的 PR 和一键审批只作为遗留工具保留。</p>
+      ${hasActiveProcessing ? `<p class="processing-note">检测到自动编辑部正在处理稿件，页面每 5 秒自动刷新一次。</p>` : ""}
     </section>
     ${nextStep && focusItem && focusGuidance ? `<section class="panel tone-${state.readiness.publicationStatus === "PASS" ? "ok" : "warn"}">
       <p class="eyebrow">当前建议动作</p>
@@ -988,13 +1105,12 @@ function dashboardPage(state, notice, error) {
         <div class="resolve-item">
           <strong class="flow-title">当前状态</strong>
           <p class="flow-text">${escapeHtml(focusGuidance.stateLabel)}</p>
-          <p class="meta">${escapeHtml(focusGuidance.why)}</p>
-          <p class="meta">${escapeHtml(publicSurfaceStatusText(focusItem.workflow.status))}</p>
+          <p class="meta">${escapeHtml(editorVisibleWorkflowSummary(focusItem, focusGuidance))}</p>
         </div>
         <div class="resolve-item">
           <strong class="flow-title">下一步只做这一件事</strong>
           <p class="flow-text">${escapeHtml(nextStep.title)}</p>
-          <p class="meta">${escapeHtml(nextStep.detail)}</p>
+          <p class="meta">${escapeHtml(editorVisibleWorkflowSummary(focusItem, focusGuidance))}</p>
           <div class="actions">${renderStepAction(nextStep.action)}</div>
         </div>
         <div class="resolve-item">
@@ -1015,21 +1131,23 @@ function dashboardPage(state, notice, error) {
     </section>` : ""}
     <section class="grid summary">
       <article class="panel"><p class="kpi">${state.workflowCounts.total}</p><p class="meta">当前审稿候选</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.review_pending}</p><p class="meta">待编辑一键通过</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_requested}</p><p class="meta">发布申请处理中</p></article>
-      <article class="panel"><p class="kpi">${blockedCount}</p><p class="meta">申请被阻断（未发布）</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_review_required}</p><p class="meta">待人工复核</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_ready}</p><p class="meta">本地预发完成</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.review_pending}</p><p class="meta">待自动审稿</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_reviewing + state.workflowCounts.autopilot_rewriting}</p><p class="meta">自动处理中</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_publishing}</p><p class="meta">自动发布中</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_failed + blockedCount}</p><p class="meta">自动失败/旧流程中断</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.quarantined}</p><p class="meta">已隔离</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.published}</p><p class="meta">已发布</p></article>
+      <article class="panel"><p class="kpi">${state.lifecycleCounts.edited_pending_publish}</p><p class="meta">已编辑待发布</p></article>
     </section>
     ${blockedCount ? `<section class="panel tone-warn">
-      <h2>系统发布阻断摘要</h2>
-      <p class="meta">当前有 ${blockedCount} 篇稿件的发布申请被后台自动阻断。公开站点没有发布这些内容；系统会先尝试自动处理发布主体辖区、draft pack、support 和官方来源哈希，只有自动步骤做不到的真实字段才会留在详情里继续补。</p>
+      <h2>旧流程中断摘要</h2>
+      <p class="meta">当前有 ${blockedCount} 篇稿件仍停在历史发布链路。优先使用稿件详情里的 <code>重新触发自动审稿</code> 切回自动编辑部。</p>
     </section>` : ""}
     <section class="panel">
       <h2>审稿队列</h2>
       <div class="queue-list">${queueCards || `<p class="meta">当前没有稿件。</p>`}</div>
     </section>
-    <p class="footnote">说明：编辑侧只保留 <code>一键审稿通过</code>。后台若缺事实、授权或发布条件，会自动阻断为 <code>release_blocked</code>，但不会要求编辑继续走律师或法务流程。</p>`;
+    <p class="footnote">说明：自动编辑部会把内容类 findings 视作审计输入，最终由 editor agent 判定；只有命令失败、配置缺失、超时、AWS 失败或线上验收失败会把 workflow 记为 <code>autopilot_failed</code>。</p>`;
   return page({ title: "EventAnalysis 审稿工作台", body, notice, error });
 }
 
@@ -1039,11 +1157,10 @@ function detailPage(state, notice, error) {
     operatorJurisdictionReport: state.operatorJurisdictionReport,
     supportByJurisdiction: state.supportSummary?.byJurisdiction,
   });
-  const hasActiveProcessing = item.workflow.status === "release_requested";
-  const legalHref = item.workflow.status === "release_blocked"
-    ? routeForLegal(item.id, item.legal?.blockedJurisdictions?.[0] || "")
-    : "";
-  const problemEntryLinks = renderProblemEntryLinks({ item, guidance, legalHref, includeReviewPreview: true });
+  const surfaceStage = editorSurfaceStageText(item, guidance);
+  const hasActiveProcessing = ["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing", "release_requested"].includes(item.workflow.status);
+  const detailPrimaryAction = itemPrimaryEntryAction(item, guidance, routeForDetail(item.id));
+  const problemEntryLinks = renderProblemEntryLinks({ item, guidance, includeReviewPreview: true });
   const continuity = item.metrics.continuity.length
     ? `<ul class="list">${item.metrics.continuity.map((entry) => `<li>${escapeHtml(entry.teamName)} 首发延续率 ${escapeHtml(entry.continuityRate)}%，共有 ${escapeHtml(entry.sharedStarters)}/${escapeHtml(entry.currentStarters)} 名首发连续出场</li>`).join("")}</ul>`
     : "<p class=\"meta\">未找到对应阵容延续数据。</p>";
@@ -1059,46 +1176,39 @@ function detailPage(state, notice, error) {
     <section class="header" ${hasActiveProcessing ? "data-auto-refresh=\"true\"" : ""}>
       <p class="eyebrow"><a href="/">返回审稿队列</a></p>
       <h1 class="title">稿件详情</h1>
-      <p class="subtitle">这里同时显示稿件正文、事实包和当前流转阶段。发布阻断不会被伪装成“没反应”，也不表示内容已经公开发布；它只表示发布申请跑过了，但没有通过。</p>
-      ${hasActiveProcessing ? `<p class="processing-note">当前稿件的发布申请正在处理中，页面每 5 秒自动刷新一次。</p>` : ""}
+      <p class="subtitle">先看当前动作和下一步。稿件正文、事实摘要和后台原始记录仍然保留，但不是你现在必须先处理的部分。</p>
+      ${hasActiveProcessing ? `<p class="processing-note">当前稿件正在自动编辑部链路中处理，页面每 5 秒自动刷新一次。</p>` : ""}
     </section>
     <section class="hero">
-      <p class="eyebrow">${escapeHtml(item.edition.competition || "未标注赛事")} · ${escapeHtml(editionStatusText(item.edition.status))}</p>
+      <p class="eyebrow">${escapeHtml(item.edition.competition || "未标注赛事")} · ${escapeHtml(surfaceStage)}</p>
       <h1>${escapeHtml(item.edition.title)}</h1>
       <p class="subtitle">${escapeHtml(item.edition.deck)}</p>
       <div class="actions">
-        ${renderGuidanceActions(item, routeForDetail(item.id))}
+        ${detailPrimaryAction}
       </div>
-      ${problemEntryLinks ? `<p class="meta">遇到问题可直接跳到</p><div class="actions">${problemEntryLinks}</div>` : ""}
     </section>
     <section class="detail">
-      <div class="article">
-        ${sections}
-        <section class="panel">
-          <h2>时间线</h2>
-          ${timeline}
-        </section>
-        <section class="panel">
-          <h2>Claims</h2>
-          ${claims}
-        </section>
-      </div>
       <aside class="grid">
-        <section class="panel">
-          <h3>当前流转</h3>
-          <p class="meta">编辑状态: ${escapeHtml(editionStatusText(item.edition.status))}</p>
-          <p class="meta">发布申请状态: ${escapeHtml(workflowStatusText(item.workflow.status))}</p>
-          <p class="meta">公开站点状态: ${escapeHtml(publicSurfaceStatusText(item.workflow.status))}</p>
-          <p class="meta">工作流摘要: ${escapeHtml(item.workflow.summary || "未记录")}</p>
+        <section class="panel tone-warn">
+          <h3>当前唯一动作</h3>
           <p class="meta">当前阶段: ${escapeHtml(guidance.stateLabel)}</p>
           <p class="meta">下一步: ${escapeHtml(guidance.nextStep)}</p>
+          <p class="meta">当前情况: ${escapeHtml(editorVisibleWorkflowSummary(item, guidance))}</p>
+          <div class="actions">${detailPrimaryAction}</div>
+          ${problemEntryLinks ? `<p class="meta">遇到问题时直接进这里</p><div class="actions">${problemEntryLinks}</div>` : ""}
+        </section>
+        <section class="panel">
+          <h3>当前流转</h3>
+          <p class="meta">生命周期状态: ${escapeHtml(lifecycleStatusText(item.workflow?.lifecycle?.status || "draft"))}</p>
+          <p class="meta">编辑侧当前阶段: ${escapeHtml(surfaceStage)}</p>
+          <p class="meta">发布申请状态: ${escapeHtml(workflowStatusText(item.workflow.status))}</p>
+          <p class="meta">公开结果: ${escapeHtml(editorVisibleWorkflowSummary(item, guidance))}</p>
           <p class="meta">最近审阅: ${escapeHtml(formatDate(item.item.reviewedAt))}</p>
           <p class="meta">工作流更新时间: ${escapeHtml(formatDate(item.workflow.updatedAt))}</p>
         </section>
         <section class="panel">
           <h3>为什么会卡在这里</h3>
-          ${guidance.blockers?.length ? `<ul class="list">${guidance.blockers.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul><p class="meta">这里按“如果你现在重新提交，系统会真实命中的阻断范围”来算，不再把旧报告里已经过时的辖区混进当前操作清单。</p>` : `<p class="meta">${escapeHtml(guidance.why)}</p>`}
-          ${problemEntryLinks ? `<p class="meta">问题入口</p><div class="actions">${problemEntryLinks}</div>` : ""}
+          ${guidance.blockers?.length ? `<ul class="list">${guidance.blockers.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul><p class="meta">这里按“如果你现在重新提交，系统会真实命中的阻断范围”来算，不再把旧报告里已经过时的范围混进当前操作清单。</p>` : `<p class="meta">${escapeHtml(guidance.why)}</p>`}
         </section>
         <section class="panel">
           <h3>审稿材料</h3>
@@ -1116,11 +1226,11 @@ function detailPage(state, notice, error) {
           <h3>阵容延续</h3>
           ${continuity}
         </section>
-        <section class="panel">
-          <h3>上次失败留痕</h3>
+        <details class="panel details-block">
+          <summary>后台原始记录再展开</summary>
           <p class="meta">这里保留上一次发布申请失败时写入的原始阻断记录，用于审计追踪；它不一定等于你现在重提时仍需要处理的当前步骤。</p>
           ${findingsList(item.workflow.release?.findings)}
-        </section>
+        </details>
         <section class="panel">
           <h3>比赛信息</h3>
           <p class="meta">${escapeHtml(item.edition.homeName)} vs ${escapeHtml(item.edition.awayName)}</p>
@@ -1128,14 +1238,28 @@ function detailPage(state, notice, error) {
           <p class="meta">事实包状态: ${escapeHtml(item.evidence?.status || "未找到")}</p>
           <p class="meta">比分: ${escapeHtml(item.evidence?.match ? `${item.evidence.match.homeScore} - ${item.evidence.match.awayScore}` : item.edition.resultLabel || "未记录")}</p>
         </section>
-        <section class="panel">
-          <h3>附加操作</h3>
+        <details class="panel details-block">
+          <summary>非当前动作再展开</summary>
           <p class="meta">这些按钮会改变工作流状态，但不是当前推荐的发布推进动作。</p>
           <div class="actions">
             ${actionButton({ action: "quarantine_zh", file: item.file, label: "隔离稿件", returnTo: routeForDetail(item.id), tone: "danger" })}
           </div>
-        </section>
+        </details>
       </aside>
+      <div class="article">
+        <details class="panel details-block">
+          <summary>稿件正文再展开</summary>
+          ${sections}
+        </details>
+        <details class="panel details-block">
+          <summary>时间线再展开</summary>
+          ${timeline}
+        </details>
+        <details class="panel details-block">
+          <summary>需要核对 Claims 时再展开</summary>
+          ${claims}
+        </details>
+      </div>
     </section>`;
   return page({ title: item.edition.title, body, notice, error });
 }
@@ -1635,7 +1759,7 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
     packAnchor: currentStage === "pack" || currentStage === "support" || currentStage === "drafts"
       ? (currentPrimaryPackCode ? `#pack-${currentPrimaryPackCode}` : "")
       : "",
-    packLabel: currentPrimaryPackCode ? `${currentPrimaryPackCode} legal pack` : "legal pack",
+    packLabel: currentPrimaryPackCode ? `${currentPrimaryPackCode} 发布资料包` : "发布资料包",
     includeOperatorAnchor: currentStage === "operator" && !operatorConfirmed,
     includeDetailLink: currentStage === "detail" || currentStage === "retry",
   }) : "";
@@ -1648,60 +1772,39 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
   const inlineNextStepNote = legalNextStep?.primaryAction?.type === "link" && legalNextStep.primaryAction.href === "#operator-jurisdiction-panel"
     ? "当前主按钮就在下方“发布主体辖区”表单里：保存发布主体辖区。"
     : (legalNextStep?.primaryAction?.type === "link" && currentPrimaryPackCode && legalNextStep.primaryAction.href === `#pack-${currentPrimaryPackCode}`
-      ? `当前主按钮就在下方“${currentPrimaryPackCode} legal pack”表单里：保存 legal pack。`
+      ? `当前主按钮就在下方“${currentPrimaryPackCode} 发布资料包”表单里：保存发布资料包。`
       : "");
   const showOperatorManualEditor = !current || currentStage === "operator";
   const showPackEditor = !current || currentStage === "pack";
   const focusPackSupportHasMaterial = supportEntryHasMaterial(focusPackSupport);
+  const remainingPackCodesAfterFocus = currentInvalidPackCodes.filter((code) => code !== packFocusCode);
+  const currentPackQueueSummary = currentPrimaryPackCode
+    ? (remainingPackCodesAfterFocus.length
+      ? `当前先处理 ${currentPrimaryPackCode}，完成后自动切到 ${remainingPackCodesAfterFocus[0]}${remainingPackCodesAfterFocus.length > 1 ? `，后面还剩 ${remainingPackCodesAfterFocus.slice(1).join("、")}` : ""}。`
+      : `当前只剩 ${currentPrimaryPackCode} 这一个辖区。补完后就会回到重新提交。`)
+    : "当前没有明确的焦点辖区。";
+  const currentBlockedScopeSummary = currentInvalidPackCodes.length
+    ? `${currentInvalidPackCodes.join("、")} ${operatorConfirmed ? "" : "以及发布主体辖区 "}会阻断这次重提。`
+    : (operatorConfirmed ? "当前没有剩余辖区阻断。" : "当前仍缺发布主体辖区。");
+  const focusSupportSummary = focusPackSupport
+    ? `当前已发现 ${focusPackSupport.name}${focusPackSupportHasMaterial ? "，里面有可导入材料。" : "，但里面还没有真实可导入字段。"}`
+    : `当前还没有 ${packFocusCode || "该辖区"} 的 support 文件。`;
   const body = `
     <section class="header">
       <p class="eyebrow"><a href="/">返回审稿工作台</a></p>
-      <h1 class="title">阻断处理台</h1>
-      <p class="subtitle">这里专门处理 <code>release_blocked</code>。页面只保留当前能推进的动作：先确认发布主体辖区，再补 legal pack，再重新提交发布申请。系统不会自动伪造律师签名、官方依据或有效日期，也不会从邮箱后缀、语言、AWS 区域或球队辖区反推发布主体。</p>
+      <h1 class="title">系统发布条件处理台</h1>
+      <p class="subtitle">这里专门处理 <code>release_blocked</code>。编辑侧不需要单独走律师或法务流程；这里只有后台发布条件补齐和重新提交动作。系统不会自动伪造签名、官方依据或有效日期，也不会从邮箱后缀、语言、AWS 区域或球队辖区反推发布主体。</p>
     </section>
     ${legalNextStep ? `<section class="panel tone-warn">
       <h2>${escapeHtml(legalNextStep.title)}</h2>
       <p class="meta">${escapeHtml(legalNextStep.detail)}</p>
-      <p class="meta">当前没有更多可安全自动执行的动作。下一步必须人工填写真实 legal pack 字段，系统不会代填律师签名、有效日期或官方来源。</p>
+      <p class="meta">当前没有更多可安全自动执行的动作。下一步必须补真实发布资料，系统不会代填签名、有效日期或官方来源。</p>
+      ${current ? `<p class="meta">${escapeHtml(currentPackQueueSummary)}</p>` : ""}
       ${inlineNextStepNote ? `<p class="meta">${escapeHtml(inlineNextStepNote)}</p>` : `<div class="actions">${renderBlockedDraftAction(legalNextStep)}</div>`}
-      ${current && currentTaskExportCodes.length ? `<div class="resolve-item tight">
-        <strong>当前补料任务单状态</strong>
-        <ul class="list">${primaryTaskStatus ? renderManualTaskStatusEntry({
-          ...primaryTaskStatus,
-          returnTo: focusedReturnTo,
-          contentId: current.id,
-        }) : `<li>当前没有补料任务单</li>`}</ul>
-        ${!primaryTaskStatus?.entry?.path ? `<form method="post" action="/actions" class="action-form">
-          <input type="hidden" name="action" value="export_legal_pack_tasks">
-          <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
-          <input type="hidden" name="contentId" value="${escapeHtml(current.id)}">
-          <input type="hidden" name="jurisdictions" value="${escapeHtml(currentTaskExportCodes.join(","))}">
-          <div class="actions"><button class="action-button" type="submit">生成当前稿件补料任务单</button></div>
-        </form>` : ""}
-        ${secondaryTaskStatuses.length ? `<details class="details-block">
-          <summary>展开其他待补辖区任务单</summary>
-          <ul class="list">${secondaryTaskStatuses.map((entry) => renderManualTaskStatusEntry({
-            ...entry,
-            returnTo: focusedReturnTo,
-            contentId: current.id,
-          })).join("")}</ul>
-        </details>` : ""}
-        ${currentTaskExportCodes.length ? `<details class="details-block">
-          <summary>如果要转给法务或运营，再展开批量补料入口</summary>
-          <p class="meta">这里会一次性生成当前稿件全部待补辖区的任务单。</p>
-          <form method="post" action="/actions" class="action-form">
-            <input type="hidden" name="action" value="export_legal_pack_tasks">
-            <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
-            <input type="hidden" name="contentId" value="${escapeHtml(current.id)}">
-            <input type="hidden" name="jurisdictions" value="${escapeHtml(currentTaskExportCodes.join(","))}">
-            <div class="actions"><button class="action-button" type="submit">批量生成当前稿件补料任务单</button></div>
-          </form>
-        </details>` : ""}
-      </div>` : ""}
       ${visibleProblemEntryLinks ? `<p class="meta">遇到问题可直接跳到：</p><div class="actions">${visibleProblemEntryLinks}</div>` : ""}
     </section>` : ""}
     <details class="panel details-block">
-      <summary>不清楚 legal pack 是什么，或要看补充说明时再展开</summary>
+      <summary>不清楚系统发布资料是什么，或要看补充说明时再展开</summary>
       <p class="meta">${escapeHtml(legalPackDefinition())}</p>
     ${renderActionChecklist("为什么系统现在不能自动放行", automationLimits, "warn", {
       collapsed: true,
@@ -1719,21 +1822,22 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
       <summary>仓库里当前已发现的私有材料</summary>
       <p class="meta">比赛事实材料: <span class="inline-code">${escapeHtml(evidenceInventory.privateEvidenceCount)}</span> 个 private-evidence 文件${evidenceInventory.privateEvidencePreview.length ? `，例如 ${escapeHtml(evidenceInventory.privateEvidencePreview.join("、"))}` : ""}。</p>
       <p class="meta">法务材料: private-legal 当前共有 <span class="inline-code">${escapeHtml(evidenceInventory.privateLegalFiles.length)}</span> 个文件；其中 support 目录下的结构化法务支撑文件 <span class="inline-code">${escapeHtml(evidenceInventory.legalSupportCount)}</span> 个${evidenceInventory.legalSupportPreview.length ? `，例如 ${escapeHtml(evidenceInventory.legalSupportPreview.join("、"))}` : ""}。</p>
-      ${evidenceInventory.legalSupportCount === 0 ? `<p class="meta">这表示仓库里目前只有 legal pack 注册表和自动识别报告，还没有可直接回填律师、日期或官方依据的结构化私有法务文件。</p>` : `<p class="meta">如果 support 文件里放的是已确认的真实辖区、律师或官方依据材料，下面的按钮可以直接把它们导入当前 legal pack。</p>`}
+      ${evidenceInventory.legalSupportCount === 0 ? `<p class="meta">这表示仓库里目前只有发布资料包注册表和自动识别报告，还没有可直接回填律师、日期或官方依据的结构化私有法务文件。</p>` : `<p class="meta">当前页面只围绕焦点辖区推进；support 里的真实材料只有在命中当前辖区时才会参与自动导入。</p>`}
       <p class="meta">支持目录: <span class="inline-code">${escapeHtml(evidenceInventory.legalSupportDir)}</span></p>
       <p class="meta">模板文件: <span class="inline-code">${escapeHtml(evidenceInventory.legalSupportExamplePath)}</span></p>
     </details>` : ""}
     ${legalSupport ? `<details class="panel details-block">
       <summary>support 扫描结果</summary>
-      ${legalSupport.entries.length ? `<p class="meta">当前可用 support 文件: ${escapeHtml(legalSupport.entries.map((entry) => `${entry.name} -> ${entry.jurisdiction}`).join("；"))}</p>` : `<p class="meta">当前没有可导入的 support JSON。</p>`}
+      <p class="meta">${escapeHtml(focusSupportSummary)}</p>
+      ${packFocusCode ? `<p class="meta">当前焦点辖区: <span class="inline-code">${escapeHtml(packFocusCode)}</span>${nextAfterFocusPack ? `；下一辖区: <span class="inline-code">${escapeHtml(nextAfterFocusPack)}</span>` : ""}</p>` : ""}
       ${legalSupport.operatorDetection?.detectedJurisdiction ? `<p class="meta">support 已唯一标记发布主体辖区: <span class="inline-code">${escapeHtml(legalSupport.operatorDetection.detectedJurisdiction)}</span></p>` : legalSupport.operatorDetection?.ambiguous ? `<p class="meta">support 里同时标记了多个发布主体辖区: ${escapeHtml(legalSupport.operatorDetection.jurisdictions.join("、"))}</p>` : `<p class="meta">support 里当前没有唯一明确的发布主体辖区标记。</p>`}
       ${legalSupport.errors.length ? `<p class="meta">这些 support 文件读取失败，修复后才会出现导入按钮：</p><ul class="list">${legalSupport.errors.map((entry) => `<li>${escapeHtml(entry.name)}：${escapeHtml(entry.message)}</li>`).join("")}</ul>` : `<p class="meta">当前没有 support 解析错误。</p>`}
-      ${currentMissingSupportCodes.length ? `<p class="meta">当前稿件还没有这些辖区的 support 文件: ${escapeHtml(currentMissingSupportCodes.join("、"))}</p><form method="post" action="/actions" class="action-form">
-        <input type="hidden" name="action" value="bootstrap_legal_support_templates">
+      ${packFocusCode && !focusPackSupport ? `<form method="post" action="/actions" class="action-form">
+        <input type="hidden" name="action" value="bootstrap_legal_support_template">
         <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
-        <input type="hidden" name="jurisdictions" value="${escapeHtml(currentMissingSupportCodes.join(","))}">
-        <input type="hidden" name="operatorJurisdiction" value="${escapeHtml(operatorConfirmed ? operatorCode : "")}">
-        <button class="action-button" type="submit">为当前稿件生成 support 骨架</button>
+        <input type="hidden" name="jurisdiction" value="${escapeHtml(packFocusCode)}">
+        <input type="hidden" name="operatorJurisdiction" value="${escapeHtml(operatorConfirmed && operatorCode === packFocusCode ? "1" : "")}">
+        <button class="action-button" type="submit">只为当前辖区生成 support 骨架</button>
       </form>` : ""}
     </details>` : ""}
     <details class="panel details-block">
@@ -1744,45 +1848,45 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
           <p class="meta">${operatorConfirmed ? `当前已填写 ${operatorCode}。` : "仓库里目前只有占位值 ZZ，没有单独的已确认主体档案；系统不能替你猜，只能等你填入已确认的两位代码。"}</p>
         </div>
         <div class="resolve-item">
-          <div class="toolbar"><strong>2. 准备 legal pack 骨架</strong>${legalStepBadge(current ? !currentNeedsDrafts : missingPackCount === 0)}${currentFlowBadge(currentStep === 2)}</div>
+          <div class="toolbar"><strong>2. 准备发布资料包骨架</strong>${legalStepBadge(current ? !currentNeedsDrafts : missingPackCount === 0)}${currentFlowBadge(currentStep === 2)}</div>
           <p class="meta">${current
-            ? (currentNeedsDrafts ? `当前稿件还缺 ${currentBlockedJurisdictions.filter((jurisdiction) => !state.packValidation.get(jurisdiction)).join("、")} 的 pack 记录，可以先生成 draft 骨架。` : "当前稿件涉及的辖区都已经有 draft 或 active 记录。")
-            : (missingPackCount === 0 ? "全站当前候选辖区都已经有 draft 或 active 记录。" : `还有 ${missingPackCount} 个候选辖区没有 legal pack 记录，可以安全生成 draft 骨架。`)}</p>
+            ? (currentNeedsDrafts ? `当前稿件还缺 ${currentBlockedJurisdictions.filter((jurisdiction) => !state.packValidation.get(jurisdiction)).join("、")} 的 pack 记录，可以先生成 draft 骨架。` : `当前焦点 ${currentPrimaryPackCode || packFocusCode || "辖区"} 的 pack 记录已经存在。`)
+            : (missingPackCount === 0 ? "全站当前候选辖区都已经有 draft 或 active 记录。" : `还有 ${missingPackCount} 个候选辖区没有发布资料包记录，可以安全生成 draft 骨架。`)}</p>
         </div>
         <div class="resolve-item">
           <div class="toolbar"><strong>3. 准备 support 材料</strong>${legalStepBadge(current ? !currentNeedsSupport : true)}${currentFlowBadge(currentStep === 3)}</div>
           <p class="meta">${current
             ? (currentNeedsSupport
               ? (currentMissingSupportCodes.length
-                ? `当前稿件还缺 ${currentMissingSupportCodes.join("、")} 的 support 文件；先生成骨架，再填入真实法务材料。`
-                : `当前已有 ${currentImportableSupportCodes.join("、")} 的 support 文件可导入 legal pack。`)
-              : (currentSupportEntries.length
-                ? "当前稿件相关辖区的 support 骨架都已生成，但里面还没有可导入的真实法务材料。"
-                : "当前稿件涉及的 support 文件已经就绪。"))
-            : "support 目录用于承接结构化私有法务材料；只有填入真实内容后才会推进 legal pack。"}
+                ? `当前先处理 ${packFocusCode || currentPrimarySupportCode}；如果该辖区没有 support，就只为它生成骨架。`
+                : `当前已有 ${currentImportableSupportCodes.join("、")} 的 support 文件可导入发布资料包。`)
+              : (focusPackSupport
+                ? "当前焦点辖区的 support 已存在，但里面还没有触发自动导入的真实材料。"
+                : "当前焦点辖区暂时不需要 support 补料。"))
+            : "support 目录用于承接结构化私有法务材料；只有填入真实内容后才会推进发布资料包。"}
           </p>
         </div>
         <div class="resolve-item">
-          <div class="toolbar"><strong>4. 补齐可发布 legal pack</strong>${legalStepBadge(current ? currentInvalidPackCodes.length === 0 : invalidPackCount === 0)}${currentFlowBadge(currentStep === 4)}</div>
+          <div class="toolbar"><strong>4. 补齐可发布发布资料包</strong>${legalStepBadge(current ? currentInvalidPackCodes.length === 0 : invalidPackCount === 0)}${currentFlowBadge(currentStep === 4)}</div>
           <p class="meta">${current
-            ? (currentInvalidPackCodes.length === 0 ? "当前稿件所需的 legal pack 都已通过校验。" : `这篇稿件当前只差 ${currentInvalidPackCodes.join("、")} ${operatorConfirmed ? "" : "以及发布主体辖区"} 的真实 legal pack 材料；不需要先补完整个站点。`)
-            : (invalidPackCount === 0 ? "当前候选辖区的 legal pack 都已通过校验。" : `仍有 ${invalidPackCount} 个辖区的 pack 无效；这一步必须由人工补入官方来源、日期和本地律师签名哈希。`)}</p>
+            ? (currentInvalidPackCodes.length === 0 ? "当前稿件所需的发布资料包都已通过校验。" : `当前先补 ${packFocusCode || currentPrimaryPackCode}；${remainingPackCodesAfterFocus.length ? `补完后会继续切到 ${remainingPackCodesAfterFocus.join("、")}。` : "补完后即可进入重新提交。"} `)
+            : (invalidPackCount === 0 ? "当前候选辖区的发布资料包都已通过校验。" : `仍有 ${invalidPackCount} 个辖区的资料包无效；这一步必须由人工补入官方来源、日期和本地律师签名哈希。`)}</p>
         </div>
         ${current ? `<div class="resolve-item">
           <div class="toolbar"><strong>5. 重新提交当前稿件</strong>${legalStepBadge(currentCanRetry)}${currentFlowBadge(currentStep === 5)}</div>
-          <p class="meta">${currentCanRetry ? "本稿件当前阻断条件已解除，可以重新跑一次独立预审与本地预发。" : "只有当前稿件的辖区和 legal pack 都补齐后，这一步才会出现重新提交按钮。"}</p>
+          <p class="meta">${currentCanRetry ? "本稿件当前阻断条件已解除，可以重新跑一次独立预审与本地预发。" : `只有 ${packFocusCode || currentPrimaryPackCode || "当前辖区"}${remainingPackCodesAfterFocus.length ? ` 以及后续 ${remainingPackCodesAfterFocus.join("、")}` : ""} 都补齐后，这一步才会出现重新提交按钮。`}</p>
         </div>` : ""}
       </div>
     </details>
     </details>
     <details class="panel details-block">
-      <summary>${currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? "如需核对当前稿件涉及的辖区范围再展开" : "查看当前稿件相关辖区范围"}</summary>
+      <summary>${currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? "如需核对当前阻断范围再展开" : "查看当前阻断范围"}</summary>
       <section class="diagnostics">
       ${renderFlowSection({
         active: !current || currentStage === "operator",
         title: currentStage === "operator" ? "现在就处理：发布主体辖区" : "处理完当前步骤后再看：发布主体辖区",
         summary: operatorCode && operatorCode !== "ZZ"
-          ? `当前已填写 ${operatorCode}，但仍需该辖区存在有效 legal pack。`
+          ? `当前已填写 ${operatorCode}，但仍需该辖区存在有效发布资料包。`
           : "当前仍是占位值 ZZ 或为空，这会直接阻断所有发布申请。",
         id: "operator-jurisdiction-panel",
         tone: state.readiness.publicationStatus === "PASS" ? "ok" : "warn",
@@ -1839,7 +1943,7 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
           </div>
           ${focusSupportDraft ? `<div class="resolve-item tight">
             <strong>如果你手里已经有私有法务材料</strong>
-            <p class="meta">你可以直接在这一步填写 ${escapeHtml(packFocusCode)} 的 support，并勾选“这份 support 同时确认当前辖区就是发布主体辖区”。保存后系统会自动同步到 legal pack；如果官方来源 URL 已填写但 hash 缺失，也会继续尝试补抓。</p>
+            <p class="meta">你可以直接在这一步填写 ${escapeHtml(packFocusCode)} 的 support，并勾选“这份 support 同时确认当前辖区就是发布主体辖区”。保存后系统会自动同步到发布资料包；如果官方来源 URL 已填写但 hash 缺失，也会继续尝试补抓。</p>
             <p class="meta">${focusPackSupport ? `当前文件：` : "将创建文件："}<span class="inline-code">${escapeHtml(focusSupportPath)}</span></p>
             <form method="post" action="/actions" class="form-grid">
               <input type="hidden" name="action" value="save_legal_support">
@@ -1868,7 +1972,7 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
                 <input id="operator-support-operator-flag" type="checkbox" name="operatorJurisdiction" value="1" ${focusSupportDraft.operatorJurisdiction || (!operatorConfirmed && packFocusCode ? "checked" : "")}>
                 这份 support 同时确认当前辖区就是发布主体辖区
               </label>
-              <div class="actions"><button class="action-button primary" type="submit">保存 support 材料并同步 legal pack</button></div>
+              <div class="actions"><button class="action-button primary" type="submit">保存 support 材料并同步发布资料包</button></div>
             </form>
           </div>` : ""}
           <div class="resolve-item tight">
@@ -1899,35 +2003,27 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
       ${renderFlowSection({
         active: !current || currentStage === "pack" || currentStage === "drafts" || currentStage === "support",
         title: !current
-          ? "全局 legal pack 摘要"
-          : (currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? "现在就参考：当前稿件相关 legal pack 摘要" : "如果需要再展开：当前稿件相关 legal pack 摘要"),
+          ? "全局发布资料包摘要"
+          : (currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? "现在就参考：当前阻断范围摘要" : "如果需要再展开：当前阻断范围摘要"),
         summary: current
-          ? (currentInvalidPackCodes.length ? `这篇稿件当前优先处理 ${currentInvalidPackCodes.join("、")} ${operatorConfirmed ? "" : "以及发布主体辖区"}。` : "这篇稿件当前没有剩余 legal pack 阻断。")
-          : (state.readiness.publicationFailures.length ? "当前发布阻断仍然存在，需补齐辖区和 legal pack。" : "当前没有 legal pack 阻断。"),
+          ? currentBlockedScopeSummary
+          : (state.readiness.publicationFailures.length ? "当前发布阻断仍然存在，需补齐辖区和发布资料包。" : "当前没有发布资料包阻断。"),
         tone: state.readiness.publicationStatus === "PASS" ? "ok" : "warn",
         body: `
         <p class="meta">自动化发布状态: ${escapeHtml(state.readiness.publicationStatus)}</p>
         <div class="code-list">${(state.registry.operatorJurisdictions || []).map((code) => `<span class="code-pill">${escapeHtml(code)}</span>`).join("") || `<span class="code-pill">未设置</span>`}</div>
         <p class="meta">${current
-          ? `当前稿件相关辖区共 ${currentBlockedJurisdictions.length || 0} 个，其中未通过 ${currentInvalidPackCodes.length} 个。`
+          ? `当前稿件阻断辖区共 ${currentBlockedJurisdictions.length || 0} 个，其中当前焦点是 ${packFocusCode || currentPrimaryPackCode || "未确定"}。`
           : `draft 候选共 ${allDraftCandidates.length} 个，其中可用 ${activePackCount}、无效 ${invalidPackCount}、未创建 ${missingPackCount}。`}</p>
         ${!current && missingPackCount > 0 ? `<div class="actions">
           <form method="post" action="/actions" class="action-form">
             <input type="hidden" name="action" value="bootstrap_all_legal_drafts">
             <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
-            <button class="action-button" type="submit">为全站缺口生成 draft legal pack</button>
+            <button class="action-button" type="submit">为全站缺口生成 draft 发布资料包</button>
           </form>
         </div>` : `<p class="meta">${current ? "当前稿件模式下不显示全站批量动作，避免把问题范围放大。" : "当前不需要再批量生成 draft 骨架。"}</p>`}
-        ${packFocusChoices.length ? `<p class="meta">${current ? "当前稿件相关辖区：" : "当前优先处理的辖区："}</p><div class="code-list">${current
-          ? packFocusChoices.map((code) => `<span class="code-pill">${escapeHtml(code)}</span>`).join("")
-          : packFocusChoices.map((code) => `<a class="code-pill" href="${escapeHtml(routeForLegal(current?.id || "", code))}">${escapeHtml(code)}</a>`).join("")}</div>` : ""}
-        <details class="details-block">
-          <summary>${current ? "展开全站 coverage queue（仅作参考）" : "展开全站 coverage queue"}</summary>
-          <p class="meta">targetMarkets: ${(coverageQueue.targetMarkets || []).join(", ") || "无"}</p>
-          <p class="meta">currentContentNexus: ${(coverageQueue.currentContentNexus || []).join(", ") || "无"}</p>
-          <p class="meta">operator: ${(coverageQueue.operator || []).join(", ") || "无"}</p>
-          <p class="meta">draftCandidates: ${allDraftCandidates.join(", ") || "无"}</p>
-        </details>
+        ${packFocusCode ? `<p class="meta">当前焦点辖区: <span class="inline-code">${escapeHtml(packFocusCode)}</span>${nextAfterFocusPack ? `；下一辖区: <span class="inline-code">${escapeHtml(nextAfterFocusPack)}</span>` : ""}</p>` : ""}
+        ${remainingPackCodesAfterFocus.length ? `<p class="meta">后续仍待处理: ${escapeHtml(remainingPackCodesAfterFocus.join("、"))}</p>` : `<p class="meta">当前没有剩余后续辖区。</p>`}
         `,
       })}
       </section>
@@ -1944,8 +2040,9 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
       ${currentGuidance?.blockers?.length ? `<ul class="list">${currentGuidance.blockers.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>` : `<p class="meta">当前稿件没有额外阻断说明。</p>`}
       <div class="resolve-panel">
         <div class="resolve-item">
-          <strong>本稿件涉及的 legal pack</strong>
-          ${currentPacks.length ? `<ul class="list">${currentPacks.map(({ jurisdiction, validation }) => `<li>${escapeHtml(jurisdiction)}: ${escapeHtml(legalPackStateText(validation))}</li>`).join("")}</ul>` : `<p class="meta">当前稿件没有记录到具体辖区阻断。</p>`}
+          <strong>当前阻断范围</strong>
+          <p class="meta">${escapeHtml(currentBlockedScopeSummary)}</p>
+          <p class="meta">${escapeHtml(currentPackQueueSummary)}</p>
         </div>
         <div class="resolve-item">
           <strong>当前可执行动作</strong>
@@ -1958,8 +2055,8 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
     ${focusPack ? renderFlowSection({
       active: !current || currentStage === "pack" || currentStage === "drafts" || currentStage === "support",
       title: currentStage === "pack" || currentStage === "drafts" || currentStage === "support"
-        ? `现在就处理：${packFocusCode} legal pack`
-        : `处理完当前步骤后再看：${packFocusCode} legal pack`,
+        ? `现在就处理：${packFocusCode} 发布资料包`
+        : `处理完当前步骤后再看：${packFocusCode} 发布资料包`,
       summary: `当前校验：${legalPackStateText(focusPackValidation)}。当前只需要补缺失字段；保存后系统会自动重抓可抓的官方来源哈希并重新校验。`,
       id: `pack-${packFocusCode}`,
       tone: focusPackValidation?.ok ? "ok" : "warn",
@@ -1970,23 +2067,11 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
           ? `<div class="resolve-item"><strong>当前还缺什么</strong><ul class="list">${focusPackRequirements.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul></div>`
           : `<p class="meta">这个 pack 当前已经通过校验。</p>`}
       ${currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? `<details class="details-block">
-        <summary>如果要发给法务或运营填写，再展开当前辖区模板</summary>
-        <p class="meta">下面这段可以直接转发给补料的人。字段名和格式已经按当前阻断项整理好。</p>
-        <form method="post" action="/actions" class="action-form">
-          <input type="hidden" name="action" value="export_legal_pack_task">
-          <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
-          <input type="hidden" name="contentId" value="${escapeHtml(current?.id || "")}">
-          <input type="hidden" name="jurisdiction" value="${escapeHtml(packFocusCode)}">
-          <div class="actions"><button class="action-button" type="submit">生成当前辖区补料任务单</button></div>
-        </form>
-        <textarea class="text-area" readonly>${textValue(buildManualLegalPackTemplate(packFocusCode, focusPack, focusPackFieldState))}</textarea>
-      </details>` : ""}
-      ${currentStage === "pack" || currentStage === "drafts" || currentStage === "support" ? `<details class="details-block">
         <summary>需要辅助信息时再展开</summary>
         <div class="resolve-item tight">
           <strong>当前辅助动作</strong>
-          <p class="meta">当前主动作是先保存这份 legal pack。你可以先在 officialSources 里只填官方 URL；保存时系统会自动尝试补抓 checkedAt 和 contentHash。只有自动补抓后仍缺失时，才需要额外点重抓按钮。</p>
-          ${focusPackSupport ? `<p class="meta">已发现对应 support 文件: <span class="inline-code">${escapeHtml(focusPackSupport.name)}</span>${focusPackSupportHasMaterial ? "，但当前步骤仍以直接补 legal pack 为主。" : "，但里面还没有可导入的真实字段。"} </p>` : `<p class="meta">如果你手里后续拿到结构化私有法务材料，再放进 <span class="inline-code">${escapeHtml(evidenceInventory?.legalSupportDir || resolve(root, "private-legal/support"))}</span> 即可；当前步骤不用先处理 support。</p>`}
+          <p class="meta">当前主动作是先保存这份发布资料包。你可以先在 officialSources 里只填官方 URL；保存时系统会自动尝试补抓 checkedAt 和 contentHash。只有自动补抓后仍缺失时，才需要额外点重抓按钮。</p>
+          ${focusPackSupport ? `<p class="meta">已发现对应 support 文件: <span class="inline-code">${escapeHtml(focusPackSupport.name)}</span>${focusPackSupportHasMaterial ? "，但当前步骤仍以直接补发布资料包为主。" : "，但里面还没有可导入的真实字段。"} </p>` : `<p class="meta">如果你手里后续拿到结构化私有法务材料，再放进 <span class="inline-code">${escapeHtml(evidenceInventory?.legalSupportDir || resolve(root, "private-legal/support"))}</span> 即可；当前步骤不用先处理 support。</p>`}
           ${focusPackHasRefreshableUrls ? `<form method="post" action="/actions" class="action-form">
             <input type="hidden" name="action" value="refresh_official_sources">
             <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
@@ -1996,7 +2081,7 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
           </form>` : `<p class="meta">当前还没有已填的官方 URL，所以这一步暂时没有额外辅助按钮。</p>`}
         </div>
       </details>` : ""}
-      ${showPackEditor ? `<div class="pack-grid">` : `<details class="details-block"><summary>需要手工录入 ${escapeHtml(packFocusCode)} legal pack 时再展开</summary><div class="pack-grid">`}
+      ${showPackEditor ? `<div class="pack-grid">` : `<details class="details-block"><summary>需要手工录入 ${escapeHtml(packFocusCode)} 发布资料包时再展开</summary><div class="pack-grid">`}
         <form method="post" action="/actions" class="panel form-grid">
           <input type="hidden" name="action" value="save_legal_pack">
           <input type="hidden" name="returnTo" value="${escapeHtml(focusedReturnTo)}">
@@ -2028,11 +2113,11 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
             : hiddenField("officialSourcesText", serializeOfficialSourcesInput(focusPack.officialSources || []))}
           ${hiddenField("notesText", (focusPack.notes || []).join("\n"))}
           ${hiddenPackFieldCount ? `<p class="meta">已通过校验的字段保持原值，不在这一步展开。</p>` : ""}
-          <div class="actions"><button class="action-button primary" type="submit">保存 legal pack</button></div>
+          <div class="actions"><button class="action-button primary" type="submit">保存发布资料包</button></div>
         </form>
         ${currentStage === "support" || !current ? `<article class="panel">
           <h3>support 私有材料</h3>
-          <p class="meta">这里保存当前辖区的结构化私有法务材料。保存后系统会自动同步到 legal pack，并在只填了官方 URL 但还没 hash 时尝试补抓。</p>
+          <p class="meta">这里保存当前辖区的结构化私有法务材料。保存后系统会自动同步到发布资料包，并在只填了官方 URL 但还没 hash 时尝试补抓。</p>
           <p class="meta">${focusPackSupport ? `当前已存在 support 文件：` : "当前还没有 support 文件；你可以直接在这里创建。"}<span class="inline-code">${escapeHtml(focusSupportPath)}</span></p>
           <form method="post" action="/actions" class="form-grid">
               <input type="hidden" name="action" value="save_legal_support">
@@ -2062,9 +2147,9 @@ function legalPage(state, notice, error, currentId = "", focusedPackCode = "", e
               <input id="support-operator-flag" type="checkbox" name="operatorJurisdiction" value="1" ${focusSupportDraft?.operatorJurisdiction ? "checked" : ""}>
               这份 support 同时确认当前辖区就是发布主体辖区
             </label>
-            <div class="actions"><button class="action-button primary" type="submit">保存 support 材料并同步 legal pack</button></div>
+            <div class="actions"><button class="action-button primary" type="submit">保存 support 材料并同步发布资料包</button></div>
           </form>
-          <p class="meta">如果勾选了“发布主体辖区”，保存后系统会同时更新发布主体辖区，并把该辖区加入当前 legal pack 流转。</p>
+          <p class="meta">如果勾选了“发布主体辖区”，保存后系统会同时更新发布主体辖区，并把该辖区加入当前发布资料包流转。</p>
         </article>` : ``}
       </div>${showPackEditor ? "" : `</details>`}
       `,
@@ -2123,7 +2208,7 @@ function commandFromEnv(envKey, fallback) {
 function releaseSummaryNotice(file, summary) {
   if (summary.workflowStatus === "release_ready") return `已完成 ${file} 的中文本地预发，可交付发物审核`;
   if (summary.workflowStatus === "release_review_required") return `已记录 ${file} 的人工复核需求`;
-  if (summary.workflowStatus === "release_blocked") return `已记录 ${file} 的发布阻断：${(summary.blockingCodes || []).join(",") || "见详情页"}`;
+  if (summary.workflowStatus === "release_blocked") return `已记录 ${file} 的系统中断，公开站点未发布，请查看稿件详情`;
   return `已更新 ${file} 的发布申请状态`;
 }
 
@@ -2131,34 +2216,17 @@ async function nextLegalFollowupReturnTo(returnTo = "/") {
   const url = new URL(returnTo || "/", "http://127.0.0.1");
   if (url.pathname !== "/legal") return `${url.pathname}${url.search}${url.hash}`;
   const contentId = url.searchParams.get("content");
-  if (!contentId) return `${url.pathname}${url.search}${url.hash}`;
+  if (!contentId) return "/";
   const state = await loadReviewAdminState(root);
   const current = state.items.find((item) => item.id === contentId);
-  if (!current) return `${url.pathname}${url.search}${url.hash}`;
-  if (current.legal?.operatorJurisdictionUnconfirmed) {
-    url.searchParams.delete("pack");
-    return `${url.pathname}${url.search}${url.hash}`;
-  }
-  const currentPack = url.searchParams.get("pack") || "";
-  const nextPack = nextBlockedLegalPack(current.legal?.blockedJurisdictions || [], currentPack);
-  if (nextPack) url.searchParams.set("pack", nextPack);
-  else url.searchParams.delete("pack");
-  return `${url.pathname}${url.search}${url.hash}`;
+  if (!current) return "/";
+  return routeForDetail(current.id);
 }
 
 async function nextLegalFollowupNotice(returnTo = "/") {
   const url = new URL(returnTo || "/", "http://127.0.0.1");
-  if (url.pathname !== "/legal") return "";
-  const contentId = url.searchParams.get("content");
-  if (!contentId) return "";
-  const state = await loadReviewAdminState(root);
-  const current = state.items.find((item) => item.id === contentId);
-  if (!current) return "";
-  if (current.legal?.operatorJurisdictionUnconfirmed) return "下一步：确认发布主体辖区";
-  const nextPack = nextBlockedLegalPack(current.legal?.blockedJurisdictions || [], url.searchParams.get("pack") || "");
-  if (nextPack) return `下一步：补 ${nextPack} legal pack`;
-  if (current.guidance?.primaryAction?.action === "submit_release_zh") return "下一步：重新提交中文发布申请";
-  return "下一步：回稿件详情核对剩余阻断";
+  if (url.pathname === "/legal") return "下一步：回当前稿件继续处理";
+  return "";
 }
 
 function uniqueNonZzJurisdictions(values = []) {
@@ -2257,8 +2325,7 @@ async function autoResolveReleaseBlockers(reviewItem, returnTo = "/") {
       };
       await writePrivateJson(resolve(root, "private-legal/operator-jurisdiction-report.json"), report);
       if (!detection.detectedJurisdiction) {
-        const blockedCode = uniqueNonZzJurisdictions(current.legal?.blockedJurisdictions || [])[0] || "";
-        return appendMessage(routeForLegal(reviewItem.id, blockedCode), "notice", detection.ambiguous
+        return appendMessage(routeForDetail(reviewItem.id), "notice", detection.ambiguous
           ? `未自动推进：公开证据命中了多个主体辖区候选 ${detection.jurisdictions.join("、")}，请手工确认`
           : "未自动识别到唯一明确的发布主体辖区；请展开手工入口确认");
       }
@@ -2349,7 +2416,7 @@ async function autoResolveReleaseBlockers(reviewItem, returnTo = "/") {
   }
 
   const focusCode = uniqueNonZzJurisdictions(current.legal?.blockedJurisdictions || [])[0] || "";
-  const nextReturnTo = await nextLegalFollowupReturnTo(routeForLegal(reviewItem.id, focusCode));
+  const nextReturnTo = await nextLegalFollowupReturnTo(routeForDetail(reviewItem.id));
   const nextStep = await nextLegalFollowupNotice(nextReturnTo);
   const summary = notices.length ? notices.join("；") : "当前没有额外可自动推进的阻断步骤";
   return appendMessage(nextReturnTo, "notice", `${summary}${nextStep ? `；${nextStep}` : ""}`);
@@ -2821,8 +2888,13 @@ async function handleAction(form) {
     return autoResolveReleaseBlockers(reviewItem, returnTo);
   }
   const releaseJob = await activeReviewJob(root, reviewItem.id, "release-request");
-  if (releaseJob && !["submit_release_zh", "preview_zh", "approve_and_submit_zh"].includes(form.action)) {
+  if (releaseJob && !["submit_release_zh", "preview_zh", "approve_and_submit_zh", "rerun_autopilot"].includes(form.action)) {
     throw new Error("该稿件的发布申请仍在处理中，请等待处理完成后再执行其他动作");
+  }
+  if (form.action === "rerun_autopilot") {
+    const result = await runCommand(["npm", "run", "editorial:autopilot", "--", `content/review-packets/${form.file}`], { cwd: root, timeoutMs: 3_600_000 });
+    const line = result.stdout.trim().split("\n").filter(Boolean).at(-1) || "自动审稿已重新触发";
+    return appendMessage(returnTo, "notice", line);
   }
   if (form.action === "approve_zh") {
     await updateReviewPacketStatus(root, form.file, "zh", "approved");
@@ -2859,11 +2931,6 @@ async function handleAction(form) {
       action: form.action,
       forceApprove: false,
     });
-  }
-  if (form.action === "review_pr") {
-    const result = await runCommand(commandFromEnv("EA_REVIEW_PR_COMMAND_JSON", ["npm", "run", "review:pr"]), { cwd: root, timeoutMs: 180_000 });
-    const line = result.stdout.trim().split("\n").filter(Boolean).at(-1) || "草稿 PR 已创建";
-    return appendMessage(returnTo, "notice", line);
   }
   throw new Error(`未知动作: ${form.action}`);
 }
@@ -2912,15 +2979,11 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/legal") {
       const state = await loadReviewAdminState(root);
-      const evidenceInventory = await loadPrivateEvidenceInventory(root);
-      const legalSupport = await loadLegalSupportEntries(root);
       const fallbackFocus = defaultLegalFocus(state);
       const currentId = url.searchParams.get("content") || fallbackFocus.currentId;
-      const focusedPackCode = url.searchParams.get("pack") || fallbackFocus.packCode;
       const current = currentId ? state.items.find((item) => item.id === currentId) || null : null;
-      const taskEntries = current ? await loadManualLegalTaskEntries(root, current.id, current.legal?.blockedJurisdictions || []) : null;
       response.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
-      response.end(legalPage(state, notice, error, currentId, focusedPackCode, evidenceInventory, legalSupport, taskEntries));
+      response.end(retiredLegalEntryPage(state, notice, error, current));
       return;
     }
     if (pathname.startsWith("/items/")) {

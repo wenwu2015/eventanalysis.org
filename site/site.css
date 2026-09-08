@@ -72,6 +72,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background: var(--paper);
   box-shadow: 8px 8px 0 var(--ink);
 }
+details.locale-menu:not([open]) > .locale-menu-panel { display: none; }
 .locale-menu-panel a { display: flex; justify-content: space-between; gap: .8rem; padding: .8rem; border-bottom: 1px solid var(--line); font-size: .78rem; }
 .locale-menu-panel a:hover, .locale-menu-panel a:focus-visible, .locale-menu-panel a[aria-current="page"] { background: var(--accent); outline: none; }
 .locale-menu-panel small { color: var(--muted); font-family: var(--mono); }

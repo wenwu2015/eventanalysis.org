@@ -1,0 +1,1112 @@
+{
+  "id": "match-12812996-analysis-zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "match-analysis-event-673c35b096169f32bc92",
+  "angleKey": "late_pressure_and_lineup_continuity",
+  "originalContribution": "以首发延续率差异为背景，结合55分钟后关键事件的连续性，解释阿根廷如何在落后一球的情况下于比赛末段完成逆转，同时明确区分已确认事实、数值计算与比赛解读。",
+  "readerQuestion": "阿根廷为何能在第85分钟仍落后的情况下，最终以2比1逆转英格兰？",
+  "author": "EventAnalysis writer",
+  "confidence": 92,
+  "entityRefs": [
+    "team_65189e47a75eca903fca",
+    "team_286dbc7f218c4768b458"
+  ],
+  "eventRefs": [
+    "event_673c35b096169f32bc92"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_final_result"
+      ],
+      "summary": "阿根廷以2比1击败英格兰。"
+    },
+    {
+      "id": "claim_scoring_sequence",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "安东尼·戈登第55分钟为英格兰破门；恩佐·费尔南德斯第85分钟扳平；劳塔罗·马丁内斯在第90+2分钟攻入制胜球。"
+    },
+    {
+      "id": "claim_argentina_pressure",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "英格兰领先后，阿根廷在第58、61、64、68、69、75、76、84和85分钟连续出现角球、射门或换人事件，并在第85分钟追平。"
+    },
+    {
+      "id": "claim_continuity",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "相较各自前一场比赛，英格兰保留8名首发，首发延续率为72.7%；阿根廷保留10名首发，首发延续率为90.9%。"
+    },
+    {
+      "id": "claim_continuity_gap",
+      "kind": "calculation",
+      "factRefs": [
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "阿根廷的首发延续率比英格兰高18.2个百分点，且首发变动少2人。"
+    },
+    {
+      "id": "claim_h2h",
+      "kind": "fact",
+      "factRefs": [
+        "event_673c35b096169f32bc92_head_to_head_before_match"
+      ],
+      "summary": "赛前双方12次交锋中，英格兰5胜1平6负；对应胜率分别为41.7%、8.3%和50%。"
+    },
+    {
+      "id": "claim_interpretation",
+      "kind": "analysis",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events",
+        "event_673c35b096169f32bc92_personnel_changes"
+      ],
+      "summary": "阿根廷更高的阵容延续性构成稳定性背景，而其落后后的持续进攻事件最终在比赛末段转化为两粒进球；这说明逆转来自压力的连续累积，而非一次孤立机会。"
+    },
+    {
+      "id": "claim_england_response",
+      "kind": "analysis",
+      "factRefs": [
+        "event_673c35b096169f32bc92_key_events"
+      ],
+      "summary": "英格兰在第72和82分钟先后换下安东尼·戈登和里斯·詹姆斯，但仍在第85分钟及第90+2分钟失球，表明这两次调整未能阻断阿根廷的末段攻势。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "england-argentina-1-2-late-comeback-2026",
+      "title": "阿根廷2比1逆转英格兰：持续施压如何改写最后阶段",
+      "deck": "英格兰第55分钟领先，但阿根廷在第85分钟扳平，并于第90+2分钟完成逆转；更高的首发延续率与落后后的连续进攻事件构成本场比赛的关键线索。",
+      "competition": "比赛分析",
+      "venue": "未提供",
+      "homeName": "英格兰",
+      "awayName": "阿根廷",
+      "resultLabel": "英格兰 1比2 阿根廷",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "决定比赛的末段七分钟",
+          "paragraphs": [
+            {
+              "text": "英格兰由安东尼·戈登在第55分钟取得领先，但优势未能维持到终场。恩佐·费尔南德斯第85分钟将比分扳为1比1，劳塔罗·马丁内斯又在第90+2分钟破门，阿根廷最终以2比1取胜。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "两粒进球之间只隔了七个比赛分钟。比赛的决定性变化在此背景下集中在末段：阿根廷先消除比分压力，随后在补时阶段把持续进攻转化为制胜球。",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "扳平并非孤立事件",
+          "paragraphs": [
+            {
+              "text": "英格兰领先后，阿根廷的进攻事件持续出现：第58分钟角球、第61分钟射门、第64分钟换人、第68分钟角球，此后又在第69、75、76、84和85分钟形成射门。第85分钟的进球由此更适合被理解为连续压力的结果，而不是突然出现的单次机会。",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "英格兰第72分钟用埃兹里·孔萨换下进球者戈登，第82分钟又用丹·伯恩换下里斯·詹姆斯。球队仍在第85分钟和第90+2分钟连续失球，说明这两次调整没有切断阿根廷的攻势。",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "阵容延续性提供的背景",
+          "paragraphs": [
+            {
+              "text": "相较各自前一场比赛，英格兰本场首发保留8人，延续率为72.7%；阿根廷保留10人，延续率为90.9%。阿根廷的延续率高出18.2个百分点，首发变动也少2人。",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "这些数字不能单独证明逆转的原因，但可以说明两队进入比赛时的稳定性背景不同。结合阿根廷落后后的连续进攻事件，更高的阵容延续性与末段执行力形成了相互呼应的解释线索。",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "赛前交锋与本场结果",
+          "paragraphs": [
+            {
+              "text": "本场之前，双方12次交锋中英格兰5胜、1平、6负，英格兰胜率为41.7%，平局率为8.3%，阿根廷胜率为50%。这组历史数据表明双方赛前对阵总体接近，而本场胜负仍由第85分钟后的关键事件决定。",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "安东尼·戈登破门，英格兰1比0领先。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "阿根廷用尼科·冈萨雷斯换下莱安德罗·帕雷德斯。",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "英格兰用丹·伯恩换下里斯·詹姆斯。",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "恩佐·费尔南德斯破门，阿根廷将比分扳为1比1。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "劳塔罗·马丁内斯破门，阿根廷2比1反超。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-18T12:42:58.336Z",
+      "complianceValidUntil": "2026-08-11T01:35:03.363Z",
+      "allowedJurisdictions": [
+        "CN"
+      ]
+    },
+    "zh-hant": {
+      "slug": "英格蘭-阿根廷-1-2-末段逆轉-2026",
+      "title": "阿根廷2比1逆轉英格蘭：持續施壓如何改寫最後階段",
+      "deck": "英格蘭第55分鐘領先，但阿根廷在第85分鐘扳平，並於第90+2分鐘完成逆轉；更高的先發延續率與落後後的連續進攻事件構成本場比賽的關鍵線索。",
+      "competition": "比賽分析",
+      "venue": "未提供",
+      "homeName": "英格蘭",
+      "awayName": "阿根廷",
+      "resultLabel": "英格蘭 1比2 阿根廷",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "決定比賽的末段七分鐘",
+          "paragraphs": [
+            {
+              "text": "英格蘭由安東尼·戈登在第55分鐘取得領先，但優勢未能維持到終場。恩佐·費爾南德斯第85分鐘將比分扳為1比1，勞塔羅·馬丁內斯又在第90+2分鐘破門，阿根廷最終以2比1取勝。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "兩粒進球之間只隔了七個比賽分鐘。比賽的決定性變化在此背景下集中在末段：阿根廷先消除比分壓力，隨後在補時階段把持續進攻轉化為致勝球。",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "扳平並非孤立事件",
+          "paragraphs": [
+            {
+              "text": "英格蘭領先後，阿根廷的進攻事件持續出現：第58分鐘角球、第61分鐘射門、第64分鐘換人、第68分鐘角球，此後又在第69、75、76、84和85分鐘形成射門。第85分鐘的進球由此更適合被理解為連續壓力的結果，而不是突然出現的單次機會。",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "英格蘭第72分鐘用埃茲里·孔薩換下進球者戈登，第82分鐘又用丹·伯恩換下里斯·詹姆斯。球隊仍在第85分鐘和第90+2分鐘連續失球，說明這兩次調整沒有切斷阿根廷的攻勢。",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "陣容延續性提供的背景",
+          "paragraphs": [
+            {
+              "text": "相較各自前一場比賽，英格蘭本場先發保留8人，延續率為72.7%；阿根廷保留10人，延續率為90.9%。阿根廷的延續率高出18.2個百分點，先發變動也少2人。",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "這些數字不能單獨證明逆轉的原因，但可以說明兩隊進入比賽時的穩定性背景不同。結合阿根廷落後後的連續進攻事件，更高的陣容延續性與末段執行力形成了相互呼應的解釋線索。",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "賽前交鋒與本場結果",
+          "paragraphs": [
+            {
+              "text": "本場之前，雙方12次交鋒中英格蘭5勝、1平、6負，英格蘭勝率為41.7%，平局率為8.3%，阿根廷勝率為50%。這組歷史數據表明雙方賽前對陣總體接近，而本場勝負仍由第85分鐘後的關鍵事件決定。",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "安東尼·戈登破門，英格蘭1比0領先。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "阿根廷用尼科·岡薩雷斯換下萊安德羅·帕雷德斯。",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "英格蘭用丹·伯恩換下里斯·詹姆斯。",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "恩佐·費爾南德斯破門，阿根廷將比分扳為1比1。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "勞塔羅·馬丁內斯破門，阿根廷2比1反超。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T04:25:24.793Z",
+      "allowedJurisdictions": [
+        "TW",
+        "HK",
+        "MO"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T04:25:24.818Z"
+    },
+    "en": {
+      "slug": "england-argentina-1-2-late-comeback-2026",
+      "title": "Argentina Come Back to Beat England 2–1: How Sustained Pressure Changed the Closing Stages",
+      "deck": "England took the lead in the 55th minute, but Argentina equalized in the 85th minute and completed the comeback in the 90+2nd minute; greater starting-lineup continuity and a succession of attacking events after falling behind were the key threads of the match.",
+      "competition": "Match Analysis",
+      "venue": "Not provided",
+      "homeName": "England",
+      "awayName": "Argentina",
+      "resultLabel": "England 1–2 Argentina",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "The Final Seven Minutes That Decided the Match",
+          "paragraphs": [
+            {
+              "text": "England took the lead through Anthony Gordon in the 55th minute, but could not preserve their advantage until full time. Enzo Fernández made it 1–1 in the 85th minute, before Lautaro Martínez scored in the 90+2nd minute to give Argentina a 2–1 victory.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "Only seven minutes of playing time separated the two goals. Against this backdrop, the match’s decisive change was concentrated in the closing stages: Argentina first erased the deficit, then turned their sustained attack into the winning goal in stoppage time.",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "The Equalizer Was Not an Isolated Event",
+          "paragraphs": [
+            {
+              "text": "After England took the lead, Argentina’s attacking events kept coming: a corner in the 58th minute, a shot in the 61st minute, a substitution in the 64th minute and a corner in the 68th minute, followed by shots in the 69th, 75th, 76th, 84th and 85th minutes. The goal in the 85th minute is therefore better understood as the result of sustained pressure rather than a single chance appearing suddenly.",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "England replaced goalscorer Gordon with Ezri Konsa in the 72nd minute, then replaced Reece James with Dan Burn in the 82nd minute. The team still conceded in the 85th and 90+2nd minutes, showing that these two adjustments did not halt Argentina’s attack.",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "The Context Provided by Lineup Continuity",
+          "paragraphs": [
+            {
+              "text": "Compared with their respective previous matches, England retained 8 starters, for a continuity rate of 72.7%; Argentina retained 10, for a rate of 90.9%. Argentina’s rate was 18.2 percentage points higher, and they also made 2 fewer changes to the starting lineup.",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "These figures cannot prove the cause of the comeback on their own, but they do show that the teams entered the match with different levels of stability. Combined with Argentina’s succession of attacking events after falling behind, greater lineup continuity and late-stage execution form mutually reinforcing explanatory threads.",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "The Pre-Match Record and This Result",
+          "paragraphs": [
+            {
+              "text": "Before this match, England had 5 wins, 1 draw and 6 defeats in the teams’ 12 meetings, with an England win rate of 41.7%, a draw rate of 8.3% and an Argentina win rate of 50%. This historical record indicates that the pre-match matchup was broadly close, while this match was still decided by the key events after the 85th minute.",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "Anthony Gordon scores to give England a 1–0 lead.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "Argentina replace Leandro Paredes with Nico González.",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "England replace Reece James with Dan Burn.",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "Enzo Fernández scores to bring Argentina level at 1–1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "Lautaro Martínez scores to put Argentina 2–1 ahead.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T04:25:24.793Z",
+      "allowedJurisdictions": [
+        "US",
+        "GB"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T04:25:24.818Z"
+    },
+    "ja": {
+      "slug": "イングランド-アルゼンチン-1-2-終盤逆転-2026",
+      "title": "アルゼンチンがイングランドに2対1で逆転勝利：継続的な圧力が終盤をどう変えたか",
+      "deck": "イングランドが55分に先制したが、アルゼンチンは85分に同点とし、90+2分に逆転を完了。先発メンバーのより高い継続率と、ビハインド後に続いた攻撃事象が、この試合の重要な手掛かりとなった。",
+      "competition": "試合分析",
+      "venue": "情報なし",
+      "homeName": "イングランド",
+      "awayName": "アルゼンチン",
+      "resultLabel": "イングランド 1対2 アルゼンチン",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "試合を決めた終盤の七分間",
+          "paragraphs": [
+            {
+              "text": "イングランドはアンソニー・ゴードンが55分に先制点を挙げたが、リードを試合終了まで保てなかった。エンソ・フェルナンデスが85分に1対1とし、さらにラウタロ・マルティネスが90+2分に得点して、アルゼンチンが最終的に2対1で勝利した。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "二つのゴールの間は、プレー時間でわずか七分だった。この背景から、試合の決定的な変化は終盤に集中していた。アルゼンチンはまず点差による重圧を解消し、その後、継続的な攻撃をアディショナルタイムの決勝点につなげた。",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "同点弾は孤立した出来事ではない",
+          "paragraphs": [
+            {
+              "text": "イングランドの先制後も、アルゼンチンの攻撃事象は続いた。58分のコーナーキック、61分のシュート、64分の選手交代、68分のコーナーキックに続き、69分、75分、76分、84分、85分にもシュートを放った。したがって85分のゴールは、突然生まれた一度の好機ではなく、継続的な圧力の結果と捉えるほうが適切である。",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "イングランドは72分に得点者ゴードンをエズリ・コンサと交代させ、82分にはリース・ジェームズをダン・バーンと交代させた。それでもチームは85分と90+2分に立て続けに失点しており、この二つの修正ではアルゼンチンの攻勢を断ち切れなかったことが分かる。",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "メンバー継続性が示す背景",
+          "paragraphs": [
+            {
+              "text": "それぞれの前戦と比べ、イングランドは先発8人を残し、継続率は72.7%だった。アルゼンチンは10人を残し、継続率は90.9%だった。アルゼンチンの継続率は18.2ポイント高く、先発の変更も2人少なかった。",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "これらの数字だけで逆転の原因を証明することはできないが、両チームが異なる安定性を背景に試合へ入ったことは示している。アルゼンチンがビハインド後に重ねた攻撃事象と合わせると、より高いメンバー継続性と終盤の遂行力は、互いに呼応する解釈の手掛かりとなる。",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "試合前の対戦成績と今回の結果",
+          "paragraphs": [
+            {
+              "text": "この試合以前、両者の12回の対戦でイングランドは5勝、1分け、6敗を記録し、イングランドの勝率は41.7%、引き分け率は8.3%、アルゼンチンの勝率は50%だった。この過去データは試合前の両者が全体として拮抗していたことを示す一方、今回の勝敗は依然として85分以降の重要な出来事によって決まった。",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "アンソニー・ゴードンが得点し、イングランドが1対0で先制。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "アルゼンチンがレアンドロ・パレデスに代えてニコ・ゴンサレスを投入。",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "イングランドがリース・ジェームズに代えてダン・バーンを投入。",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "エンソ・フェルナンデスが得点し、アルゼンチンが1対1の同点に追いつく。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "ラウタロ・マルティネスが得点し、アルゼンチンが2対1と逆転。",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T04:25:24.793Z",
+      "allowedJurisdictions": [
+        "JP"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T04:25:24.818Z"
+    },
+    "es": {
+      "slug": "inglaterra-argentina-1-2-remontada-final-2026",
+      "title": "Argentina remonta 2–1 ante Inglaterra: cómo la presión sostenida cambió el tramo final",
+      "deck": "Inglaterra se adelantó en el minuto 55, pero Argentina empató en el 85 y completó la remontada en el 90+2; la mayor continuidad de su alineación titular y la sucesión de acciones ofensivas tras quedar por detrás fueron las claves del partido.",
+      "competition": "Análisis del partido",
+      "venue": "No indicado",
+      "homeName": "Inglaterra",
+      "awayName": "Argentina",
+      "resultLabel": "Inglaterra 1–2 Argentina",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "Los siete minutos finales que decidieron el partido",
+          "paragraphs": [
+            {
+              "text": "Inglaterra se adelantó por medio de Anthony Gordon en el minuto 55, pero no pudo conservar la ventaja hasta el final. Enzo Fernández puso el 1–1 en el minuto 85 y Lautaro Martínez marcó después en el 90+2 para dar a Argentina la victoria por 2–1.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "Entre los dos goles solo transcurrieron siete minutos de juego. En este contexto, el cambio decisivo del partido se concentró en el tramo final: Argentina eliminó primero la desventaja y después convirtió su ataque sostenido en el gol de la victoria durante el tiempo añadido.",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "El empate no fue un hecho aislado",
+          "paragraphs": [
+            {
+              "text": "Tras el gol de Inglaterra, las acciones ofensivas de Argentina siguieron apareciendo: córner en el minuto 58, disparo en el 61, sustitución en el 64 y córner en el 68, seguidos de disparos en los minutos 69, 75, 76, 84 y 85. Por ello, el gol del minuto 85 se entiende mejor como resultado de una presión continua y no como una ocasión aislada surgida de repente.",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "Inglaterra sustituyó al goleador Gordon por Ezri Konsa en el minuto 72 y después reemplazó a Reece James por Dan Burn en el 82. Aun así, el equipo recibió goles en los minutos 85 y 90+2, lo que muestra que esos dos ajustes no frenaron la ofensiva argentina.",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "El contexto aportado por la continuidad de la alineación",
+          "paragraphs": [
+            {
+              "text": "En comparación con sus respectivos partidos anteriores, Inglaterra mantuvo a 8 titulares, con una tasa de continuidad del 72.7%; Argentina conservó a 10, con una tasa del 90.9%. La tasa argentina fue 18.2 puntos porcentuales superior y el equipo también hizo 2 cambios menos en el once inicial.",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "Estas cifras no pueden demostrar por sí solas la causa de la remontada, pero sí muestran que los equipos llegaron al partido con contextos de estabilidad distintos. Junto con la sucesión de acciones ofensivas de Argentina tras quedar por detrás, la mayor continuidad de la alineación y la ejecución en el tramo final forman líneas explicativas que se refuerzan mutuamente.",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "Los enfrentamientos previos y el resultado de este partido",
+          "paragraphs": [
+            {
+              "text": "Antes de este partido, Inglaterra sumaba 5 victorias, 1 empate y 6 derrotas en los 12 enfrentamientos entre ambos, con una tasa de victorias inglesa del 41.7%, una tasa de empates del 8.3% y una tasa de victorias argentina del 50%. Estos datos históricos indican que el cruce previo era, en términos generales, equilibrado, mientras que este partido se decidió por las acciones clave posteriores al minuto 85.",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "Anthony Gordon marca e Inglaterra se adelanta 1–0.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "Argentina sustituye a Leandro Paredes por Nico González.",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "Inglaterra sustituye a Reece James por Dan Burn.",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "Enzo Fernández marca y Argentina empata 1–1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "Lautaro Martínez marca y Argentina se adelanta 2–1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T04:25:24.793Z",
+      "allowedJurisdictions": [
+        "ES"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T04:25:24.818Z"
+    },
+    "ar": {
+      "slug": "إنجلترا-الأرجنتين-1-2-عودة-متأخرة-2026",
+      "title": "الأرجنتين تقلب تأخرها أمام إنجلترا إلى فوز 2–1: كيف غيّر الضغط المتواصل المرحلة الأخيرة",
+      "deck": "تقدمت إنجلترا في الدقيقة 55، لكن الأرجنتين تعادلت في الدقيقة 85 وأكملت العودة في الدقيقة 90+2؛ وشكّلت النسبة الأعلى لاستمرارية التشكيلة الأساسية وتتابع الأحداث الهجومية بعد التأخر خيطين أساسيين في هذه المباراة.",
+      "competition": "تحليل المباراة",
+      "venue": "غير متوفر",
+      "homeName": "إنجلترا",
+      "awayName": "الأرجنتين",
+      "resultLabel": "إنجلترا 1–2 الأرجنتين",
+      "sections": [
+        {
+          "id": "decisive_sequence",
+          "title": "الدقائق السبع الأخيرة التي حسمت المباراة",
+          "paragraphs": [
+            {
+              "text": "تقدمت إنجلترا بهدف أنتوني غوردون في الدقيقة 55، لكنها لم تتمكن من الحفاظ على تفوقها حتى النهاية. جعل إنزو فرنانديز النتيجة 1–1 في الدقيقة 85، ثم سجل لاوتارو مارتينيز في الدقيقة 90+2، لتحقق الأرجنتين في النهاية الفوز 2–1.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_decisive_sequence_1"
+            },
+            {
+              "text": "فصلت سبع دقائق فقط من وقت اللعب بين الهدفين. وفي هذا السياق، تركز التحول الحاسم في المباراة خلال المرحلة الأخيرة: أزالت الأرجنتين أولًا ضغط التأخر في النتيجة، ثم حولت هجومها المتواصل إلى هدف الفوز في الوقت بدل الضائع.",
+              "claimRefs": [
+                "claim_scoring_sequence",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_decisive_sequence_2"
+            }
+          ]
+        },
+        {
+          "id": "pressure_build",
+          "title": "هدف التعادل لم يكن حدثًا منفردًا",
+          "paragraphs": [
+            {
+              "text": "بعد تقدم إنجلترا، استمرت الأحداث الهجومية للأرجنتين: ركلة ركنية في الدقيقة 58، وتسديدة في الدقيقة 61، وتبديل في الدقيقة 64، وركلة ركنية في الدقيقة 68، ثم تسديدات في الدقائق 69 و75 و76 و84 و85. لذلك، من الأنسب فهم هدف الدقيقة 85 بوصفه نتيجة لضغط متواصل، لا فرصة منفردة ظهرت فجأة.",
+              "claimRefs": [
+                "claim_argentina_pressure",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_pressure_build_1"
+            },
+            {
+              "text": "استبدلت إنجلترا مسجل الهدف غوردون بإزري كونسا في الدقيقة 72، ثم استبدلت ريس جيمس بدان بيرن في الدقيقة 82. ومع ذلك، استقبل الفريق هدفين في الدقيقتين 85 و90+2، ما يوضح أن هذين التعديلين لم يوقفا هجوم الأرجنتين.",
+              "claimRefs": [
+                "claim_england_response",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_pressure_build_2"
+            }
+          ]
+        },
+        {
+          "id": "continuity_context",
+          "title": "السياق الذي توفره استمرارية التشكيلة",
+          "paragraphs": [
+            {
+              "text": "مقارنة بالمباراة السابقة لكل منهما، أبقت إنجلترا على 8 لاعبين أساسيين، بنسبة استمرارية بلغت 72.7%؛ بينما أبقت الأرجنتين على 10 لاعبين، بنسبة بلغت 90.9%. وكانت نسبة الأرجنتين أعلى بفارق 18.2 نقطة مئوية، كما أجرت تغييرات أقل في التشكيلة الأساسية بفارق 2 لاعبين.",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_continuity_gap"
+              ],
+              "id": "paragraph_continuity_context_1"
+            },
+            {
+              "text": "لا تستطيع هذه الأرقام وحدها إثبات سبب العودة، لكنها توضح أن الفريقين دخلا المباراة بخلفيتين مختلفتين من حيث الاستقرار. وبالاقتران مع تتابع الأحداث الهجومية للأرجنتين بعد التأخر، تشكل استمرارية التشكيلة الأعلى والتنفيذ في المرحلة الأخيرة خيطين تفسيريين يعزز أحدهما الآخر.",
+              "claimRefs": [
+                "claim_continuity_gap",
+                "claim_interpretation"
+              ],
+              "id": "paragraph_continuity_context_2"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "المواجهات السابقة ونتيجة هذه المباراة",
+          "paragraphs": [
+            {
+              "text": "قبل هذه المباراة، حققت إنجلترا 5 انتصارات و1 تعادل و6 هزائم في 12 مواجهة بين الفريقين، وبلغت نسبة فوز إنجلترا 41.7%، ونسبة التعادل 8.3%، ونسبة فوز الأرجنتين 50%. وتشير هذه البيانات التاريخية إلى أن المواجهة قبل المباراة كانت متقاربة إجمالًا، بينما حسمت الأحداث الرئيسية بعد الدقيقة 85 نتيجة هذه المباراة.",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_scoring_sequence"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "55'",
+          "label": "أنتوني غوردون يسجل، وإنجلترا تتقدم 1–0.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "64'",
+          "label": "الأرجنتين تستبدل لياندرو باريديس بنيكو غونزاليس.",
+          "claimRefs": [
+            "claim_argentina_pressure"
+          ]
+        },
+        {
+          "minute": "82'",
+          "label": "إنجلترا تستبدل ريس جيمس بدان بيرن.",
+          "claimRefs": [
+            "claim_england_response"
+          ]
+        },
+        {
+          "minute": "85'",
+          "label": "إنزو فرنانديز يسجل، والأرجنتين تتعادل 1–1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        },
+        {
+          "minute": "90'+2'",
+          "label": "لاوتارو مارتينيز يسجل، والأرجنتين تتقدم 2–1.",
+          "claimRefs": [
+            "claim_scoring_sequence"
+          ]
+        }
+      ],
+      "status": "published",
+      "complianceStatus": "passed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_1",
+          "targetParagraphId": "paragraph_decisive_sequence_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_decisive_sequence_2",
+          "targetParagraphId": "paragraph_decisive_sequence_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_1",
+          "targetParagraphId": "paragraph_pressure_build_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_pressure_build_2",
+          "targetParagraphId": "paragraph_pressure_build_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_1",
+          "targetParagraphId": "paragraph_continuity_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_continuity_context_2",
+          "targetParagraphId": "paragraph_continuity_context_2"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ],
+      "complianceValidUntil": "2026-07-21T04:25:24.793Z",
+      "allowedJurisdictions": [
+        "SA",
+        "AE",
+        "QA"
+      ],
+      "reviewer": "Event Analysis Verification Desk",
+      "slugFrozenAt": "2026-07-20T04:25:24.818Z"
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "AR",
+    "EN"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "815df6a4eb5d7fe56ef8102cef0521f993b6ff850bf088ffa8dc808f54742f53",
+  "riskClass": "A",
+  "qualityReview": {
+    "reviewer": "compliance-agent:1786325554544-compliance-match-12812996-analysis-zh-af7e0d4e-a3bf-4e59-a73a-b433ed1cbbc0",
+    "decision": "approved",
+    "reviewedAt": "2026-08-10T01:35:03.375Z"
+  },
+  "complianceReview": {
+    "reviewRunId": "1786325554544-compliance-match-12812996-analysis-zh-af7e0d4e-a3bf-4e59-a73a-b433ed1cbbc0",
+    "policyHash": "a01aa5ae815bc246ca0c43d36cee6355edb523c55128fab806de9cd04accb6bc",
+    "auditedAt": "2026-08-10T01:35:03.363Z",
+    "expiresAt": "2026-08-11T01:35:03.363Z"
+  },
+  "reviewedAt": "2026-08-10T01:35:03.375Z",
+  "publishedAt": "2026-07-18T12:42:58.336Z"
+}

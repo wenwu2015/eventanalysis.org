@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "type", "sport", "primaryIntentKey", "angleKey", "originalContribution", "readerQuestion", "author", "confidence", "entityRefs", "eventRefs", "claims", "editions"],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string", "enum": ["match_analysis", "moment_analysis", "roundup"] },
+    "sport": { "type": "string", "const": "football" },
+    "primaryIntentKey": { "type": "string" },
+    "angleKey": { "type": "string" },
+    "originalContribution": { "type": "string" },
+    "readerQuestion": { "type": "string" },
+    "author": { "type": "string" },
+    "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "entityRefs": { "type": "array", "items": { "type": "string" } },
+    "eventRefs": { "type": "array", "items": { "type": "string" } },
+    "claims": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/claim" } },
+    "editions": { "type": "object", "required": ["zh"], "properties": { "zh": { "$ref": "#/$defs/edition" } }, "additionalProperties": false }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "claim": { "type": "object", "required": ["id", "kind", "factRefs", "summary"], "properties": { "id": { "type": "string" }, "kind": { "type": "string", "enum": ["fact", "calculation", "analysis"] }, "factRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } }, "summary": { "type": "string" } }, "additionalProperties": false },
+    "paragraph": { "type": "object", "required": ["text", "claimRefs"], "properties": { "text": { "type": "string" }, "claimRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } } }, "additionalProperties": false },
+    "section": { "type": "object", "required": ["id", "title", "paragraphs"], "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "paragraphs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/paragraph" } } }, "additionalProperties": false },
+    "timelineItem": { "type": "object", "required": ["minute", "label", "claimRefs"], "properties": { "minute": { "type": "string" }, "label": { "type": "string" }, "claimRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } } }, "additionalProperties": false },
+    "edition": { "type": "object", "required": ["slug", "title", "deck", "competition", "venue", "homeName", "awayName", "resultLabel", "sections", "timeline"], "properties": { "slug": { "type": "string" }, "title": { "type": "string" }, "deck": { "type": "string" }, "competition": { "type": "string" }, "venue": { "type": "string" }, "homeName": { "type": "string" }, "awayName": { "type": "string" }, "resultLabel": { "type": "string" }, "sections": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/section" } }, "timeline": { "type": "array", "items": { "$ref": "#/$defs/timelineItem" } } }, "additionalProperties": false }
+  }
+}

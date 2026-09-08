@@ -13,7 +13,7 @@ await runCommand(["git", "commit", "-m", "content: add football analysis drafts 
 await runCommand(["git", "push", "-u", "origin", branch], { cwd: root, timeoutMs: 120_000 });
 const body = [
   "## Editorial gate",
-  "- [ ] Core result confirmed by two independent authorised sources",
+  "- [ ] Core result confirmed by two independent authorised sources, or by one authorised official source",
   "- [ ] Historical record and deterministic rates checked",
   "- [ ] Personnel changes checked",
   "- [ ] Sport code is active and uses the correct deterministic rules",

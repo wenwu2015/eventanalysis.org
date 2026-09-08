@@ -8,6 +8,7 @@ import {
   policyHash,
   prepareChineseMaster,
   prepareDerivedEdition,
+  releaseAuditLocalesForItem,
   riskClassForItem,
   scanProhibitedLanguage,
   sourceEditionHash,
@@ -112,6 +113,23 @@ test("public editions need a current compliance lease and approved countries", (
   assert.equal(isEditionPublishable(content, "zh", new Date("2026-07-15T00:00:00Z")), false);
 });
 
+test("release locale scope keeps historical published items on their live locales", () => {
+  const historical = prepareChineseMaster(item());
+  historical.id = "historical";
+  Object.assign(historical.editions.zh, { status: "published", complianceStatus: "passed", complianceValidUntil: "2099-01-01T00:00:00Z", allowedJurisdictions: ["CN"] });
+
+  const target = prepareChineseMaster(item());
+  target.id = "target";
+  Object.assign(target.editions.zh, { status: "published", complianceStatus: "passed", complianceValidUntil: "2099-01-01T00:00:00Z", allowedJurisdictions: ["CN"] });
+  target.editions.en = edition("en", "The team scored in minute 72 and won 2–1.");
+  prepareDerivedEdition(target, "en", { current: true });
+  Object.assign(target.editions.en, { status: "published", complianceStatus: "passed", complianceValidUntil: "2099-01-01T00:00:00Z", allowedJurisdictions: ["US"] });
+
+  assert.deepEqual(releaseAuditLocalesForItem(historical, null, "target"), ["zh"]);
+  assert.deepEqual(releaseAuditLocalesForItem(historical, ["zh", "en"], "target"), ["zh"]);
+  assert.deepEqual(releaseAuditLocalesForItem(target, ["zh", "en"], "target"), ["zh", "en"]);
+});
+
 test("approved editions are local-previewable but not production-publishable", () => {
   const content = prepareChineseMaster(item());
   Object.assign(content.editions.zh, { status: "approved", complianceStatus: "passed", complianceValidUntil: "2099-01-01T00:00:00Z", allowedJurisdictions: ["CN"] });
@@ -195,6 +213,71 @@ test("one evidence organization posing as two sources is not independent", () =>
   const result = auditContentItem(fixture);
   assert.equal(result.decision, "BLOCK");
   assert.ok(result.findings.some(({ code }) => code === "insufficient_independent_sources"));
+});
+
+test("one authorised official source can satisfy the core fact gate when policy allows it", () => {
+  const fixture = auditableFixture();
+  fixture.policy = { ...fixture.policy, allowSingleOfficialCoreSource: true };
+  fixture.agentReport = { ...fixture.agentReport, policyHash: policyHash(fixture.policy) };
+  fixture.data.facts[0].evidenceRefs = ["ev-1"];
+  fixture.evidenceRecords = [{ id: "ev-1", sourceId: "fifa" }];
+  fixture.sourceRegistry = [{ id: "fifa", independenceGroup: "fifa", official: true, license: { authorised: true } }];
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
+});
+
+test("one authorised non-official source can satisfy the core fact gate for moment analysis when policy allows it", () => {
+  const fixture = auditableFixture();
+  fixture.item.type = "moment_analysis";
+  fixture.policy = { ...fixture.policy, allowSingleAuthorisedCoreSource: true };
+  fixture.agentReport = { ...fixture.agentReport, policyHash: policyHash(fixture.policy) };
+  fixture.data.facts[0].evidenceRefs = ["ev-1"];
+  fixture.evidenceRecords = [{ id: "ev-1", sourceId: "sofascore" }];
+  fixture.sourceRegistry = [{ id: "sofascore", independenceGroup: "sofascore", license: { authorised: true } }];
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
+});
+
+test("one authorised non-official source can satisfy the core fact gate for roundup when policy allows it", () => {
+  const fixture = auditableFixture();
+  fixture.item.type = "roundup";
+  fixture.policy = { ...fixture.policy, allowSingleAuthorisedCoreSource: true };
+  fixture.agentReport = { ...fixture.agentReport, policyHash: policyHash(fixture.policy) };
+  fixture.data.facts[0].evidenceRefs = ["ev-1"];
+  fixture.evidenceRecords = [{ id: "ev-1", sourceId: "sofascore" }];
+  fixture.sourceRegistry = [{ id: "sofascore", independenceGroup: "sofascore", license: { authorised: true } }];
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
+});
+
+test("one authorised non-official source is still insufficient for match analysis", () => {
+  const fixture = auditableFixture();
+  fixture.policy = { ...fixture.policy, allowSingleAuthorisedCoreSource: true };
+  fixture.agentReport = { ...fixture.agentReport, policyHash: policyHash(fixture.policy) };
+  fixture.data.facts[0].evidenceRefs = ["ev-1"];
+  fixture.evidenceRecords = [{ id: "ev-1", sourceId: "sofascore" }];
+  fixture.sourceRegistry = [{ id: "sofascore", independenceGroup: "sofascore", license: { authorised: true } }];
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "BLOCK");
+  assert.ok(result.findings.some(({ code }) => code === "insufficient_independent_sources"));
+});
+
+test("deterministic audit can pass without legal packs when policy disables legal validation", () => {
+  const fixture = auditableFixture();
+  fixture.policy = { ...fixture.policy, disableLegalPackValidation: true };
+  fixture.legalRegistry = { operatorJurisdictions: ["ZZ"], packs: [] };
+  fixture.agentReport = {
+    ...fixture.agentReport,
+    policyHash: policyHash(fixture.policy),
+    legalPackHashes: [],
+    jurisdictionDecisions: [],
+  };
+  const result = auditContentItem(fixture);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.allowedJurisdictions, ["CN", "US"]);
 });
 
 test("agent preaudit accepts operator-jurisdiction decisions when explicitly expected", () => {

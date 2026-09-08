@@ -33,10 +33,8 @@ const requested = localeArg ? localeArg.slice("--locales=".length).split(",").fi
 for (const locale of requested) if (locale === "zh" || !supported.has(locale)) throw new Error(`Unsupported translation locale: ${locale}`);
 prepareChineseMaster(item);
 
-await withEphemeralJob({ root, articleId: `translate-${item.id}`, diskLimitBytes: config.policy.jobDiskLimitBytes }, async (job) => {
-  const promptPath = resolve(job.jobDir, "translation-input.json");
-  const outputPath = resolve(job.jobDir, "translation-output.json");
-  const prompt = {
+function buildPrompt(retryHints = []) {
+  return {
     schemaVersion: 1,
     objective: "Derive localized editions from the approved Chinese source without adding or removing facts, claims, numbers or judgments.",
     contentId: item.id,
@@ -49,29 +47,64 @@ await withEphemeralJob({ root, articleId: `translate-${item.id}`, diskLimitBytes
       "Localize title, deck, section titles, slug and prose naturally; never use an English placeholder.",
       "Do not add predictions, mental-state claims, insults, allegations, health speculation or national stereotypes.",
       "Preserve every number and limiting phrase from the Chinese source.",
+      "Any number that appears as digits in the Chinese source must remain digits in the target. Do not rewrite 1, 2, 12, 90+2, 72.7% or similar values as words.",
+      "Keep the numeric token sequence identical to the Chinese source. Do not introduce Arabic numerals when the Chinese source used words such as 两个, 一次 or 三次.",
+      ...(retryHints.length
+        ? retryHints.map((hint) => `Retry correction: ${hint}`)
+        : []),
     ],
     claims: item.claims,
     sourceEdition: item.editions.zh,
   };
-  await writeFile(promptPath, `${JSON.stringify(prompt, null, 2)}\n`, { mode: 0o600 });
-  await runCommand(config.ai.translator.command, { cwd: root, timeoutMs: config.ai.translator.timeoutMs, env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath } });
-  const output = JSON.parse(await readFile(outputPath, "utf8"));
-  if (!Array.isArray(output.editions)) throw new Error("Translation agent returned an invalid editions array");
-  const returnedEditions = Object.fromEntries(output.editions.map(({ locale, edition }) => [locale, edition]));
-  if (output.editions.length !== requested.length || Object.keys(returnedEditions).sort().join(",") !== [...requested].sort().join(",")) throw new Error("Translation agent returned the wrong locale set");
-  for (const locale of requested) {
-    const edition = returnedEditions[locale];
-    if (!edition?.title || !edition?.deck || !edition?.slug || !edition?.sections?.length) throw new Error(`Translation ${locale} is incomplete`);
-    edition.slug = normalizeSlug(edition.slug);
-    edition.status = "needs_review";
-    edition.complianceStatus = "unreviewed";
-    item.editions[locale] = edition;
-    prepareDerivedEdition(item, locale, { current: true, agentVersion: output.agentVersion || "configured-translator" });
-    const findings = validateTranslation(item, locale);
-    if (findings.length) throw new Error(`Translation ${locale} failed source consistency: ${JSON.stringify(findings)}`);
-    const prohibited = scanProhibitedLanguage(edition).filter(({ severity }) => severity === "C");
-    if (prohibited.length) throw new Error(`Translation ${locale} contains prohibited language: ${JSON.stringify(prohibited)}`);
+}
+
+await withEphemeralJob({ root, articleId: `translate-${item.id}`, diskLimitBytes: config.policy.jobDiskLimitBytes }, async (job) => {
+  const promptPath = resolve(job.jobDir, "translation-input.json");
+  const outputPath = resolve(job.jobDir, "translation-output.json");
+  const maxAttempts = 3;
+  let retryHints = [];
+  let translated = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const prompt = buildPrompt(retryHints);
+    await writeFile(promptPath, `${JSON.stringify(prompt, null, 2)}\n`, { mode: 0o600 });
+    await runCommand(config.ai.translator.command, { cwd: root, timeoutMs: config.ai.translator.timeoutMs, env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath } });
+    const output = JSON.parse(await readFile(outputPath, "utf8"));
+    if (!Array.isArray(output.editions)) throw new Error("Translation agent returned an invalid editions array");
+    const returnedEditions = Object.fromEntries(output.editions.map(({ locale, edition }) => [locale, edition]));
+    if (output.editions.length !== requested.length || Object.keys(returnedEditions).sort().join(",") !== [...requested].sort().join(",")) throw new Error("Translation agent returned the wrong locale set");
+    const candidate = structuredClone(item);
+    const retryableFindings = [];
+    for (const locale of requested) {
+      const edition = returnedEditions[locale];
+      if (!edition?.title || !edition?.deck || !edition?.slug || !edition?.sections?.length) throw new Error(`Translation ${locale} is incomplete`);
+      edition.slug = normalizeSlug(edition.slug);
+      edition.status = "needs_review";
+      edition.complianceStatus = "unreviewed";
+      candidate.editions[locale] = edition;
+      prepareDerivedEdition(candidate, locale, { current: true, agentVersion: output.agentVersion || "configured-translator" });
+      const findings = validateTranslation(candidate, locale);
+      if (findings.length) {
+        retryableFindings.push({ locale, findings });
+        continue;
+      }
+      const prohibited = scanProhibitedLanguage(edition).filter(({ severity }) => severity === "C");
+      if (prohibited.length) throw new Error(`Translation ${locale} contains prohibited language: ${JSON.stringify(prohibited)}`);
+    }
+    if (!retryableFindings.length) {
+      translated = candidate;
+      break;
+    }
+    const onlyNumericDrift = retryableFindings.every(({ findings }) => findings.every(({ code }) => code === "numeric_drift"));
+    if (!onlyNumericDrift || attempt === maxAttempts) {
+      const { locale, findings } = retryableFindings[0];
+      throw new Error(`Translation ${locale} failed source consistency: ${JSON.stringify(findings)}`);
+    }
+    retryHints = retryableFindings.map(({ locale }) =>
+      `${locale} failed because one or more digits were rewritten as words or absorbed into inflected nouns. Keep every explicit count and score token in digit form, including single-digit values such as 1 draw, 2 fewer changes, 1-1 and 2-1.`
+    );
   }
+  if (!translated) throw new Error("Translation attempts exhausted without a valid result");
+  item = translated;
 });
 
 if (existing) {

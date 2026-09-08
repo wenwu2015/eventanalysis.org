@@ -58,3 +58,5 @@ next-env.d.ts
 /output/
 /.playwright-cli/
 /ops/skills/eventanalysis-publish-compliance-workspace/
+content
+private-review

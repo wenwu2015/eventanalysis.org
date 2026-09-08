@@ -1,4 +1,4 @@
-import { collectBrowserPage } from "../lib/browser-collector.mjs";
+import { AccessControlError, collectBrowserPage } from "../lib/browser-collector.mjs";
 
 function walk(value, visit, seen = new Set()) {
   if (!value || typeof value !== "object" || seen.has(value)) return;
@@ -57,22 +57,60 @@ export function extractSofaEvents(responseBodies) {
 }
 
 function datePath(date) {
-  return date.toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
-export async function discoverFinishedMatches({ source, job, now = new Date(), lookbackHours = 48, stabilityMinutes = 20, timeoutMs }) {
+function assertNoAccessChallenge(responses = []) {
+  const blocked = responses.find((response) => {
+    const status = Number(response?.status);
+    if ([401, 403, 429].includes(status)) return true;
+    return /"reason"\s*:\s*"challenge"/i.test(String(response?.body || ""));
+  });
+  if (!blocked) return;
+  const status = Number(blocked.status);
+  const detail = [401, 403, 429].includes(status) ? `Provider returned ${status}` : "An access-control challenge was detected";
+  throw new AccessControlError(`${detail}; no bypass was attempted.`);
+}
+
+export async function discoverFinishedMatches({
+  source,
+  job,
+  now = new Date(),
+  lookbackHours = 48,
+  stabilityMinutes = 20,
+  timeoutMs,
+  collectPage = collectBrowserPage,
+  onCollectionError = null,
+}) {
   const dates = new Set();
   for (let hours = 0; hours <= lookbackHours; hours += 24) {
     dates.add(datePath(new Date(now.getTime() - hours * 3_600_000)));
   }
   const all = new Map();
   for (const date of dates) {
-    const result = await collectBrowserPage({
-      source,
-      url: `${source.baseUrl}/football/${date}`,
-      job,
-      timeoutMs,
-    });
+    let result;
+    try {
+      result = await collectPage({
+        source,
+        url: `${source.baseUrl}/football/${date}`,
+        job,
+        timeoutMs,
+      });
+      assertNoAccessChallenge(result.responses);
+    } catch (error) {
+      onCollectionError?.({
+        sourceId: source.id,
+        date,
+        code: error?.code || "collection_failed",
+        message: String(error?.message || error).slice(0, 500),
+      });
+      continue;
+    }
     for (const event of extractSofaEvents(result.responses.map((response) => response.body))) {
       all.set(event.id, event);
     }
@@ -115,6 +153,7 @@ export async function collectMatchEvidence({ source, event, job, timeoutMs }) {
       }
     },
   });
+  assertNoAccessChallenge(result.responses);
   const bodies = result.responses.map((response) => {
     try { return JSON.parse(response.body); } catch { return null; }
   }).filter(Boolean);

@@ -1,42 +1,46 @@
 {
   "contentId": "match-12812996-analysis-zh",
-  "status": "release_blocked",
-  "summary": "发布申请已被阻断，需先补齐 legal pack、辖区或事实证据。",
-  "updatedAt": "2026-07-16T11:19:35.687Z",
+  "status": "release_ready",
+  "summary": "中文本地预发已完成，可交付发物审核或等待手动生产发布。",
+  "updatedAt": "2026-07-20T04:35:23.440Z",
   "preview": {
     "dynamicRoute": "/review-preview/match-12812996-analysis-zh",
     "reviewHtmlRoute": "/private-review/match-12812996-analysis-zh/",
     "reviewHtmlPath": "private-review/html/match-12812996-analysis-zh/index.html",
     "reviewBuiltAt": "2026-07-16T11:03:55.276Z"
   },
+  "lifecycle": {
+    "status": "edited_pending_publish",
+    "statusUpdatedAt": "2026-07-20T04:35:23.440Z",
+    "sourceItemPath": "content/data/items/match-12812996-analysis-zh.json",
+    "sourceRevision": 1,
+    "publishedAt": "2026-07-18T12:42:58.336Z",
+    "pendingSince": "2026-07-20T04:35:23.440Z",
+    "deletedAt": null,
+    "title": "阿根廷2比1逆转英格兰：持续施压如何改写最后阶段",
+    "competition": "国际足联世界杯淘汰赛",
+    "homeName": "英格兰",
+    "awayName": "阿根廷"
+  },
   "release": {
-    "requestedAt": "2026-07-16T11:17:24.336Z",
-    "decisionAt": "2026-07-16T11:19:35.685Z",
+    "requestedAt": "2026-07-18T06:55:57.960Z",
+    "decisionAt": "2026-07-18T06:58:14.509Z",
     "requestedLocales": [
       "zh"
     ],
-    "decision": "BLOCK",
+    "decision": "PASS",
     "riskClass": "A",
-    "findings": [
-      {
-        "code": "nexus_legal_pack_invalid",
-        "jurisdiction": "GB",
-        "reasons": [
-          "pack_not_active",
-          "invalid_jurisdiction",
-          "invalid_reviewed_at",
-          "pack_expired",
-          "missing_counsel_signature",
-          "invalid_official_sources"
-        ],
-        "severity": "BLOCK"
-      },
+    "findings": [],
+    "reportPath": "private-compliance/reports/match-12812996-analysis-zh-r1.json",
+    "destination": "content/data/items",
+    "previewPath": "/zh/football/比赛分析/england-argentina-1-2-late-comeback-2026/",
+    "commandError": null,
+    "ignoredFindings": [
       {
         "code": "nexus_legal_pack_invalid",
         "jurisdiction": "AR",
         "reasons": [
           "pack_not_active",
-          "invalid_jurisdiction",
           "invalid_reviewed_at",
           "pack_expired",
           "missing_counsel_signature",
@@ -46,21 +50,20 @@
       },
       {
         "code": "nexus_legal_pack_invalid",
-        "jurisdiction": "ZZ",
+        "jurisdiction": "EN",
         "reasons": [
           "pack_not_active",
-          "invalid_jurisdiction",
           "invalid_reviewed_at",
           "pack_expired",
           "missing_counsel_signature",
           "invalid_official_sources"
         ],
         "severity": "BLOCK"
+      },
+      {
+        "code": "agent_report_missing_jurisdiction_decisions",
+        "severity": "BLOCK"
       }
-    ],
-    "reportPath": "private-compliance/reports/match-12812996-analysis-zh-r1.json",
-    "destination": null,
-    "previewPath": "/zh/football/比赛分析/england-argentina-1-2-late-comeback-analysis/",
-    "commandError": null
+    ]
   }
 }

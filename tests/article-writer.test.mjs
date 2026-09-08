@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeReviewDraft } from "../pipeline/lib/article-writer.mjs";
+import { assertDraftShape, normalizeReviewDraft } from "../pipeline/lib/article-writer.mjs";
 
 test("review draft normalization softens unsupported causal phrasing and drops unsupported timeline entries", () => {
   const item = {
@@ -37,4 +37,49 @@ test("review draft normalization softens unsupported causal phrasing and drops u
   assert.equal(item.editions.zh.timeline.length, 1);
   assert.equal(item.editions.zh.timeline[0].minute, "85'");
   assert.deepEqual(item.editions.zh.timeline[0].claimRefs, ["claim_goal"]);
+});
+
+test("moment primary intent keys are normalized to the event scope when needed", () => {
+  const item = {
+    id: "moment-test",
+    type: "moment_analysis",
+    sport: "football",
+    primaryIntentKey: "post_match_key_moment_review",
+    angleKey: "final-score",
+    originalContribution: "test",
+    eventRefs: ["event_example"],
+    entityRefs: ["team_home", "team_away"],
+    claims: [
+      { id: "claim_goal", kind: "fact", factRefs: ["fact_goal"], summary: "终场比分确认。" },
+    ],
+    editions: {
+      zh: {
+        slug: "moment-test",
+        title: "终场比分确认",
+        deck: "只保留确定事实。",
+        sections: [
+          {
+            id: "result",
+            title: "结果",
+            paragraphs: [
+              { id: "p1", text: "终场比分确认。", claimRefs: ["claim_goal"] },
+            ],
+          },
+        ],
+        timeline: [],
+      },
+    },
+  };
+
+  assertDraftShape(item, {
+    references: {
+      eventRefs: ["event_example"],
+      entityRefs: ["team_home", "team_away"],
+      requiredFactRefs: ["fact_goal"],
+      optionalFactRefs: [],
+    },
+    entities: [],
+  });
+
+  assert.equal(item.primaryIntentKey, "moment-analysis-event-example");
 });

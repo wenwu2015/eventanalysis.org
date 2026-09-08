@@ -1,0 +1,393 @@
+{
+  "id": "match_analysis_12813003_zh",
+  "type": "match_analysis",
+  "sport": "football",
+  "primaryIntentKey": "match-analysis-event-853cacbe6d91b35784ef",
+  "angleKey": "early_lead_survives_second_half_comeback",
+  "originalContribution": "以比分节点、赛前交锋记录和双方相同的首发连续性为框架，解释英格兰如何凭借上半场建立的四球优势，抵御法国下半场追至一球差的反扑，并在终场前重新拉开差距。",
+  "readerQuestion": "英格兰为何能在法国下半场连追三球后仍以6比4取胜？",
+  "author": "EventAnalysis writer",
+  "confidence": 94,
+  "entityRefs": [
+    "team_0702f2cee3c1b2321d1a",
+    "team_65189e47a75eca903fca"
+  ],
+  "eventRefs": [
+    "event_853cacbe6d91b35784ef"
+  ],
+  "claims": [
+    {
+      "id": "claim_final_result",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_final_result"
+      ],
+      "summary": "英格兰以6比4战胜法国。"
+    },
+    {
+      "id": "claim_h2h",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_head_to_head_before_match"
+      ],
+      "summary": "本场之前六次交锋中，英格兰五胜、法国一胜，没有平局；英格兰胜率为83.3%。"
+    },
+    {
+      "id": "claim_continuity",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_personnel_changes"
+      ],
+      "summary": "两队与各自前一场相比都只有4名首发继续先发，首发连续性均为36.4%。"
+    },
+    {
+      "id": "claim_turnover_calc",
+      "kind": "calculation",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_personnel_changes"
+      ],
+      "summary": "两队本场首发均更换7人，占11名首发的63.6%。"
+    },
+    {
+      "id": "claim_early_control",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "英格兰由德克兰·赖斯第3分钟、埃兹里·孔萨第18分钟以及布卡约·萨卡第37分钟和上半场补时第1分钟进球，取得4比0领先。"
+    },
+    {
+      "id": "claim_france_comeback",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "法国在第48、54和66分钟连续进球，将比分从0比4追至3比4，其中基利安·姆巴佩攻入两球。"
+    },
+    {
+      "id": "claim_late_resolution",
+      "kind": "fact",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "萨卡第87分钟罚入点球；奥斯曼·登贝莱在下半场补时第6分钟追回一球，裘德·贝林厄姆两分钟后进球，将最终比分定为6比4。"
+    },
+    {
+      "id": "claim_advantage_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events"
+      ],
+      "summary": "英格兰取胜的基础是极早得分并在上半场持续扩大优势，使法国的强势反扑始终处于追赶状态。"
+    },
+    {
+      "id": "claim_resilience_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_key_events",
+        "event_853cacbe6d91b35784ef_personnel_changes"
+      ],
+      "summary": "在双方首发连续性同样偏低的背景下，英格兰更快形成得分效率；当优势缩至一球时，又通过第87分钟点球及时中断法国的追平势头。"
+    },
+    {
+      "id": "claim_h2h_context_analysis",
+      "kind": "analysis",
+      "factRefs": [
+        "event_853cacbe6d91b35784ef_head_to_head_before_match",
+        "event_853cacbe6d91b35784ef_final_result"
+      ],
+      "summary": "本场结果延续了英格兰在近期交锋样本中的优势，但比赛过程显示，历史优势并未转化为下半场的稳定控制。"
+    }
+  ],
+  "editions": {
+    "zh": {
+      "slug": "france-4-6-england-early-lead-comeback-analysis",
+      "title": "英格兰6比4击败法国：四球先手如何扛住三球反扑",
+      "deck": "英格兰上半场建立4比0优势，法国下半场一度追至3比4；第87分钟的点球成为阻断逆转势头的关键节点。",
+      "competition": "国际足联世界杯淘汰赛",
+      "venue": "",
+      "homeName": "法国",
+      "awayName": "英格兰",
+      "resultLabel": "法国 4比6 英格兰",
+      "sections": [
+        {
+          "id": "match_verdict",
+          "title": "比赛结论",
+          "paragraphs": [
+            {
+              "text": "英格兰以6比4战胜法国。决定比赛归属的并非最后两分钟的互有进球，而是英格兰在上半场建立的四球缓冲：法国下半场虽然把差距压缩到一球，却始终未能完成扳平。",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_early_control",
+                "claim_france_comeback",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_match_verdict_1"
+            }
+          ]
+        },
+        {
+          "id": "first_half",
+          "title": "英格兰用开局改写比赛条件",
+          "paragraphs": [
+            {
+              "text": "德克兰·赖斯第3分钟破门，埃兹里·孔萨第18分钟扩大优势，布卡约·萨卡随后在第37分钟和上半场补时第1分钟连续得分。4比0的领先意味着英格兰可以承受局部失控，而法国此后每一次进攻都背负着巨大的比分压力。",
+              "claimRefs": [
+                "claim_early_control",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_first_half_1"
+            }
+          ]
+        },
+        {
+          "id": "comeback",
+          "title": "法国反扑有速度，缺少最后一步",
+          "paragraphs": [
+            {
+              "text": "法国在第48分钟由基利安·姆巴佩破门，第54分钟布拉德利·巴尔科拉再进一球；第66分钟姆巴佩梅开二度，比分来到3比4。法国用18分钟连追三球，把比赛重新拉回一球差，但此前四球落后的代价让他们没有容错空间。",
+              "claimRefs": [
+                "claim_france_comeback",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_comeback_1"
+            }
+          ]
+        },
+        {
+          "id": "turning_point",
+          "title": "第87分钟终止逆转窗口",
+          "paragraphs": [
+            {
+              "text": "当法国距离扳平只差一球时，萨卡在第87分钟罚入点球，把英格兰的领先恢复到两球。登贝莱在下半场补时第6分钟将比分追成4比5，但贝林厄姆两分钟后立即回应，最终锁定6比4。这个序列说明，英格兰未能完全控制下半场，却在最危险的阶段重新获得了比分保护。",
+              "claimRefs": [
+                "claim_late_resolution",
+                "claim_resilience_analysis"
+              ],
+              "id": "paragraph_turning_point_1"
+            }
+          ]
+        },
+        {
+          "id": "lineup_context",
+          "title": "同样大幅轮换，不同进入状态",
+          "paragraphs": [
+            {
+              "text": "两队与各自前一场相比都只有4名首发继续先发，首发连续性均为36.4%；换言之，双方均更换7名首发，占首发阵容的63.6%。在相同的阵容变动幅度下，英格兰更早建立有效配合并兑现机会，这使法国后程的进攻提升只能用于追赶。",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_turnover_calc",
+                "claim_resilience_analysis"
+              ],
+              "id": "paragraph_lineup_context_1"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "交锋优势延续，控制力仍有警讯",
+          "paragraphs": [
+            {
+              "text": "本场之前六次交锋，英格兰五胜、法国一胜，没有平局，英格兰胜率为83.3%。这场胜利延续了交锋优势，但从4比0被追到4比3，也表明最终比分不能掩盖其下半场防守与比赛管理上的波动。",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "18'",
+          "label": "埃兹里·孔萨破门，英格兰扩大为2比0",
+          "claimRefs": [
+            "claim_early_control"
+          ]
+        },
+        {
+          "minute": "90'+6'",
+          "label": "奥斯曼·登贝莱破门，法国追至4比5",
+          "claimRefs": [
+            "claim_late_resolution"
+          ]
+        },
+        {
+          "minute": "90'+8'",
+          "label": "裘德·贝林厄进球，英格兰锁定6比4",
+          "claimRefs": [
+            "claim_late_resolution"
+          ]
+        }
+      ],
+      "status": "needs_review",
+      "complianceStatus": "unreviewed"
+    },
+    "en": {
+      "slug": "france-4-6-england-early-lead-comeback-analysis",
+      "title": "England Beat France 6–4: How a Four-Goal Head Start Withstood a Three-Goal Fightback",
+      "deck": "England established a 4–0 lead in the first half, before France pulled back to 3–4 in the second; the 87th-minute penalty proved the key moment in halting the comeback.",
+      "competition": "FIFA World Cup Knockout Stage",
+      "venue": "",
+      "homeName": "France",
+      "awayName": "England",
+      "resultLabel": "France 4–6 England",
+      "sections": [
+        {
+          "id": "match_verdict",
+          "title": "Match Verdict",
+          "paragraphs": [
+            {
+              "text": "England beat France 6–4. What decided the match was not the exchange of goals in the final two minutes, but the four-goal cushion England built in the first half: although France reduced the deficit to one goal after the break, they never managed to equalize.",
+              "claimRefs": [
+                "claim_final_result",
+                "claim_early_control",
+                "claim_france_comeback",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_match_verdict_1"
+            }
+          ]
+        },
+        {
+          "id": "first_half",
+          "title": "England Changed the Terms of the Match from the Start",
+          "paragraphs": [
+            {
+              "text": "Declan Rice scored in the 3rd minute, Ezri Konsa extended the lead in the 18th, and Bukayo Saka then struck in the 37th minute and the 1st minute of first-half stoppage time. A 4–0 lead meant England could absorb spells of lost control, while every subsequent French attack carried the weight of an enormous deficit.",
+              "claimRefs": [
+                "claim_early_control",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_first_half_1"
+            }
+          ]
+        },
+        {
+          "id": "comeback",
+          "title": "France’s Fightback Had Pace but Fell One Step Short",
+          "paragraphs": [
+            {
+              "text": "Kylian Mbappé scored for France in the 48th minute, and Bradley Barcola added another in the 54th; Mbappé struck his second in the 66th minute to make it 3–4. France scored three unanswered goals in 18 minutes to bring the match back within one, but the cost of their earlier four-goal deficit left them no margin for error.",
+              "claimRefs": [
+                "claim_france_comeback",
+                "claim_advantage_analysis"
+              ],
+              "id": "paragraph_comeback_1"
+            }
+          ]
+        },
+        {
+          "id": "turning_point",
+          "title": "The 87th Minute Closed the Comeback Window",
+          "paragraphs": [
+            {
+              "text": "With France one goal away from equalizing, Saka converted a penalty in the 87th minute to restore England’s two-goal lead. Dembélé made it 4–5 in the 6th minute of second-half stoppage time, but Bellingham responded two minutes later to seal the final 6–4 scoreline. This sequence showed that England did not fully control the second half, but regained a protective cushion at the most dangerous stage.",
+              "claimRefs": [
+                "claim_late_resolution",
+                "claim_resilience_analysis"
+              ],
+              "id": "paragraph_turning_point_1"
+            }
+          ]
+        },
+        {
+          "id": "lineup_context",
+          "title": "Similar Levels of Rotation, Different Starts",
+          "paragraphs": [
+            {
+              "text": "Compared with their respective previous matches, both teams retained only 4 starters, giving each a starting-lineup continuity rate of 36.4%; in other words, both changed 7 starters, representing 63.6% of the starting eleven. With the same degree of lineup turnover, England established effective combinations and converted their chances earlier, leaving France’s later attacking improvement useful only for chasing the game.",
+              "claimRefs": [
+                "claim_continuity",
+                "claim_turnover_calc",
+                "claim_resilience_analysis"
+              ],
+              "id": "paragraph_lineup_context_1"
+            }
+          ]
+        },
+        {
+          "id": "historical_context",
+          "title": "Head-to-Head Advantage Continues, but Control Remains a Concern",
+          "paragraphs": [
+            {
+              "text": "In the six meetings before this match, England had five wins and France one, with no draws, giving England a win rate of 83.3%. This victory extended that head-to-head advantage, but being pulled back from 4–0 to 4–3 also showed that the final score cannot conceal the fluctuations in England’s second-half defending and game management.",
+              "claimRefs": [
+                "claim_h2h",
+                "claim_h2h_context_analysis"
+              ],
+              "id": "paragraph_historical_context_1"
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "minute": "18'",
+          "label": "Ezri Konsa scores, extending England’s lead to 2–0",
+          "claimRefs": [
+            "claim_early_control"
+          ]
+        },
+        {
+          "minute": "90'+6'",
+          "label": "Ousmane Dembélé scores, bringing France back to 4–5",
+          "claimRefs": [
+            "claim_late_resolution"
+          ]
+        },
+        {
+          "minute": "90'+8'",
+          "label": "Jude Bellingham scores, sealing England’s 6–4 victory",
+          "claimRefs": [
+            "claim_late_resolution"
+          ]
+        }
+      ],
+      "status": "needs_review",
+      "complianceStatus": "unreviewed",
+      "derivedFromLocale": "zh",
+      "derivedFromRevision": 1,
+      "derivedFromHash": "160a40b0ad22364166c4e1b62ac8de4a7af9340f9762b870b48abf56b4aa9719",
+      "translationAgentVersion": "1",
+      "translationStatus": "current",
+      "paragraphMappings": [
+        {
+          "sourceParagraphId": "paragraph_match_verdict_1",
+          "targetParagraphId": "paragraph_match_verdict_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_first_half_1",
+          "targetParagraphId": "paragraph_first_half_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_comeback_1",
+          "targetParagraphId": "paragraph_comeback_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_turning_point_1",
+          "targetParagraphId": "paragraph_turning_point_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_lineup_context_1",
+          "targetParagraphId": "paragraph_lineup_context_1"
+        },
+        {
+          "sourceParagraphId": "paragraph_historical_context_1",
+          "targetParagraphId": "paragraph_historical_context_1"
+        }
+      ]
+    }
+  },
+  "schemaVersion": 3,
+  "revision": 1,
+  "nexusJurisdictions": [
+    "EN",
+    "FR"
+  ],
+  "sourceLocale": "zh",
+  "sourceRevision": 1,
+  "sourceEditionHash": "160a40b0ad22364166c4e1b62ac8de4a7af9340f9762b870b48abf56b4aa9719",
+  "riskClass": "A"
+}

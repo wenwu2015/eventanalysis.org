@@ -22,7 +22,7 @@
     { "id": "statsbomb", "independenceGroup": "statsbomb", "label": "StatsBomb", "baseUrl": "https://statsbomb.com", "coverage": ["advanced-events", "lineups"], "priority": 87 },
     { "id": "transfermarkt", "independenceGroup": "transfermarkt", "label": "Transfermarkt", "baseUrl": "https://www.transfermarkt.com", "coverage": ["personnel", "transfers", "injuries", "coaches"], "priority": 80 },
     { "id": "skillcorner", "independenceGroup": "skillcorner", "label": "SkillCorner", "baseUrl": "https://skillcorner.com", "coverage": ["tracking", "physical"], "priority": 78 },
-    { "id": "fifa", "independenceGroup": "fifa", "label": "FIFA", "baseUrl": "https://www.fifa.com", "responseOrigins": ["https://cxm-api.fifa.com", "https://api.fifa.com"], "coverage": ["world-cup", "results", "lineups", "head-to-head"], "priority": 92 },
+    { "id": "fifa", "independenceGroup": "fifa", "official": true, "label": "FIFA", "baseUrl": "https://www.fifa.com", "responseOrigins": ["https://cxm-api.fifa.com", "https://api.fifa.com"], "coverage": ["world-cup", "results", "lineups", "head-to-head"], "priority": 92 },
     { "id": "fifa-archive", "independenceGroup": "fifa", "label": "FIFA Archives", "baseUrl": "https://www.archives.fifa.com", "coverage": ["video", "historical-footage"], "priority": 72 },
     { "id": "uefa-archive", "independenceGroup": "uefa", "label": "UEFA Video Archive", "baseUrl": "https://www.uefa.com", "coverage": ["video", "historical-footage"], "priority": 72 },
     { "id": "img-replay", "independenceGroup": "img", "label": "IMG Replay", "baseUrl": "https://replay.img.com", "coverage": ["video", "historical-footage"], "priority": 70 }

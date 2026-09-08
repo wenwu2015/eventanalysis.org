@@ -104,7 +104,7 @@ test("sending an item back to review clears preview compliance fields", () => {
   assert.equal("complianceValidUntil" in next.editions.zh, false);
 });
 
-test("review pending guidance uses one-click review pass", () => {
+test("review pending guidance routes into autopilot", () => {
   const item = {
     id: "match-review-pending",
     file: "match-review-pending.json",
@@ -115,13 +115,13 @@ test("review pending guidance uses one-click review pass", () => {
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
-  assert.equal(guidance.stateLabel, "待编辑一键通过");
-  assert.equal(guidance.primaryAction?.action, "approve_and_submit_zh");
-  assert.equal(guidance.primaryAction?.label, "一键审稿通过");
-  assert.match(guidance.nextStep, /自动批准中文/);
+  assert.equal(guidance.stateLabel, "待自动审稿");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.match(guidance.nextStep, /自动判断、改稿并推进正式发布/);
 });
 
-test("editorial approved guidance continues with one-click review pass", () => {
+test("editorial approved guidance continues with autopilot", () => {
   const item = {
     id: "match-editorial-approved",
     file: "match-editorial-approved.json",
@@ -132,13 +132,13 @@ test("editorial approved guidance continues with one-click review pass", () => {
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
-  assert.equal(guidance.stateLabel, "待一键流转");
-  assert.equal(guidance.primaryAction?.action, "approve_and_submit_zh");
-  assert.equal(guidance.primaryAction?.label, "一键审稿通过");
-  assert.match(guidance.nextStep, /提交后台预审与本地预发/);
+  assert.equal(guidance.stateLabel, "待自动流转");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.match(guidance.nextStep, /从当前稿件继续推进/);
 });
 
-test("release blocked guidance offers auto-fix before manual follow-up", () => {
+test("release blocked guidance routes fact-only blockers back to the item detail", () => {
   const item = {
     id: "match-1",
     file: "match-1.json",
@@ -160,14 +160,14 @@ test("release blocked guidance offers auto-fix before manual follow-up", () => {
     metrics: { missing: ["head_to_head_history"] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["ZZ"], packs: [] });
-  assert.equal(guidance.stateLabel, "申请被阻断（未发布）");
-  assert.equal(guidance.primaryAction?.action, "autofix_release_blockers");
-  assert.equal(guidance.primaryAction?.label, "先自动处理 GB 阻断");
+  assert.equal(guidance.stateLabel, "旧流程中断");
+  assert.equal(guidance.primaryAction?.type, "link");
+  assert.equal(guidance.primaryAction?.label, "去补事实包");
   assert.deepEqual(guidance.secondaryActions, []);
-  assert.match(guidance.nextStep, /先自动处理当前阻断/);
+  assert.match(guidance.nextStep, /补齐事实包/);
   assert.equal(guidance.resolveHref, "/items/match-1");
-  assert.ok(guidance.blockers.some((entry) => entry.includes("GB")));
-  assert.ok(guidance.blockers.some((entry) => entry.includes("发布主体辖区未确认")));
+  assert.ok(guidance.blockers.length >= 1);
+  assert.ok(guidance.blockers.some((entry) => entry.includes("事实包缺口")));
 });
 
 test("release blocked guidance sends fact-only blockers back to the item detail", () => {
@@ -189,12 +189,12 @@ test("release blocked guidance sends fact-only blockers back to the item detail"
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["GB"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "申请被阻断（未发布）");
+  assert.equal(guidance.stateLabel, "旧流程中断");
   assert.equal(guidance.primaryAction?.label, "去补事实包");
   assert.equal(guidance.resolveHref, "/items/match-3");
 });
 
-test("release blocked guidance auto-fix still attempts operator confirmation first", () => {
+test("release blocked guidance can be retried with one click when no fact gap remains", () => {
   const item = {
     id: "match-operator",
     file: "match-operator.json",
@@ -224,11 +224,49 @@ test("release blocked guidance auto-fix still attempts operator confirmation fir
     },
   });
   assert.equal(guidance.primaryAction?.type, "form");
-  assert.equal(guidance.primaryAction?.action, "autofix_release_blockers");
-  assert.equal(guidance.primaryAction?.label, "先自动处理 AR 阻断");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
 });
 
-test("release blocked guidance becomes retry-ready once legal blockers are resolved", () => {
+test("published guidance exposes a terminal published state", () => {
+  const item = {
+    id: "match-published",
+    item: { nexusJurisdictions: [] },
+    entityJurisdictions: [],
+    workflow: {
+      status: "published",
+      summary: "published",
+      lifecycle: { status: "published" },
+    },
+    readiness: { reviewHtmlBuilt: true, previewBuilt: true },
+    metrics: { missing: [] },
+  };
+  const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
+  assert.equal(guidance.stateLabel, "已发布");
+  assert.equal(guidance.primaryAction, null);
+  assert.match(guidance.nextStep, /重新生成|重新/);
+});
+
+test("deleted guidance exposes a terminal deleted state", () => {
+  const item = {
+    id: "match-deleted",
+    item: { nexusJurisdictions: [] },
+    entityJurisdictions: [],
+    workflow: {
+      status: "deleted",
+      summary: "deleted",
+      lifecycle: { status: "deleted" },
+    },
+    readiness: { reviewHtmlBuilt: false, previewBuilt: false },
+    metrics: { missing: [] },
+  };
+  const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
+  assert.equal(guidance.stateLabel, "已删除");
+  assert.equal(guidance.primaryAction, null);
+  assert.match(guidance.why, /已删除/);
+});
+
+test("release blocked guidance stays one-click retry even if historical legal blockers were resolved", () => {
   const item = {
     id: "match-2",
     workflow: {
@@ -245,9 +283,9 @@ test("release blocked guidance becomes retry-ready once legal blockers are resol
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["GB"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "阻断已解除，待重新提交");
-  assert.equal(guidance.primaryAction?.label, "重新提交中文发布申请");
-  assert.deepEqual(guidance.blockers, []);
+  assert.equal(guidance.stateLabel, "旧流程中断");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
 test("blocked item resolution stage prioritizes operator confirmation before pack editing", () => {
@@ -331,10 +369,10 @@ test("release blocked guidance still requires the current operator jurisdiction 
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["US"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "申请被阻断（未发布）");
-  assert.equal(guidance.primaryAction?.label, "先自动处理 US 阻断");
+  assert.equal(guidance.stateLabel, "旧流程中断");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.deepEqual(guidance.secondaryActions, []);
-  assert.ok(guidance.blockers.some((entry) => entry.includes("US")));
+  assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
 test("release blocked guidance follows the current retry scope instead of stale report jurisdictions", () => {
@@ -359,10 +397,9 @@ test("release blocked guidance follows the current retry scope instead of stale 
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] }, { packValidation: new Map() });
-  assert.match(guidance.nextStep, /先自动处理当前阻断/);
-  assert.equal(guidance.primaryAction?.label, "先自动处理 AR 阻断");
-  assert.ok(guidance.blockers.some((entry) => entry.includes("AR、EN")));
-  assert.equal(guidance.blockers.some((entry) => entry.includes("GB")), false);
+  assert.match(guidance.nextStep, /重跑自动审稿/);
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
 test("release blocked guidance prioritizes operator pack before other invalid jurisdictions", () => {
@@ -387,11 +424,11 @@ test("release blocked guidance prioritizes operator pack before other invalid ju
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["US"], packs: [] }, { packValidation: new Map() });
-  assert.equal(guidance.primaryAction?.label, "先自动处理 US 阻断");
-  assert.ok(guidance.blockers.some((entry) => entry.includes("US")));
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
-test("release blocked guidance links directly to the current legal pack when auto-fix is exhausted", () => {
+test("release blocked guidance no longer sends editor into legal-only blocker handling", () => {
   const item = {
     id: "match-6",
     file: "match-6.json",
@@ -426,14 +463,12 @@ test("release blocked guidance links directly to the current legal pack when aut
     packValidation: new Map([["AR", { ok: false, findings: ["pack_not_active", "invalid_reviewed_at"] }]]),
     supportByJurisdiction: new Map([["AR", { jurisdiction: "AR", hasMaterial: false }]]),
   });
-  assert.equal(guidance.primaryAction?.type, "link");
-  assert.equal(guidance.primaryAction?.label, "去补 AR legal pack");
-  assert.match(guidance.primaryAction?.href || "", /\/legal\?content=match-6&pack=AR/);
-  assert.match(guidance.resolveHref, /\/legal\?content=match-6&pack=AR/);
-  assert.match(guidance.nextStep, /先补 AR legal pack 的真实字段/);
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.equal(guidance.resolveHref, "/items/match-6");
+  assert.match(guidance.nextStep, /重跑自动审稿/);
 });
 
-test("release blocked guidance auto-fix can target multiple blocked jurisdictions", () => {
+test("release blocked guidance still stays on one-click retry with multiple historical blocked jurisdictions", () => {
   const item = {
     id: "match-7",
     file: "match-7.json",
@@ -462,9 +497,9 @@ test("release blocked guidance auto-fix can target multiple blocked jurisdiction
     packValidation: new Map(),
     supportByJurisdiction: new Map([["AR", { jurisdiction: "AR", hasMaterial: false }]]),
   });
-  assert.match(guidance.nextStep, /先自动处理当前阻断/);
-  assert.equal(guidance.primaryAction?.label, "先自动处理 AR 阻断");
-  assert.ok(guidance.blockers.some((entry) => entry.includes("AR、ES、FR")));
+  assert.match(guidance.nextStep, /重跑自动审稿/);
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
 test("legal draft scaffolds only create missing non-ZZ jurisdictions", () => {

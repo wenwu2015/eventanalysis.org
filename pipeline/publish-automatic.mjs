@@ -4,14 +4,16 @@ import { resolve } from "node:path";
 import { auditContentItem } from "./lib/compliance.mjs";
 import { findContentItemFile, loadAgentReport, loadCompliancePolicy, loadEvidenceRecords, loadLegalRegistry, loadSourceRegistry } from "./lib/compliance-store.mjs";
 import { loadContentData } from "./lib/data-store.mjs";
+import { summarizeEditorialReleaseReport } from "./lib/editorial-release.mjs";
 import { runCommand } from "./lib/command-runner.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const inputArg = process.argv.slice(2).find((value) => !value.startsWith("--"));
 const contentFlag = process.argv.find((value) => value.startsWith("--content="));
 const localeFlag = process.argv.find((value) => value.startsWith("--locales="));
+const skipPreaudit = process.argv.includes("--skip-preaudit");
 const requestedLocales = localeFlag ? new Set(localeFlag.slice("--locales=".length).split(",").filter(Boolean)) : null;
-if (!inputArg && !contentFlag) throw new Error("Usage: npm run publish:automatic -- <content-item.json> OR --content=<id> [--locales=zh,en]");
+if (!inputArg && !contentFlag) throw new Error("Usage: npm run publish:automatic -- <content-item.json> OR --content=<id> [--locales=zh,en] [--skip-preaudit]");
 let item;
 let inputPath;
 if (contentFlag) {
@@ -23,11 +25,16 @@ if (contentFlag) {
   inputPath = resolve(root, inputArg);
   item = JSON.parse(await readFile(inputPath, "utf8"));
 }
-await runCommand(["npm", "run", "compliance:preaudit", "--", ...(contentFlag ? [contentFlag] : [inputArg]), ...(requestedLocales ? [`--locales=${[...requestedLocales].join(",")}`] : [])], { cwd: root, timeoutMs: 900_000 });
+if (!skipPreaudit) {
+  await runCommand(["npm", "run", "compliance:preaudit", "--", ...(contentFlag ? [contentFlag] : [inputArg]), ...(requestedLocales ? [`--locales=${[...requestedLocales].join(",")}`] : [])], { cwd: root, timeoutMs: 900_000 });
+}
 const [policy, legalRegistry, data, evidenceRecords, sourceRegistry, agentReport] = await Promise.all([
   loadCompliancePolicy(root), loadLegalRegistry(root), loadContentData(root), loadEvidenceRecords(root), loadSourceRegistry(root), loadAgentReport(root, item),
 ]);
-const report = auditContentItem({ item, data, policy, legalRegistry, evidenceRecords, sourceRegistry, agentReport, requestedLocales });
+const report = summarizeEditorialReleaseReport(
+  auditContentItem({ item, data, policy, legalRegistry, evidenceRecords, sourceRegistry, agentReport, requestedLocales }),
+  requestedLocales ? [...requestedLocales] : [],
+);
 if (report.decision === "BLOCK") {
   const destructive = report.riskClass === "C" || report.findings.some(({ category }) => ["insult", "nationality_attack", "mental_state", "unverified_allegation", "health_speculation"].includes(category));
   const existing = await findContentItemFile(root, item.id);
@@ -49,7 +56,12 @@ if (report.decision === "REVIEW" || report.riskClass !== "A") {
   let approvedLocales = 0;
   for (const [locale, edition] of Object.entries(item.editions || {})) {
     if (requestedLocales && !requestedLocales.has(locale)) continue;
-    const allowed = (policy.localeMarkets[locale] || []).filter((country) => report.allowedJurisdictions.includes(country));
+    const defaultAllowed = locale === "zh" ? ["LOCAL_PREVIEW"] : [];
+    const allowed = locale === "zh" && report.allowedJurisdictions.includes("LOCAL_PREVIEW")
+      ? ["LOCAL_PREVIEW"]
+      : (policy.localeMarkets?.[locale] || []).length
+        ? (policy.localeMarkets[locale] || []).filter((country) => report.allowedJurisdictions.includes(country))
+        : (report.allowedJurisdictions.length ? report.allowedJurisdictions : defaultAllowed);
     if (locale !== "zh" && edition.translationStatus !== "current") throw new Error(`${locale} translation is not current`);
     if (allowed.length) {
       edition.status = "approved";
