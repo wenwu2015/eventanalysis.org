@@ -2,6 +2,38 @@
   "schemaVersion": 3,
   "records": [
     {
+      "id": "event_130d5b456959ca59f045",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-07T07:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_43c55a32db33b918c780",
+        "team_21b6a3a74f64034fcd20"
+      ],
+      "homeTeamId": "team_43c55a32db33b918c780",
+      "awayTeamId": "team_21b6a3a74f64034fcd20",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_14fa85c3e75b842f0779",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-08-04T18:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_6df408728cc848935493",
+        "team_c4bd940b6bf2a368b1ba"
+      ],
+      "homeTeamId": "team_6df408728cc848935493",
+      "awayTeamId": "team_c4bd940b6bf2a368b1ba",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
       "id": "event_1fa9a50fd27ce823bb3f",
       "sport": "football",
       "kind": "match",
@@ -18,6 +50,198 @@
       "awayTeamId": "team_0f34b7bb2edb12d9b7d3"
     },
     {
+      "id": "event_20995cfc2ba3a8f10bcf",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Serie A",
+      "startedAt": "2026-08-29T16:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_b94e2b8f256de5dd6179",
+        "team_76d4de2f70c39dcbbc12"
+      ],
+      "homeTeamId": "team_b94e2b8f256de5dd6179",
+      "awayTeamId": "team_76d4de2f70c39dcbbc12",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
+      "id": "event_221e91a9e618ee186eee",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Premier League",
+      "startedAt": "2026-08-23T15:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_c3f74cab4376514f5379",
+        "team_cdc972e71622ac908e3c"
+      ],
+      "homeTeamId": "team_c3f74cab4376514f5379",
+      "awayTeamId": "team_cdc972e71622ac908e3c",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_23a80c028653b504c5b6",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Premier League",
+      "startedAt": "2026-08-29T11:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_cdc972e71622ac908e3c",
+        "team_00ccedc1eddaae4c93d8"
+      ],
+      "homeTeamId": "team_cdc972e71622ac908e3c",
+      "awayTeamId": "team_00ccedc1eddaae4c93d8",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_32e793c56c4929f55540",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Ligue 1",
+      "startedAt": "2026-08-28T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_6bf0e3591ae86e6c8f30",
+        "team_52d56473b53025f76e56"
+      ],
+      "homeTeamId": "team_6bf0e3591ae86e6c8f30",
+      "awayTeamId": "team_52d56473b53025f76e56",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_37193fb3ac5a62462504",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Bundesliga",
+      "startedAt": "2026-08-29T13:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_d8f00c86b09b097bc190",
+        "team_436ab66fc6616a67a66c"
+      ],
+      "homeTeamId": "team_d8f00c86b09b097bc190",
+      "awayTeamId": "team_436ab66fc6616a67a66c",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_47367dcee4dfe35a83bc",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-08T11:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_a37b3a7ed1d8bd4d0a40",
+        "team_6eaa4699a284379e8d76"
+      ],
+      "homeTeamId": "team_a37b3a7ed1d8bd4d0a40",
+      "awayTeamId": "team_6eaa4699a284379e8d76",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_47857da6938eab653ebc",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-19T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_5627471d0552b6087f41",
+        "team_439648de7c34dff0ada7"
+      ],
+      "homeTeamId": "team_5627471d0552b6087f41",
+      "awayTeamId": "team_439648de7c34dff0ada7",
+      "homeScore": 1,
+      "awayScore": 0
+    },
+    {
+      "id": "event_4acc32e4cec5b17c57de",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Ligue 1",
+      "startedAt": "2026-08-22T18:45:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_3308f1ee9899606e5791",
+        "team_14ee7b082215bf252276"
+      ],
+      "homeTeamId": "team_3308f1ee9899606e5791",
+      "awayTeamId": "team_14ee7b082215bf252276",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_4e33cef8d03df3f92814",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-09-01T16:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_1df6c5d6e7b026cc4f6e",
+        "team_4cfac8fb087c49ab76e9"
+      ],
+      "homeTeamId": "team_1df6c5d6e7b026cc4f6e",
+      "awayTeamId": "team_4cfac8fb087c49ab76e9",
+      "homeScore": 4,
+      "awayScore": 0
+    },
+    {
+      "id": "event_4f9c70d9f8404c562fff",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Bundesliga",
+      "startedAt": "2026-08-29T13:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_43a6b4e90e2311ba4cb6",
+        "team_3d5bda7373507989bb38"
+      ],
+      "homeTeamId": "team_43a6b4e90e2311ba4cb6",
+      "awayTeamId": "team_3d5bda7373507989bb38",
+      "homeScore": 3,
+      "awayScore": 3
+    },
+    {
+      "id": "event_59a5939bcc8923cf1c14",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Ligue 1",
+      "startedAt": "2026-08-29T18:45:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_14ee7b082215bf252276",
+        "team_ba6652028047035f03d5"
+      ],
+      "homeTeamId": "team_14ee7b082215bf252276",
+      "awayTeamId": "team_ba6652028047035f03d5",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_5a7ac334f37e4a4602db",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Bundesliga",
+      "startedAt": "2026-08-29T13:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_c2723fc2f4c110f00aa8",
+        "team_0de2514a4edae9fa9649"
+      ],
+      "homeTeamId": "team_c2723fc2f4c110f00aa8",
+      "awayTeamId": "team_0de2514a4edae9fa9649",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
       "id": "event_673c35b096169f32bc92",
       "sport": "football",
       "kind": "match",
@@ -31,6 +255,118 @@
       "homeTeamId": "team_65189e47a75eca903fca",
       "awayTeamId": "team_286dbc7f218c4768b458",
       "homeScore": 1,
+      "awayScore": 2
+    },
+    {
+      "id": "event_6a3f0dd483be579f9a3d",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T17:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_b016cd9f3334de32f502",
+        "team_39b8f151f8b98dcbdfc1"
+      ],
+      "homeTeamId": "team_b016cd9f3334de32f502",
+      "awayTeamId": "team_39b8f151f8b98dcbdfc1",
+      "homeScore": 1,
+      "awayScore": 2
+    },
+    {
+      "id": "event_6b260c2fa47401d1215f",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T18:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_142f4446264309cec23e",
+        "team_0cc11aa1f3e313aa30b2"
+      ],
+      "homeTeamId": "team_142f4446264309cec23e",
+      "awayTeamId": "team_0cc11aa1f3e313aa30b2",
+      "homeScore": 2,
+      "awayScore": 3
+    },
+    {
+      "id": "event_7122329288df73b83148",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-07-28T18:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_38c5c91bb622ca605c36",
+        "team_8b17e72f73db34b97422"
+      ],
+      "homeTeamId": "team_38c5c91bb622ca605c36",
+      "awayTeamId": "team_8b17e72f73db34b97422",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_75dca64f47c9fe17cf78",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Premier League",
+      "startedAt": "2026-08-28T15:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_3fb190293fe1b4b881da",
+        "team_4d47bc9701d632c472d4"
+      ],
+      "homeTeamId": "team_3fb190293fe1b4b881da",
+      "awayTeamId": "team_4d47bc9701d632c472d4",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_78ce5634ea425d81f202",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-19T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_a96b267ff87dea75710b",
+        "team_88071113148698a6c517"
+      ],
+      "homeTeamId": "team_a96b267ff87dea75710b",
+      "awayTeamId": "team_88071113148698a6c517",
+      "homeScore": 1,
+      "awayScore": 0
+    },
+    {
+      "id": "event_7bbf60208315db9c75ed",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T17:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_3c55fff00943976aec21",
+        "team_f1a4f6f04bbcc5e5c47a"
+      ],
+      "homeTeamId": "team_3c55fff00943976aec21",
+      "awayTeamId": "team_f1a4f6f04bbcc5e5c47a",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_7cb644a0b32c2bb1c722",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-07-29T17:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_81d4ceeb358044f9155d",
+        "team_fdf9bbc80fa812b16a36"
+      ],
+      "homeTeamId": "team_81d4ceeb358044f9155d",
+      "awayTeamId": "team_fdf9bbc80fa812b16a36",
+      "homeScore": 2,
       "awayScore": 2
     },
     {
@@ -50,6 +386,246 @@
       "awayScore": 6
     },
     {
+      "id": "event_8a1b2bf35f021d25e8bf",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-08-04T18:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_49586757172aaffeb6ca",
+        "team_9abf67e75d9e11a606af"
+      ],
+      "homeTeamId": "team_49586757172aaffeb6ca",
+      "awayTeamId": "team_9abf67e75d9e11a606af",
+      "homeScore": 3,
+      "awayScore": 3
+    },
+    {
+      "id": "event_9943f31369fbe2009669",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T17:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_0fc0d5bd6b1043b58498",
+        "team_d51e590d5f03fb1b1a7e"
+      ],
+      "homeTeamId": "team_0fc0d5bd6b1043b58498",
+      "awayTeamId": "team_d51e590d5f03fb1b1a7e",
+      "homeScore": 2,
+      "awayScore": 3
+    },
+    {
+      "id": "event_9c128d501d4520f10be6",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_29538d12b9978f662eac",
+        "team_d8db6b2f51bcdca48d32"
+      ],
+      "homeTeamId": "team_29538d12b9978f662eac",
+      "awayTeamId": "team_d8db6b2f51bcdca48d32",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
+      "id": "event_a17984abc0c818e5743e",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-08T14:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_4cfac8fb087c49ab76e9",
+        "team_52b96e37908ba734a758"
+      ],
+      "homeTeamId": "team_4cfac8fb087c49ab76e9",
+      "awayTeamId": "team_52b96e37908ba734a758",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "id": "event_aacb2212ca3e69783799",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa Conference League, Qualification Playoff",
+      "startedAt": "2026-08-27T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_3c957fe00ff23f9ce4b9",
+        "team_1b556b1579c8429aaa42"
+      ],
+      "homeTeamId": "team_3c957fe00ff23f9ce4b9",
+      "awayTeamId": "team_1b556b1579c8429aaa42",
+      "homeScore": 2,
+      "awayScore": 3
+    },
+    {
+      "id": "event_b50018b6a95292241844",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Ligue 1",
+      "startedAt": "2026-08-23T18:45:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_c92d6158047a1af1beb4",
+        "team_52d56473b53025f76e56"
+      ],
+      "homeTeamId": "team_c92d6158047a1af1beb4",
+      "awayTeamId": "team_52d56473b53025f76e56",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_b6c64813b6255aba5097",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Serie A",
+      "startedAt": "2026-08-29T16:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_f973d7dc9ad71c090aad",
+        "team_069a198ed98432892f4c"
+      ],
+      "homeTeamId": "team_f973d7dc9ad71c090aad",
+      "awayTeamId": "team_069a198ed98432892f4c",
+      "homeScore": 2,
+      "awayScore": 3
+    },
+    {
+      "id": "event_b7d630874a83249398b6",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-05T14:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_77f587741e6ddd08c262",
+        "team_52b96e37908ba734a758"
+      ],
+      "homeTeamId": "team_77f587741e6ddd08c262",
+      "awayTeamId": "team_52b96e37908ba734a758",
+      "homeScore": 2,
+      "awayScore": 3
+    },
+    {
+      "id": "event_b86c847f744efc255f83",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-07-28T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_6b74aae0229d82a5e6d9",
+        "team_7590384f31b8c3f7a3d8"
+      ],
+      "homeTeamId": "team_6b74aae0229d82a5e6d9",
+      "awayTeamId": "team_7590384f31b8c3f7a3d8",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
+      "id": "event_bfd0f0d4bf8ac39cd04e",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Qualification",
+      "startedAt": "2026-08-04T16:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_bff2a3c9c6d915590d6a",
+        "team_f73462edae96089460bb"
+      ],
+      "homeTeamId": "team_bff2a3c9c6d915590d6a",
+      "awayTeamId": "team_f73462edae96089460bb",
+      "homeScore": 1,
+      "awayScore": 2
+    },
+    {
+      "id": "event_c9580798c506402430c0",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa League, Playoff Round",
+      "startedAt": "2026-08-27T18:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_8b17e72f73db34b97422",
+        "team_e5c63a0fc9a7a2b2ef3a"
+      ],
+      "homeTeamId": "team_8b17e72f73db34b97422",
+      "awayTeamId": "team_e5c63a0fc9a7a2b2ef3a",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "id": "event_cc67770210a9745a4751",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Premier League",
+      "startedAt": "2026-08-30T13:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_34f5c650b5842b0b5c5f",
+        "team_758d2ffe857db1385825"
+      ],
+      "homeTeamId": "team_34f5c650b5842b0b5c5f",
+      "awayTeamId": "team_758d2ffe857db1385825",
+      "homeScore": 4,
+      "awayScore": 3
+    },
+    {
+      "id": "event_d5fd3a27dbce0802e5c6",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-05T16:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_e72cda5b84af056c5008",
+        "team_81cac9114698eec3b238"
+      ],
+      "homeTeamId": "team_e72cda5b84af056c5008",
+      "awayTeamId": "team_81cac9114698eec3b238",
+      "homeScore": 4,
+      "awayScore": 3
+    },
+    {
+      "id": "event_dab5c7f5d6fbea42e645",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "Ligue 1",
+      "startedAt": "2026-08-29T18:45:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_05eb1aa5bd6330cfa2ae",
+        "team_467a1b0ff34904e75e71"
+      ],
+      "homeTeamId": "team_05eb1aa5bd6330cfa2ae",
+      "awayTeamId": "team_467a1b0ff34904e75e71",
+      "homeScore": 1,
+      "awayScore": 2
+    },
+    {
+      "id": "event_dc53f28001a135a8aaaa",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Europa League, Playoff Round",
+      "startedAt": "2026-08-27T17:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_4068a0370fa5eb5140c3",
+        "team_d2103e3b3b7b99b48eed"
+      ],
+      "homeTeamId": "team_4068a0370fa5eb5140c3",
+      "awayTeamId": "team_d2103e3b3b7b99b48eed",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
       "id": "event_ea7993453165e916736c",
       "sport": "football",
       "kind": "match",
@@ -64,6 +640,38 @@
       "awayTeamId": "team_286dbc7f218c4768b458",
       "homeScore": 1,
       "awayScore": 0
+    },
+    {
+      "id": "event_f5fabf4348893487d4e7",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "FIFA World Cup, Knockout",
+      "startedAt": "2026-07-19T19:00:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_cabb2e2f442ed58e38e8",
+        "team_b17eb6e648a71622d907"
+      ],
+      "homeTeamId": "team_cabb2e2f442ed58e38e8",
+      "awayTeamId": "team_b17eb6e648a71622d907",
+      "homeScore": 1,
+      "awayScore": 0
+    },
+    {
+      "id": "event_ff059df588040979799a",
+      "sport": "football",
+      "kind": "match",
+      "competitionName": "UEFA Champions League, Women, Qualification",
+      "startedAt": "2026-08-26T16:30:00.000Z",
+      "status": "finished",
+      "entityRefs": [
+        "team_dd56cb8f3e60168278f6",
+        "team_a5e4ff906230bec70ad2"
+      ],
+      "homeTeamId": "team_dd56cb8f3e60168278f6",
+      "awayTeamId": "team_a5e4ff906230bec70ad2",
+      "homeScore": 3,
+      "awayScore": 2
     }
   ]
 }

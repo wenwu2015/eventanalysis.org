@@ -6,6 +6,26 @@ function internalId(kind, value) {
   return `${kind}_${createHash("sha256").update(String(value)).digest("hex").slice(0, 20)}`;
 }
 
+export function authorisedSourceEntityId(value) {
+  return internalId("team", `authorised-source:${value}`);
+}
+
+export function authorisedSourceEventId(value) {
+  return internalId("event", `authorised-source:${value}`);
+}
+
+export function authorisedSourcePersonId(value) {
+  return internalId("person", `authorised-source:${value}`);
+}
+
+function focusPersonIdentity(person = {}) {
+  return person.sourcePlayerId || `${person.teamId || "unknown-team"}:${String(person.name || "").trim().toLowerCase()}`;
+}
+
+export function focusPersonEntityId(person = {}) {
+  return authorisedSourcePersonId(focusPersonIdentity(person));
+}
+
 function mergeRecords(current, incoming) {
   const records = new Map(current.map((record) => [record.id, record]));
   for (const record of incoming) records.set(record.id, record);
@@ -23,16 +43,33 @@ async function upsertPacket(path, incoming, schemaVersion = 3) {
 
 export function materializeFactBundle(bundle) {
   const match = bundle.match;
-  const homeId = internalId("team", `authorised-source:${match.homeTeamId}`);
-  const awayId = internalId("team", `authorised-source:${match.awayTeamId}`);
-  const eventId = internalId("event", `authorised-source:${match.id}`);
+  const homeId = authorisedSourceEntityId(match.homeTeamId);
+  const awayId = authorisedSourceEntityId(match.awayTeamId);
+  const eventId = authorisedSourceEventId(match.id);
   const finalFactId = `${eventId}_final_result`;
   const h2hFactId = `${eventId}_head_to_head_before_match`;
   const personnelFactId = `${eventId}_personnel_changes`;
   const keyEventsFactId = `${eventId}_key_events`;
+  const focusPeople = [...new Map((bundle.focusPeople || [])
+    .filter((person) => person?.name)
+    .map((person) => [focusPersonEntityId(person), person]))
+    .entries()]
+    .map(([id, person]) => ({
+      id,
+      kind: "Person",
+      sport: bundle.sport,
+      names: { zh: person.name },
+      aliases: [person.name],
+      attributes: {
+        teamId: person.teamId || null,
+        sourcePlayerId: person.sourcePlayerId || null,
+        focusReason: person.reason || null,
+      },
+    }));
   const entities = [
     { id: homeId, kind: "Team", sport: bundle.sport, names: { zh: match.homeTeam }, aliases: [match.homeTeam], attributes: { jurisdiction: match.homeJurisdiction || null } },
     { id: awayId, kind: "Team", sport: bundle.sport, names: { zh: match.awayTeam }, aliases: [match.awayTeam], attributes: { jurisdiction: match.awayJurisdiction || null } },
+    ...focusPeople,
   ];
   const events = [{
     id: eventId,
@@ -60,7 +97,7 @@ export function materializeFactBundle(bundle) {
     facts,
     references: {
       eventRefs: [eventId],
-      entityRefs: [homeId, awayId],
+      entityRefs: [homeId, awayId, ...focusPeople.map(({ id }) => id)],
       requiredFactRefs: [finalFactId, h2hFactId, personnelFactId],
       optionalFactRefs: bundle.keyEvents?.length ? [keyEventsFactId] : [],
     },

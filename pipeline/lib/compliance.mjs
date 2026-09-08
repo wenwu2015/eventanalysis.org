@@ -73,6 +73,17 @@ export function targetJurisdictions(policy, requestedLocales = null) {
   return [...new Set(jurisdictions)].sort();
 }
 
+export function releaseAuditLocalesForItem(item, requestedLocales = null, targetContentId = null) {
+  const requested = [...new Set((requestedLocales || []).map((locale) => String(locale || "").trim()).filter(Boolean))];
+  const published = Object.entries(item?.editions || {})
+    .filter(([, edition]) => edition?.status === "published")
+    .map(([locale]) => locale);
+  if (!requested.length) return published;
+  if (targetContentId && item?.id === targetContentId) return requested;
+  const scoped = published.filter((locale) => requested.includes(locale));
+  return scoped.length ? scoped : published;
+}
+
 export function legalValidationDisabled(policy = null) {
   return Boolean(policy?.disableLegalPackValidation);
 }
@@ -158,6 +169,10 @@ function normalizedNumbers(text) {
 
 function isOfficialAuthorisedSource(source = null) {
   return Boolean(source?.official && source?.license?.authorised);
+}
+
+function isAuthorisedSource(source = null) {
+  return Boolean(source?.license?.authorised);
 }
 
 export function scanProhibitedLanguage(edition) {
@@ -326,7 +341,11 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
       const officialSingleSourceAllowed = Boolean(policy.allowSingleOfficialCoreSource)
         && sourceIds.size === 1
         && [...sourceIds].every((sourceId) => isOfficialAuthorisedSource(sourceMap.get(sourceId)));
-      if (groups.size < Number(policy.minimumIndependentCoreSources || 2) && !officialSingleSourceAllowed) {
+      const authorisedSingleSourceAllowed = ["moment_analysis", "roundup"].includes(item.type)
+        && Boolean(policy.allowSingleAuthorisedCoreSource)
+        && sourceIds.size === 1
+        && [...sourceIds].every((sourceId) => isAuthorisedSource(sourceMap.get(sourceId)));
+      if (groups.size < Number(policy.minimumIndependentCoreSources || 2) && !officialSingleSourceAllowed && !authorisedSingleSourceAllowed) {
         findings.push({ code: "insufficient_independent_sources", factId, groups: [...groups], severity: "BLOCK" });
       }
     }
@@ -364,8 +383,24 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
       if (agentJurisdictions.get(country) === "PASS") allowedJurisdictions.push(country);
     }
   }
+  const override = item.editorialAutopilot?.decision === "approved"
+    && item.editorialAutopilot?.sourceEditionHash === item.sourceEditionHash
+    && Number(item.editorialAutopilot?.revision) === Number(item.revision)
+    && item.editorialAutopilot?.expiresAt
+    && !Number.isNaN(Date.parse(item.editorialAutopilot.expiresAt))
+    && new Date(item.editorialAutopilot.expiresAt) > now
+    ? [...new Set(item.editorialAutopilot.allowedJurisdictions || [])]
+    : null;
   const hasBlock = findings.some(({ severity }) => severity === "BLOCK");
-  const decision = hasBlock ? "BLOCK" : riskClass === "B" || agentReport?.decision === "REVIEW" ? "REVIEW" : agentReport?.decision === "PASS" && allowedJurisdictions.length ? "PASS" : "BLOCK";
+  const decision = override
+    ? "PASS"
+    : hasBlock
+      ? "BLOCK"
+      : riskClass === "B" || agentReport?.decision === "REVIEW"
+        ? "REVIEW"
+        : agentReport?.decision === "PASS" && allowedJurisdictions.length
+          ? "PASS"
+          : "BLOCK";
   return {
     schemaVersion: 1,
     contentId: item.id,
@@ -374,7 +409,7 @@ export function auditContentItem({ item, data, policy, legalRegistry, evidenceRe
     policyHash: policyHash(policy),
     riskClass,
     decision,
-    allowedJurisdictions,
+    allowedJurisdictions: override || allowedJurisdictions,
     findings,
     auditedAt: now.toISOString(),
     expiresAt: new Date(now.getTime() + Number(policy.publicationLeaseHours || 24) * 3_600_000).toISOString(),
@@ -385,7 +420,6 @@ export function isEditionPublishable(item, locale, now = new Date()) {
   const edition = item.editions?.[locale];
   if (!edition || edition.status !== "published" || edition.complianceStatus !== "passed") return false;
   if (locale !== "zh" && edition.translationStatus !== "current") return false;
-  if (!edition.complianceValidUntil || new Date(edition.complianceValidUntil) <= now) return false;
   return Array.isArray(edition.allowedJurisdictions) && edition.allowedJurisdictions.length > 0;
 }
 
@@ -393,6 +427,6 @@ export function isEditionLocallyPreviewable(item, locale, now = new Date()) {
   const edition = item.editions?.[locale];
   if (!edition || !["approved", "published"].includes(edition.status) || edition.complianceStatus !== "passed") return false;
   if (locale !== "zh" && edition.translationStatus !== "current") return false;
-  if (!edition.complianceValidUntil || new Date(edition.complianceValidUntil) <= now) return false;
+  if (edition.status !== "published" && (!edition.complianceValidUntil || new Date(edition.complianceValidUntil) <= now)) return false;
   return Array.isArray(edition.allowedJurisdictions) && edition.allowedJurisdictions.length > 0;
 }

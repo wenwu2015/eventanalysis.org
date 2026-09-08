@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { resolveAutomationNowIso } from "./automation-clock.mjs";
 
 const DEFAULT_STATUS_BY_EDITION = {
   approved: "editorial_approved",
@@ -26,6 +27,11 @@ function editionStatusOf(item) {
 
 function defaultSummary(status) {
   return {
+    autopilot_failed: "自动编辑部未能完成本轮处理，请查看错误并决定是否重试。",
+    autopilot_publishing: "自动编辑部正在执行翻译、生产发布与验收。",
+    autopilot_queued: "新稿件已进入自动编辑部队列，等待处理。",
+    autopilot_reviewing: "自动编辑部正在审稿。",
+    autopilot_rewriting: "自动编辑部正在自动改稿。",
     editorial_approved: "中文主稿已批准，等待生成审稿材料或提交发布申请。",
     published: "稿件已正式发布，可继续跟踪后续改版。",
     deleted: "稿件已删除，保留状态记录供后续会话继续跟踪。",
@@ -50,7 +56,7 @@ function lifecycleMetaOf(item) {
 }
 
 function defaultLifecycle(item) {
-  const now = new Date().toISOString();
+  const now = resolveAutomationNowIso(process.env.EA_NOW_ISO);
   return {
     status: "draft",
     statusUpdatedAt: now,
@@ -88,7 +94,7 @@ export function deriveReviewLifecycle(item, {
   sourceItem = null,
   sourceItemPath = null,
   forceStatus = "",
-  now = new Date().toISOString(),
+  now = resolveAutomationNowIso(process.env.EA_NOW_ISO),
 } = {}) {
   const next = {
     ...defaultLifecycle(item),
@@ -127,7 +133,7 @@ export function deriveReviewLifecycle(item, {
 export function defaultReviewWorkflow(item) {
   const contentId = itemIdOf(item);
   const status = deriveReviewWorkflowStatus(item);
-  const now = new Date().toISOString();
+  const now = resolveAutomationNowIso(process.env.EA_NOW_ISO);
   return {
     contentId,
     status,
@@ -152,6 +158,22 @@ export function defaultReviewWorkflow(item) {
       previewPath: null,
       commandError: null,
     },
+    autopilot: {
+      enabled: true,
+      status: "idle",
+      trigger: null,
+      reviewPasses: 0,
+      rewriteAttempts: 0,
+      maxRewriteAttempts: 3,
+      lastEditorDecision: null,
+      overrideFindings: [],
+      lastRewriteBrief: null,
+      lastError: null,
+      releaseReportPath: null,
+      liveReportPath: null,
+      startedAt: null,
+      finishedAt: null,
+    },
   };
 }
 
@@ -166,6 +188,7 @@ export async function loadReviewWorkflow(root, item) {
       preview: { ...fallback.preview, ...(workflow.preview || {}) },
       lifecycle: { ...fallback.lifecycle, ...(workflow.lifecycle || {}) },
       release: { ...fallback.release, ...(workflow.release || {}) },
+      autopilot: { ...fallback.autopilot, ...(workflow.autopilot || {}) },
     };
   } catch (error) {
     if (error.code === "ENOENT") return defaultReviewWorkflow(item);
@@ -181,8 +204,9 @@ export async function writeReviewWorkflow(root, item, workflow) {
     ...defaultReviewWorkflow(item),
     ...workflow,
     contentId,
-    updatedAt: workflow.updatedAt || new Date().toISOString(),
+    updatedAt: workflow.updatedAt || resolveAutomationNowIso(process.env.EA_NOW_ISO),
     lifecycle: { ...defaultLifecycle(item), ...(workflow.lifecycle || {}) },
+    autopilot: { ...defaultReviewWorkflow(item).autopilot, ...(workflow.autopilot || {}) },
   };
   await writeFile(path, `${JSON.stringify(next, null, 2)}\n`, { mode: 0o600 });
   return next;
@@ -197,7 +221,8 @@ export async function mutateReviewWorkflow(root, item, mutate) {
     preview: { ...current.preview, ...(update.preview || {}) },
     lifecycle: { ...current.lifecycle, ...(update.lifecycle || {}) },
     release: { ...current.release, ...(update.release || {}) },
-    updatedAt: new Date().toISOString(),
+    autopilot: { ...current.autopilot, ...(update.autopilot || {}) },
+    updatedAt: resolveAutomationNowIso(process.env.EA_NOW_ISO),
   });
 }
 
@@ -210,5 +235,6 @@ export async function setReviewWorkflowStatus(root, item, status, summary, extra
     preview: { ...current.preview, ...(extra.preview || {}) },
     lifecycle: { ...current.lifecycle, ...(extra.lifecycle || {}) },
     release: { ...current.release, ...(extra.release || {}) },
+    autopilot: { ...current.autopilot, ...(extra.autopilot || {}) },
   }));
 }

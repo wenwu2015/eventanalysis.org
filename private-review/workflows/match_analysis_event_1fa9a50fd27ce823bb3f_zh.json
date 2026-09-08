@@ -2,12 +2,25 @@
   "contentId": "match_analysis_event_1fa9a50fd27ce823bb3f_zh",
   "status": "release_ready",
   "summary": "中文本地预发已完成，可交付发物审核或等待手动生产发布。",
-  "updatedAt": "2026-07-17T14:50:14.274Z",
+  "updatedAt": "2026-07-20T04:35:23.440Z",
   "preview": {
     "dynamicRoute": "/review-preview/match_analysis_event_1fa9a50fd27ce823bb3f_zh",
     "reviewHtmlRoute": null,
     "reviewHtmlPath": null,
     "reviewBuiltAt": null
+  },
+  "lifecycle": {
+    "status": "edited_pending_publish",
+    "statusUpdatedAt": "2026-07-20T04:35:23.440Z",
+    "sourceItemPath": "content/data/items/match_analysis_event_1fa9a50fd27ce823bb3f_zh.json",
+    "sourceRevision": 1,
+    "publishedAt": "2026-07-18T13:49:17.330Z",
+    "pendingSince": "2026-07-20T04:35:23.440Z",
+    "deletedAt": null,
+    "title": "法国0比2西班牙：连续性差异之外，两个进球节点如何划定胜负",
+    "competition": "世界锦标赛淘汰赛",
+    "homeName": "法国",
+    "awayName": "西班牙"
   },
   "release": {
     "requestedAt": "2026-07-17T14:45:03.178Z",

@@ -2,12 +2,25 @@
   "contentId": "match-12812996-analysis-zh",
   "status": "release_ready",
   "summary": "中文本地预发已完成，可交付发物审核或等待手动生产发布。",
-  "updatedAt": "2026-07-18T06:58:17.153Z",
+  "updatedAt": "2026-07-20T04:35:23.440Z",
   "preview": {
     "dynamicRoute": "/review-preview/match-12812996-analysis-zh",
     "reviewHtmlRoute": "/private-review/match-12812996-analysis-zh/",
     "reviewHtmlPath": "private-review/html/match-12812996-analysis-zh/index.html",
     "reviewBuiltAt": "2026-07-16T11:03:55.276Z"
+  },
+  "lifecycle": {
+    "status": "edited_pending_publish",
+    "statusUpdatedAt": "2026-07-20T04:35:23.440Z",
+    "sourceItemPath": "content/data/items/match-12812996-analysis-zh.json",
+    "sourceRevision": 1,
+    "publishedAt": "2026-07-18T12:42:58.336Z",
+    "pendingSince": "2026-07-20T04:35:23.440Z",
+    "deletedAt": null,
+    "title": "阿根廷2比1逆转英格兰：持续施压如何改写最后阶段",
+    "competition": "国际足联世界杯淘汰赛",
+    "homeName": "英格兰",
+    "awayName": "阿根廷"
   },
   "release": {
     "requestedAt": "2026-07-18T06:55:57.960Z",

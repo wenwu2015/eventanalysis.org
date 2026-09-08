@@ -68,6 +68,10 @@ test("AWS publish directory contains framework-free static output", async () => 
   await access(resolve(root, "dist/client/assets/search.js"));
   await access(resolve(root, "dist/client/favicon.svg"));
   await assert.rejects(access(resolve(root, "dist/client/assets/ad-slot.js")));
+  const css = await readFile(resolve(root, "dist/client/assets/site.css"), "utf8");
+  assert.match(css, /details\.locale-menu:not\(\[open\]\) > \.locale-menu-panel \{ display: none; \}/);
+  const edgeRouter = await readFile(resolve(root, "ops/aws/cloudfront_request_router.js"), "utf8");
+  assert.doesNotMatch(edgeRouter, /country_index|global-lease-expired|route-lease-expired|not available in your jurisdiction/i);
   const pages = await htmlFiles(resolve(root, "dist/client"));
   assert.ok(pages.length >= 44, "21 locale homes, 21 legal pages, root and 404 should be pre-generated");
   for (const path of pages) {
@@ -94,7 +98,7 @@ test("published site exposes locale homes, legal pages and released match-analys
       "/en/football/all-content/",
       "/en/football/search/",
       "/en/football/match-analysis/",
-      "/en/football/match-analysis/england-argentina-1-2-late-comeback-2026-en/",
+      "/en/football/match-analysis/england-argentina-1-2-late-comeback-2026/",
     ];
     for (const path of publicPaths) {
       const response = await fetch(`http://127.0.0.1:${port}${path}`);
@@ -127,12 +131,21 @@ test("published site exposes locale homes, legal pages and released match-analys
     assert.match(chinese, /这一次改变了什么/);
     assert.match(chinese, /为什么形成这个结果/);
     assert.doesNotMatch(chinese, /我们的分析框架/);
+    assert.doesNotMatch(chinese, /已核验|待审核|编辑部在线/);
+    const zhArchive = await (await fetch(`http://127.0.0.1:${port}/zh/football/全部内容/`)).text();
+    assert.match(zhArchive, /全部内容/);
+    assert.doesNotMatch(zhArchive, /Event Analysis · football|待审核|已核验|发布门禁/);
+    const zhSearch = await (await fetch(`http://127.0.0.1:${port}/zh/football/搜索/`)).text();
+    assert.match(zhSearch, /搜索/);
+    assert.doesNotMatch(zhSearch, /Event Analysis · Search|待审核|已核验/);
     const japanese = await (await fetch(`http://127.0.0.1:${port}/ja/football/`)).text();
     assert.match(japanese, /分析の枠組み/);
     assert.doesNotMatch(japanese, /Spain 2–1 England|準備中/);
     const arabic = await (await fetch(`http://127.0.0.1:${port}/ar/football/`)).text();
     assert.match(arabic, /dir="rtl"/);
     assert.match(arabic, /تنتهي المباراة/);
+    const englishArticle = await (await fetch(`http://127.0.0.1:${port}/en/football/match-analysis/france-0-2-spain-continuity-decisive-moments/`)).text();
+    assert.doesNotMatch(englishArticle, /Verified|Pending Review|Editorial desk active/);
   } finally {
     server.kill("SIGTERM");
   }
@@ -169,7 +182,7 @@ test("published sitemap includes homes, list pages and match-analysis detail sit
   assert.doesNotMatch(english, /https:\/\/eventanalysis\.org/);
   assert.doesNotMatch(english, /people|\/search\//);
   const englishMatchAnalysis = await readFile(resolve(root, "dist/client/sitemaps/en-football-match-analysis.xml"), "utf8");
-  assert.match(englishMatchAnalysis, /https:\/\/www\.eventanalysis\.org\/en\/football\/match-analysis\/england-argentina-1-2-late-comeback-2026-en\/<\/loc>/);
+  assert.match(englishMatchAnalysis, /https:\/\/www\.eventanalysis\.org\/en\/football\/match-analysis\/england-argentina-1-2-late-comeback-2026\/<\/loc>/);
   assert.match(englishMatchAnalysis, /https:\/\/www\.eventanalysis\.org\/en\/football\/match-analysis\/france-0-2-spain-continuity-decisive-moments\/<\/loc>/);
   const robots = await readFile(resolve(root, "dist/client/robots.txt"), "utf8");
   assert.equal(robots, "User-agent: *\nAllow: /\nSitemap: https://www.eventanalysis.org/sitemap.xml\nHost: https://www.eventanalysis.org\n");

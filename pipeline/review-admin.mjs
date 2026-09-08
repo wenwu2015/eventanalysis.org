@@ -67,7 +67,7 @@ function formatDate(value) {
 function editionStatusText(status) {
   return {
     approved: "已批准",
-    needs_review: "待编辑一键通过",
+    needs_review: "待自动审稿",
     published: "已入库",
     quarantined: "已隔离",
     withdrawn: "已撤回",
@@ -76,15 +76,20 @@ function editionStatusText(status) {
 
 function workflowStatusText(status) {
   return {
+    autopilot_failed: "自动流程失败",
+    autopilot_publishing: "自动发布中",
+    autopilot_queued: "自动排队中",
+    autopilot_reviewing: "自动审稿中",
+    autopilot_rewriting: "自动改稿中",
     deleted: "已删除",
-    editorial_approved: "已批准待一键流转",
+    editorial_approved: "已批准待自动流转",
     published: "已发布",
     quarantined: "已隔离",
-    release_blocked: "系统中断（未发布）",
-    release_ready: "本地预发完成（未公开发布）",
-    release_requested: "发布申请处理中（未公开发布）",
-    release_review_required: "发布待人工复核",
-    review_pending: "待编辑一键通过",
+    release_blocked: "旧流程中断",
+    release_ready: "旧流程本地预发完成",
+    release_requested: "旧流程处理中",
+    release_review_required: "旧流程待人工复核",
+    review_pending: "待自动审稿",
   }[status] || status;
 }
 
@@ -103,6 +108,11 @@ function readinessTone(status) {
 
 function workflowTone(status) {
   return {
+    autopilot_failed: "warn",
+    autopilot_publishing: "ok",
+    autopilot_queued: "default",
+    autopilot_reviewing: "ok",
+    autopilot_rewriting: "ok",
     deleted: "warn",
     editorial_approved: "ok",
     published: "ok",
@@ -117,17 +127,27 @@ function workflowTone(status) {
 
 function editorSurfaceStageText(item, guidance = null) {
   const workflowStatus = item?.workflow?.status || "";
+  if (workflowStatus === "autopilot_queued") return "自动排队中";
+  if (workflowStatus === "autopilot_reviewing") return "自动审稿中";
+  if (workflowStatus === "autopilot_rewriting") return "自动改稿中";
+  if (workflowStatus === "autopilot_publishing") return "自动发布中";
+  if (workflowStatus === "autopilot_failed") return "自动流程失败";
   if (workflowStatus === "release_requested") return "已进入系统发布检查";
   if (workflowStatus === "release_blocked") return "已进入系统发布检查";
-  if (workflowStatus === "release_review_required") return "待人工复核";
-  if (workflowStatus === "release_ready") return "本地预发完成";
+  if (workflowStatus === "release_review_required") return "旧流程待人工复核";
+  if (workflowStatus === "release_ready") return "旧流程本地预发完成";
   if (workflowStatus === "published") return "已正式发布";
   if (workflowStatus === "deleted") return "已删除";
-  return guidance?.stateLabel === "待编辑一键通过" ? "待编辑一键通过" : editionStatusText(item?.edition?.status);
+  return guidance?.stateLabel === "待自动审稿" ? "待自动审稿" : editionStatusText(item?.edition?.status);
 }
 
 function publicSurfaceStatusText(status) {
   return {
+    autopilot_failed: "自动编辑部本轮失败，公开站点未追加发布。",
+    autopilot_publishing: "自动编辑部正在推进正式生产发布与线上验收。",
+    autopilot_queued: "自动编辑部尚未开始处理，公开站点未变更。",
+    autopilot_reviewing: "自动编辑部正在审稿，公开站点尚未变更。",
+    autopilot_rewriting: "自动编辑部正在改稿，公开站点尚未变更。",
     release_requested: "公开站点尚未变更，系统正在跑本地预审和本地预发。",
     release_blocked: "公开站点未发布。这次只是后台系统中断，不是已经上线后回滚。",
     release_review_required: "公开站点尚未变更，当前停在人工复核前。",
@@ -138,6 +158,11 @@ function publicSurfaceStatusText(status) {
 function editorVisibleWorkflowSummary(item, guidance = null) {
   const status = item?.workflow?.status || "";
   const blockers = guidance?.blockers || [];
+  if (status === "autopilot_queued") return "稿件已进入自动编辑部队列，公开站点尚未变更。";
+  if (status === "autopilot_reviewing") return "自动编辑部正在审稿，公开站点还没有发布。";
+  if (status === "autopilot_rewriting") return "自动编辑部正在改稿，公开站点还没有发布。";
+  if (status === "autopilot_publishing") return "自动编辑部正在执行正式发布与线上验收。";
+  if (status === "autopilot_failed") return blockers[0] || "自动编辑部本轮失败，公开站点仍维持原状。";
   if (status === "release_requested") return "后台正在执行检查，公开站点还没有发布。";
   if (status === "release_ready") return "后台检查已通过，当前只完成了中文本地预发，公开站点还没有发布。";
   if (status === "release_review_required") return "后台要求人工复核，公开站点还没有发布。";
@@ -162,8 +187,10 @@ function editorVisibleQueueIssue(item, guidance = null) {
     if (item?.metrics?.missing?.length) return blockers[0];
     return "打开稿件详情，看“为什么会卡在这里”，然后直接重跑一键审核通过。";
   }
+  if (["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing"].includes(item?.workflow?.status)) return "自动编辑部处理中，暂时无需额外操作。";
+  if (item?.workflow?.status === "autopilot_failed") return "查看错误后可直接重新触发自动审稿。";
   if (item?.workflow?.status === "release_requested") return "后台处理中，暂时无需额外操作。";
-  if (item?.workflow?.status === "release_ready") return "已到本地预发完成阶段，可转发物审核。";
+  if (item?.workflow?.status === "release_ready") return "旧流程只完成了本地预发；建议切到自动编辑部链路。";
   return "当前没有额外问题。";
 }
 
@@ -177,7 +204,7 @@ function actionErrorMessage(error) {
   const text = String(error?.message || error || "").trim();
   const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
   for (const line of [...lines].reverse()) {
-    if (/AgentPreAudit is invalid:|Automatic publication blocked and quarantined:|No locale has an approved publication jurisdiction|Requested locale is missing from content item:/.test(line) && !line.includes("${")) {
+    if (/AgentPreAudit is invalid:|Automatic publication blocked and quarantined:|No locale has an approved publication jurisdiction|Requested locale is missing from content item:|rewrite_limit_reached/.test(line) && !line.includes("${")) {
       return line.replace(/^Error:\s*/, "");
     }
   }
@@ -286,12 +313,12 @@ function renderProblemEntryLinks({
 
 function renderWorkflowStageFlow(status = "") {
   const labels = [
-    ["review_pending", "一键通过"],
-    ["editorial_approved", "待流转"],
-    ["release_requested", "预审中"],
-    ["release_blocked", "阻断处理"],
-    ["release_review_required", "人工复核"],
-    ["release_ready", "本地预发完成"],
+    ["review_pending", "待审稿"],
+    ["autopilot_reviewing", "自动审稿"],
+    ["autopilot_rewriting", "自动改稿"],
+    ["autopilot_publishing", "自动发布"],
+    ["published", "已发布"],
+    ["autopilot_failed", "自动失败"],
   ];
   return `<div class="status-flow">${labels.map(([value, label]) => `<span class="status-step ${value === status ? "current" : ""}">${escapeHtml(label)}</span>`).join("")}</div>`;
 }
@@ -817,13 +844,16 @@ function dashboardNextStep(state) {
     const action = guidance.primaryAction || null;
     const actionKey = action?.type === "form" ? action.action : action?.type === "link" ? action.label : "";
     const rank = {
-      approve_and_submit_zh: 0,
-      submit_release_zh: 1,
-      review_pr: 2,
+      rerun_autopilot: 0,
+      "重新触发自动审稿": 0,
+      "去补事实包": 1,
+      quarantine_zh: 2,
       build_review_html: 3,
-      "去补事实包": 4,
-      "查看详情": 5,
-      "": 6,
+      submit_release_zh: 4,
+      approve_and_submit_zh: 5,
+      review_pr: 6,
+      "查看详情": 7,
+      "": 8,
     }[actionKey] ?? 7;
     const factGapCount = item.metrics?.missing?.length || 0;
     return { item, guidance, rank, factGapCount };
@@ -1004,7 +1034,7 @@ async function fetchOperatorJurisdictionEvidenceFromUrls(urls = []) {
 }
 
 function dashboardPage(state, notice, error) {
-  const hasActiveProcessing = state.workflowCounts.release_requested > 0;
+  const hasActiveProcessing = (state.workflowCounts.autopilot_queued + state.workflowCounts.autopilot_reviewing + state.workflowCounts.autopilot_rewriting + state.workflowCounts.autopilot_publishing + state.workflowCounts.release_requested) > 0;
   const nextStep = dashboardNextStep(state);
   const focusItem = nextStep?.item || state.items[0] || null;
   const focusGuidance = focusItem
@@ -1062,9 +1092,9 @@ function dashboardPage(state, notice, error) {
   const body = `
     <section class="header" ${hasActiveProcessing ? "data-auto-refresh=\"true\"" : ""}>
       <p class="eyebrow">EventAnalysis 审稿工作台</p>
-      <h1 class="title">中文审稿、一键通过、系统发布检查</h1>
-      <p class="subtitle">编辑侧只保留一个核心动作：<code>一键审稿通过</code>。点击后系统会自动批准中文、补生成私有审稿材料，并在后台继续做预审和中文本地预发；没过也只会记成系统中断，不会公开发布。</p>
-      ${hasActiveProcessing ? `<p class="processing-note">检测到发布申请正在处理中，页面每 5 秒自动刷新一次。</p>` : ""}
+      <h1 class="title">自动编辑部监控台</h1>
+      <p class="subtitle">新稿会直接进入自动编辑部链路：自动审稿、最多 3 次自动改稿、全量翻译、正式生产发布与线上验收。主动作改为 <code>重新触发自动审稿</code>；旧的 PR 和一键审批只作为遗留工具保留。</p>
+      ${hasActiveProcessing ? `<p class="processing-note">检测到自动编辑部正在处理稿件，页面每 5 秒自动刷新一次。</p>` : ""}
     </section>
     ${nextStep && focusItem && focusGuidance ? `<section class="panel tone-${state.readiness.publicationStatus === "PASS" ? "ok" : "warn"}">
       <p class="eyebrow">当前建议动作</p>
@@ -1101,22 +1131,23 @@ function dashboardPage(state, notice, error) {
     </section>` : ""}
     <section class="grid summary">
       <article class="panel"><p class="kpi">${state.workflowCounts.total}</p><p class="meta">当前审稿候选</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.review_pending}</p><p class="meta">待编辑一键通过</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_requested}</p><p class="meta">发布申请处理中</p></article>
-      <article class="panel"><p class="kpi">${blockedCount}</p><p class="meta">系统中断（未发布）</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_review_required}</p><p class="meta">待人工复核</p></article>
-      <article class="panel"><p class="kpi">${state.workflowCounts.release_ready}</p><p class="meta">本地预发完成</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.review_pending}</p><p class="meta">待自动审稿</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_reviewing + state.workflowCounts.autopilot_rewriting}</p><p class="meta">自动处理中</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_publishing}</p><p class="meta">自动发布中</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.autopilot_failed + blockedCount}</p><p class="meta">自动失败/旧流程中断</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.quarantined}</p><p class="meta">已隔离</p></article>
+      <article class="panel"><p class="kpi">${state.workflowCounts.published}</p><p class="meta">已发布</p></article>
       <article class="panel"><p class="kpi">${state.lifecycleCounts.edited_pending_publish}</p><p class="meta">已编辑待发布</p></article>
     </section>
     ${blockedCount ? `<section class="panel tone-warn">
-      <h2>系统中断摘要</h2>
-      <p class="meta">当前有 ${blockedCount} 篇稿件的后台检查没有通过，但公开站点都还没有发布。编辑侧只需要看当前动作、事实缺口和详情页里的问题入口。</p>
+      <h2>旧流程中断摘要</h2>
+      <p class="meta">当前有 ${blockedCount} 篇稿件仍停在历史发布链路。优先使用稿件详情里的 <code>重新触发自动审稿</code> 切回自动编辑部。</p>
     </section>` : ""}
     <section class="panel">
       <h2>审稿队列</h2>
       <div class="queue-list">${queueCards || `<p class="meta">当前没有稿件。</p>`}</div>
     </section>
-    <p class="footnote">说明：编辑侧只保留 <code>一键审稿通过</code>。后台若缺事实、授权或命令条件，会自动记为 <code>release_blocked</code>，但仍保持未公开发布。</p>`;
+    <p class="footnote">说明：自动编辑部会把内容类 findings 视作审计输入，最终由 editor agent 判定；只有命令失败、配置缺失、超时、AWS 失败或线上验收失败会把 workflow 记为 <code>autopilot_failed</code>。</p>`;
   return page({ title: "EventAnalysis 审稿工作台", body, notice, error });
 }
 
@@ -1127,7 +1158,7 @@ function detailPage(state, notice, error) {
     supportByJurisdiction: state.supportSummary?.byJurisdiction,
   });
   const surfaceStage = editorSurfaceStageText(item, guidance);
-  const hasActiveProcessing = item.workflow.status === "release_requested";
+  const hasActiveProcessing = ["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing", "release_requested"].includes(item.workflow.status);
   const detailPrimaryAction = itemPrimaryEntryAction(item, guidance, routeForDetail(item.id));
   const problemEntryLinks = renderProblemEntryLinks({ item, guidance, includeReviewPreview: true });
   const continuity = item.metrics.continuity.length
@@ -1146,7 +1177,7 @@ function detailPage(state, notice, error) {
       <p class="eyebrow"><a href="/">返回审稿队列</a></p>
       <h1 class="title">稿件详情</h1>
       <p class="subtitle">先看当前动作和下一步。稿件正文、事实摘要和后台原始记录仍然保留，但不是你现在必须先处理的部分。</p>
-      ${hasActiveProcessing ? `<p class="processing-note">当前稿件的发布申请正在处理中，页面每 5 秒自动刷新一次。</p>` : ""}
+      ${hasActiveProcessing ? `<p class="processing-note">当前稿件正在自动编辑部链路中处理，页面每 5 秒自动刷新一次。</p>` : ""}
     </section>
     <section class="hero">
       <p class="eyebrow">${escapeHtml(item.edition.competition || "未标注赛事")} · ${escapeHtml(surfaceStage)}</p>
@@ -2857,8 +2888,13 @@ async function handleAction(form) {
     return autoResolveReleaseBlockers(reviewItem, returnTo);
   }
   const releaseJob = await activeReviewJob(root, reviewItem.id, "release-request");
-  if (releaseJob && !["submit_release_zh", "preview_zh", "approve_and_submit_zh"].includes(form.action)) {
+  if (releaseJob && !["submit_release_zh", "preview_zh", "approve_and_submit_zh", "rerun_autopilot"].includes(form.action)) {
     throw new Error("该稿件的发布申请仍在处理中，请等待处理完成后再执行其他动作");
+  }
+  if (form.action === "rerun_autopilot") {
+    const result = await runCommand(["npm", "run", "editorial:autopilot", "--", `content/review-packets/${form.file}`], { cwd: root, timeoutMs: 3_600_000 });
+    const line = result.stdout.trim().split("\n").filter(Boolean).at(-1) || "自动审稿已重新触发";
+    return appendMessage(returnTo, "notice", line);
   }
   if (form.action === "approve_zh") {
     await updateReviewPacketStatus(root, form.file, "zh", "approved");
@@ -2895,11 +2931,6 @@ async function handleAction(form) {
       action: form.action,
       forceApprove: false,
     });
-  }
-  if (form.action === "review_pr") {
-    const result = await runCommand(commandFromEnv("EA_REVIEW_PR_COMMAND_JSON", ["npm", "run", "review:pr"]), { cwd: root, timeoutMs: 180_000 });
-    const line = result.stdout.trim().split("\n").filter(Boolean).at(-1) || "草稿 PR 已创建";
-    return appendMessage(returnTo, "notice", line);
   }
   throw new Error(`未知动作: ${form.action}`);
 }

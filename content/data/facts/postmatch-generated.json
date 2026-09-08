@@ -3,6 +3,96 @@
   "records": [
     {
       "status": "confirmed",
+      "validFrom": "2026-08-07T12:20:43.880Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16726690_6ac80cfc5e8d"
+      ],
+      "id": "event_130d5b456959ca59f045_final_result",
+      "subjectId": "event_130d5b456959ca59f045",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:20:43.880Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16726690_6ac80cfc5e8d"
+      ],
+      "id": "event_130d5b456959ca59f045_head_to_head_before_match",
+      "subjectId": "event_130d5b456959ca59f045",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:20:43.880Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16726690_6ac80cfc5e8d"
+      ],
+      "id": "event_130d5b456959ca59f045_personnel_changes",
+      "subjectId": "event_130d5b456959ca59f045",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:17:53.917Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578085_2ad986a8489a"
+      ],
+      "id": "event_14fa85c3e75b842f0779_final_result",
+      "subjectId": "event_14fa85c3e75b842f0779",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:17:53.917Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578085_2ad986a8489a"
+      ],
+      "id": "event_14fa85c3e75b842f0779_head_to_head_before_match",
+      "subjectId": "event_14fa85c3e75b842f0779",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:17:53.917Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578085_2ad986a8489a"
+      ],
+      "id": "event_14fa85c3e75b842f0779_personnel_changes",
+      "subjectId": "event_14fa85c3e75b842f0779",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
       "validFrom": "2026-07-16T08:18:25.188Z",
       "evidenceRefs": [
         "evidence_sofascore_12813008_a7ba7ed5d058",
@@ -582,6 +672,737 @@
     },
     {
       "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284974_cb299f3f7849"
+      ],
+      "id": "event_20995cfc2ba3a8f10bcf_final_result",
+      "subjectId": "event_20995cfc2ba3a8f10bcf",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284974_cb299f3f7849"
+      ],
+      "id": "event_20995cfc2ba3a8f10bcf_head_to_head_before_match",
+      "subjectId": "event_20995cfc2ba3a8f10bcf",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284974_cb299f3f7849"
+      ],
+      "id": "event_20995cfc2ba3a8f10bcf_personnel_changes",
+      "subjectId": "event_20995cfc2ba3a8f10bcf",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:01:28.287Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363246_cf54b9e50ace"
+      ],
+      "id": "event_221e91a9e618ee186eee_final_result",
+      "subjectId": "event_221e91a9e618ee186eee",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:01:28.287Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363246_cf54b9e50ace"
+      ],
+      "id": "event_221e91a9e618ee186eee_head_to_head_before_match",
+      "subjectId": "event_221e91a9e618ee186eee",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:01:28.287Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363246_cf54b9e50ace"
+      ],
+      "id": "event_221e91a9e618ee186eee_personnel_changes",
+      "subjectId": "event_221e91a9e618ee186eee",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363254_7b6a137ebfe4"
+      ],
+      "id": "event_23a80c028653b504c5b6_final_result",
+      "subjectId": "event_23a80c028653b504c5b6",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363254_7b6a137ebfe4"
+      ],
+      "id": "event_23a80c028653b504c5b6_head_to_head_before_match",
+      "subjectId": "event_23a80c028653b504c5b6",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 28,
+        "draws": 15,
+        "awayWins": 10,
+        "matches": 53,
+        "homeWinRate": 52.8,
+        "drawRate": 28.3,
+        "awayWinRate": 18.9
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363254_7b6a137ebfe4"
+      ],
+      "id": "event_23a80c028653b504c5b6_personnel_changes",
+      "subjectId": "event_23a80c028653b504c5b6",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310930_b1a4389db259"
+      ],
+      "id": "event_32e793c56c4929f55540_final_result",
+      "subjectId": "event_32e793c56c4929f55540",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310930_b1a4389db259"
+      ],
+      "id": "event_32e793c56c4929f55540_head_to_head_before_match",
+      "subjectId": "event_32e793c56c4929f55540",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 32,
+        "draws": 27,
+        "awayWins": 45,
+        "matches": 104,
+        "homeWinRate": 30.8,
+        "drawRate": 26,
+        "awayWinRate": 43.3
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310930_b1a4389db259"
+      ],
+      "id": "event_32e793c56c4929f55540_personnel_changes",
+      "subjectId": "event_32e793c56c4929f55540",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434022_a80504e8c99d"
+      ],
+      "id": "event_37193fb3ac5a62462504_final_result",
+      "subjectId": "event_37193fb3ac5a62462504",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434022_a80504e8c99d"
+      ],
+      "id": "event_37193fb3ac5a62462504_head_to_head_before_match",
+      "subjectId": "event_37193fb3ac5a62462504",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434022_a80504e8c99d"
+      ],
+      "id": "event_37193fb3ac5a62462504_personnel_changes",
+      "subjectId": "event_37193fb3ac5a62462504",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-08T18:43:46.324Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737093_71efdedde16d"
+      ],
+      "id": "event_47367dcee4dfe35a83bc_final_result",
+      "subjectId": "event_47367dcee4dfe35a83bc",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-08T18:43:46.324Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737093_71efdedde16d"
+      ],
+      "id": "event_47367dcee4dfe35a83bc_head_to_head_before_match",
+      "subjectId": "event_47367dcee4dfe35a83bc",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-08T18:43:46.324Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737093_71efdedde16d"
+      ],
+      "id": "event_47367dcee4dfe35a83bc_personnel_changes",
+      "subjectId": "event_47367dcee4dfe35a83bc",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_47857da6938eab653ebc_final_result",
+      "subjectId": "event_47857da6938eab653ebc",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_47857da6938eab653ebc_head_to_head_before_match",
+      "subjectId": "event_47857da6938eab653ebc",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 3,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 4,
+        "homeWinRate": 75,
+        "drawRate": 0,
+        "awayWinRate": 25
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_47857da6938eab653ebc_key_events",
+      "subjectId": "event_47857da6938eab653ebc",
+      "predicate": "key_events",
+      "value": [
+        {
+          "minute": "106'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Goal!",
+          "description": "Ferran TORRES (Spain) scores!!"
+        },
+        {
+          "minute": "108'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "109'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "Match end",
+          "description": "The final whistle sounds."
+        },
+        {
+          "minute": "111'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Yellow card",
+          "description": "Alexis MAC ALLISTER (Argentina) is booked by the referee."
+        },
+        {
+          "minute": "113'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Nico WILLIAMS (Spain) is ruled offside."
+        },
+        {
+          "minute": "114'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "115'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "117'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Lionel MESSI (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "119'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+1'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "120'+3'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Foul",
+          "description": "Nicolas TAGLIAFICO (Argentina) commits a foul."
+        },
+        {
+          "minute": "120'+4'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Eric GARCIA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+5'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Marc CUCURELLA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+6'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "End Time",
+          "description": "The referee blows for the end of the second period of extra time."
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_47857da6938eab653ebc_personnel_changes",
+      "subjectId": "event_47857da6938eab653ebc",
+      "predicate": "personnel_changes",
+      "value": [
+        {
+          "baseline": false,
+          "previousMatchId": "400021541",
+          "currentMatchId": "400021543",
+          "teamId": "43969",
+          "teamName": "Spain",
+          "sharedStarters": 11,
+          "currentStarters": 11,
+          "continuityRate": 100,
+          "incomingPlayerIds": [],
+          "outgoingPlayerIds": [],
+          "incomingPlayers": [],
+          "outgoingPlayers": []
+        },
+        {
+          "baseline": false,
+          "previousMatchId": "400021540",
+          "currentMatchId": "400021543",
+          "teamId": "43922",
+          "teamName": "Argentina",
+          "sharedStarters": 8,
+          "currentStarters": 11,
+          "continuityRate": 72.7,
+          "incomingPlayerIds": [
+            "402926",
+            "428882",
+            "430631"
+          ],
+          "outgoingPlayerIds": [
+            "402925",
+            "332847",
+            "485595"
+          ],
+          "incomingPlayers": [
+            {
+              "id": "402926",
+              "name": "Gonzalo MONTIEL"
+            },
+            {
+              "id": "428882",
+              "name": "Rodrigo DE PAUL"
+            },
+            {
+              "id": "430631",
+              "name": "Nico GONZALEZ"
+            }
+          ],
+          "outgoingPlayers": [
+            {
+              "id": "402925",
+              "name": "Nahuel MOLINA"
+            },
+            {
+              "id": "332847",
+              "name": "Leandro PAREDES"
+            },
+            {
+              "id": "485595",
+              "name": "Giuliano SIMEONE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:03:01.522Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310920_de2a386737fc"
+      ],
+      "id": "event_4acc32e4cec5b17c57de_final_result",
+      "subjectId": "event_4acc32e4cec5b17c57de",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:03:01.522Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310920_de2a386737fc"
+      ],
+      "id": "event_4acc32e4cec5b17c57de_head_to_head_before_match",
+      "subjectId": "event_4acc32e4cec5b17c57de",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:03:01.522Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310920_de2a386737fc"
+      ],
+      "id": "event_4acc32e4cec5b17c57de_personnel_changes",
+      "subjectId": "event_4acc32e4cec5b17c57de",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-09-02T00:01:32.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792552_e1d1223022ed"
+      ],
+      "id": "event_4e33cef8d03df3f92814_final_result",
+      "subjectId": "event_4e33cef8d03df3f92814",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 4,
+        "awayScore": 0,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-09-02T00:01:32.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792552_e1d1223022ed"
+      ],
+      "id": "event_4e33cef8d03df3f92814_head_to_head_before_match",
+      "subjectId": "event_4e33cef8d03df3f92814",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-09-02T00:01:32.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792552_e1d1223022ed"
+      ],
+      "id": "event_4e33cef8d03df3f92814_personnel_changes",
+      "subjectId": "event_4e33cef8d03df3f92814",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434026_669f37ede26b"
+      ],
+      "id": "event_4f9c70d9f8404c562fff_final_result",
+      "subjectId": "event_4f9c70d9f8404c562fff",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434026_669f37ede26b"
+      ],
+      "id": "event_4f9c70d9f8404c562fff_head_to_head_before_match",
+      "subjectId": "event_4f9c70d9f8404c562fff",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434026_669f37ede26b"
+      ],
+      "id": "event_4f9c70d9f8404c562fff_personnel_changes",
+      "subjectId": "event_4f9c70d9f8404c562fff",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310929_ab7e918d4ab3"
+      ],
+      "id": "event_59a5939bcc8923cf1c14_final_result",
+      "subjectId": "event_59a5939bcc8923cf1c14",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310929_ab7e918d4ab3"
+      ],
+      "id": "event_59a5939bcc8923cf1c14_head_to_head_before_match",
+      "subjectId": "event_59a5939bcc8923cf1c14",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 7,
+        "draws": 13,
+        "awayWins": 13,
+        "matches": 33,
+        "homeWinRate": 21.2,
+        "drawRate": 39.4,
+        "awayWinRate": 39.4
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310929_ab7e918d4ab3"
+      ],
+      "id": "event_59a5939bcc8923cf1c14_personnel_changes",
+      "subjectId": "event_59a5939bcc8923cf1c14",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434020_c72ca016b421"
+      ],
+      "id": "event_5a7ac334f37e4a4602db_final_result",
+      "subjectId": "event_5a7ac334f37e4a4602db",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434020_c72ca016b421"
+      ],
+      "id": "event_5a7ac334f37e4a4602db_head_to_head_before_match",
+      "subjectId": "event_5a7ac334f37e4a4602db",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16434020_c72ca016b421"
+      ],
+      "id": "event_5a7ac334f37e4a4602db_personnel_changes",
+      "subjectId": "event_5a7ac334f37e4a4602db",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
       "validFrom": "2026-07-17T00:08:07.486Z",
       "evidenceRefs": [
         "evidence_sofascore_12812996_b3e61fdfcf65",
@@ -925,6 +1746,512 @@
           ]
         }
       ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717092_38f135963f14"
+      ],
+      "id": "event_6a3f0dd483be579f9a3d_final_result",
+      "subjectId": "event_6a3f0dd483be579f9a3d",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717092_38f135963f14"
+      ],
+      "id": "event_6a3f0dd483be579f9a3d_head_to_head_before_match",
+      "subjectId": "event_6a3f0dd483be579f9a3d",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 0,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717092_38f135963f14"
+      ],
+      "id": "event_6a3f0dd483be579f9a3d_personnel_changes",
+      "subjectId": "event_6a3f0dd483be579f9a3d",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823073_5e96c89333e8"
+      ],
+      "id": "event_6b260c2fa47401d1215f_final_result",
+      "subjectId": "event_6b260c2fa47401d1215f",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823073_5e96c89333e8"
+      ],
+      "id": "event_6b260c2fa47401d1215f_head_to_head_before_match",
+      "subjectId": "event_6b260c2fa47401d1215f",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823073_5e96c89333e8"
+      ],
+      "id": "event_6b260c2fa47401d1215f_personnel_changes",
+      "subjectId": "event_6b260c2fa47401d1215f",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:21:20.356Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350246_017519114dad"
+      ],
+      "id": "event_7122329288df73b83148_final_result",
+      "subjectId": "event_7122329288df73b83148",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:21:20.356Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350246_017519114dad"
+      ],
+      "id": "event_7122329288df73b83148_head_to_head_before_match",
+      "subjectId": "event_7122329288df73b83148",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 0,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:21:20.356Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350246_017519114dad"
+      ],
+      "id": "event_7122329288df73b83148_personnel_changes",
+      "subjectId": "event_7122329288df73b83148",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16390286_ea8f45daa0bd"
+      ],
+      "id": "event_75dca64f47c9fe17cf78_final_result",
+      "subjectId": "event_75dca64f47c9fe17cf78",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16390286_ea8f45daa0bd"
+      ],
+      "id": "event_75dca64f47c9fe17cf78_head_to_head_before_match",
+      "subjectId": "event_75dca64f47c9fe17cf78",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 2,
+        "draws": 0,
+        "awayWins": 6,
+        "matches": 8,
+        "homeWinRate": 25,
+        "drawRate": 0,
+        "awayWinRate": 75
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16390286_ea8f45daa0bd"
+      ],
+      "id": "event_75dca64f47c9fe17cf78_personnel_changes",
+      "subjectId": "event_75dca64f47c9fe17cf78",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_78ce5634ea425d81f202_final_result",
+      "subjectId": "event_78ce5634ea425d81f202",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_78ce5634ea425d81f202_head_to_head_before_match",
+      "subjectId": "event_78ce5634ea425d81f202",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 3,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 4,
+        "homeWinRate": 75,
+        "drawRate": 0,
+        "awayWinRate": 25
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_78ce5634ea425d81f202_key_events",
+      "subjectId": "event_78ce5634ea425d81f202",
+      "predicate": "key_events",
+      "value": [
+        {
+          "minute": "106'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Goal!",
+          "description": "Ferran TORRES (Spain) scores!!"
+        },
+        {
+          "minute": "108'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "109'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "Match end",
+          "description": "The final whistle sounds."
+        },
+        {
+          "minute": "111'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Yellow card",
+          "description": "Alexis MAC ALLISTER (Argentina) is booked by the referee."
+        },
+        {
+          "minute": "113'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Nico WILLIAMS (Spain) is ruled offside."
+        },
+        {
+          "minute": "114'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "115'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "117'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Lionel MESSI (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "119'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+1'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "120'+3'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Foul",
+          "description": "Nicolas TAGLIAFICO (Argentina) commits a foul."
+        },
+        {
+          "minute": "120'+4'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Eric GARCIA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+5'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Marc CUCURELLA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+6'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "End Time",
+          "description": "The referee blows for the end of the second period of extra time."
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_78ce5634ea425d81f202_personnel_changes",
+      "subjectId": "event_78ce5634ea425d81f202",
+      "predicate": "personnel_changes",
+      "value": [
+        {
+          "baseline": false,
+          "previousMatchId": "400021541",
+          "currentMatchId": "400021543",
+          "teamId": "43969",
+          "teamName": "Spain",
+          "sharedStarters": 11,
+          "currentStarters": 11,
+          "continuityRate": 100,
+          "incomingPlayerIds": [],
+          "outgoingPlayerIds": [],
+          "incomingPlayers": [],
+          "outgoingPlayers": []
+        },
+        {
+          "baseline": false,
+          "previousMatchId": "400021540",
+          "currentMatchId": "400021543",
+          "teamId": "43922",
+          "teamName": "Argentina",
+          "sharedStarters": 8,
+          "currentStarters": 11,
+          "continuityRate": 72.7,
+          "incomingPlayerIds": [
+            "402926",
+            "428882",
+            "430631"
+          ],
+          "outgoingPlayerIds": [
+            "402925",
+            "332847",
+            "485595"
+          ],
+          "incomingPlayers": [
+            {
+              "id": "402926",
+              "name": "Gonzalo MONTIEL"
+            },
+            {
+              "id": "428882",
+              "name": "Rodrigo DE PAUL"
+            },
+            {
+              "id": "430631",
+              "name": "Nico GONZALEZ"
+            }
+          ],
+          "outgoingPlayers": [
+            {
+              "id": "402925",
+              "name": "Nahuel MOLINA"
+            },
+            {
+              "id": "332847",
+              "name": "Leandro PAREDES"
+            },
+            {
+              "id": "485595",
+              "name": "Giuliano SIMEONE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16796599_17886bb1cba0"
+      ],
+      "id": "event_7bbf60208315db9c75ed_final_result",
+      "subjectId": "event_7bbf60208315db9c75ed",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16796599_17886bb1cba0"
+      ],
+      "id": "event_7bbf60208315db9c75ed_head_to_head_before_match",
+      "subjectId": "event_7bbf60208315db9c75ed",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 2,
+        "awayWins": 0,
+        "matches": 2,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16796599_17886bb1cba0"
+      ],
+      "id": "event_7bbf60208315db9c75ed_personnel_changes",
+      "subjectId": "event_7bbf60208315db9c75ed",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:24:33.485Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350243_398a5df449b5"
+      ],
+      "id": "event_7cb644a0b32c2bb1c722_final_result",
+      "subjectId": "event_7cb644a0b32c2bb1c722",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:24:33.485Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350243_398a5df449b5"
+      ],
+      "id": "event_7cb644a0b32c2bb1c722_head_to_head_before_match",
+      "subjectId": "event_7cb644a0b32c2bb1c722",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:24:33.485Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350243_398a5df449b5"
+      ],
+      "id": "event_7cb644a0b32c2bb1c722_personnel_changes",
+      "subjectId": "event_7cb644a0b32c2bb1c722",
+      "predicate": "personnel_changes",
+      "value": []
     },
     {
       "status": "confirmed",
@@ -1702,6 +3029,681 @@
     },
     {
       "status": "confirmed",
+      "validFrom": "2026-08-05T12:16:16.247Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578083_5cc83a4f32eb"
+      ],
+      "id": "event_8a1b2bf35f021d25e8bf_final_result",
+      "subjectId": "event_8a1b2bf35f021d25e8bf",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T12:16:16.247Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578083_5cc83a4f32eb"
+      ],
+      "id": "event_8a1b2bf35f021d25e8bf_head_to_head_before_match",
+      "subjectId": "event_8a1b2bf35f021d25e8bf",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T12:16:16.247Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578083_5cc83a4f32eb"
+      ],
+      "id": "event_8a1b2bf35f021d25e8bf_personnel_changes",
+      "subjectId": "event_8a1b2bf35f021d25e8bf",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16822948_36a3680e014b"
+      ],
+      "id": "event_9943f31369fbe2009669_final_result",
+      "subjectId": "event_9943f31369fbe2009669",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16822948_36a3680e014b"
+      ],
+      "id": "event_9943f31369fbe2009669_head_to_head_before_match",
+      "subjectId": "event_9943f31369fbe2009669",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 0,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16822948_36a3680e014b"
+      ],
+      "id": "event_9943f31369fbe2009669_personnel_changes",
+      "subjectId": "event_9943f31369fbe2009669",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717101_b37431ab8725"
+      ],
+      "id": "event_9c128d501d4520f10be6_final_result",
+      "subjectId": "event_9c128d501d4520f10be6",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717101_b37431ab8725"
+      ],
+      "id": "event_9c128d501d4520f10be6_head_to_head_before_match",
+      "subjectId": "event_9c128d501d4520f10be6",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16717101_b37431ab8725"
+      ],
+      "id": "event_9c128d501d4520f10be6_personnel_changes",
+      "subjectId": "event_9c128d501d4520f10be6",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-10T01:21:53.541Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737110_0b5bd25707de"
+      ],
+      "id": "event_a17984abc0c818e5743e_final_result",
+      "subjectId": "event_a17984abc0c818e5743e",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-10T01:21:53.541Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737110_0b5bd25707de"
+      ],
+      "id": "event_a17984abc0c818e5743e_head_to_head_before_match",
+      "subjectId": "event_a17984abc0c818e5743e",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-10T01:21:53.541Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16737110_0b5bd25707de"
+      ],
+      "id": "event_a17984abc0c818e5743e_personnel_changes",
+      "subjectId": "event_a17984abc0c818e5743e",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823068_7b5a71487501"
+      ],
+      "id": "event_aacb2212ca3e69783799_final_result",
+      "subjectId": "event_aacb2212ca3e69783799",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823068_7b5a71487501"
+      ],
+      "id": "event_aacb2212ca3e69783799_head_to_head_before_match",
+      "subjectId": "event_aacb2212ca3e69783799",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 0,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16823068_7b5a71487501"
+      ],
+      "id": "event_aacb2212ca3e69783799_personnel_changes",
+      "subjectId": "event_aacb2212ca3e69783799",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:00:16.490Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16311125_4c183b891132"
+      ],
+      "id": "event_b50018b6a95292241844_final_result",
+      "subjectId": "event_b50018b6a95292241844",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:00:16.490Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16311125_4c183b891132"
+      ],
+      "id": "event_b50018b6a95292241844_head_to_head_before_match",
+      "subjectId": "event_b50018b6a95292241844",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 24,
+        "draws": 18,
+        "awayWins": 43,
+        "matches": 85,
+        "homeWinRate": 28.2,
+        "drawRate": 21.2,
+        "awayWinRate": 50.6
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-24T02:00:16.490Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16311125_4c183b891132"
+      ],
+      "id": "event_b50018b6a95292241844_personnel_changes",
+      "subjectId": "event_b50018b6a95292241844",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284979_a35003ba63d2"
+      ],
+      "id": "event_b6c64813b6255aba5097_final_result",
+      "subjectId": "event_b6c64813b6255aba5097",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284979_a35003ba63d2"
+      ],
+      "id": "event_b6c64813b6255aba5097_head_to_head_before_match",
+      "subjectId": "event_b6c64813b6255aba5097",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16284979_a35003ba63d2"
+      ],
+      "id": "event_b6c64813b6255aba5097_personnel_changes",
+      "subjectId": "event_b6c64813b6255aba5097",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:27:02.013Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16362759_71f3d1c7e790"
+      ],
+      "id": "event_b7d630874a83249398b6_final_result",
+      "subjectId": "event_b7d630874a83249398b6",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:27:02.013Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16362759_71f3d1c7e790"
+      ],
+      "id": "event_b7d630874a83249398b6_head_to_head_before_match",
+      "subjectId": "event_b7d630874a83249398b6",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:27:02.013Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16362759_71f3d1c7e790"
+      ],
+      "id": "event_b7d630874a83249398b6_personnel_changes",
+      "subjectId": "event_b7d630874a83249398b6",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:27:46.291Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350244_9796641e1a30"
+      ],
+      "id": "event_b86c847f744efc255f83_final_result",
+      "subjectId": "event_b86c847f744efc255f83",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:27:46.291Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350244_9796641e1a30"
+      ],
+      "id": "event_b86c847f744efc255f83_head_to_head_before_match",
+      "subjectId": "event_b86c847f744efc255f83",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T12:27:46.291Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16350244_9796641e1a30"
+      ],
+      "id": "event_b86c847f744efc255f83_personnel_changes",
+      "subjectId": "event_b86c847f744efc255f83",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:22:33.145Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578168_a41d3c609eea"
+      ],
+      "id": "event_bfd0f0d4bf8ac39cd04e_final_result",
+      "subjectId": "event_bfd0f0d4bf8ac39cd04e",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:22:33.145Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578168_a41d3c609eea"
+      ],
+      "id": "event_bfd0f0d4bf8ac39cd04e_head_to_head_before_match",
+      "subjectId": "event_bfd0f0d4bf8ac39cd04e",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-05T01:22:33.145Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16578168_a41d3c609eea"
+      ],
+      "id": "event_bfd0f0d4bf8ac39cd04e_personnel_changes",
+      "subjectId": "event_bfd0f0d4bf8ac39cd04e",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708166_5a468fe57b05"
+      ],
+      "id": "event_c9580798c506402430c0_final_result",
+      "subjectId": "event_c9580798c506402430c0",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "result": "draw"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708166_5a468fe57b05"
+      ],
+      "id": "event_c9580798c506402430c0_head_to_head_before_match",
+      "subjectId": "event_c9580798c506402430c0",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 0,
+        "awayWinRate": 100
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708166_5a468fe57b05"
+      ],
+      "id": "event_c9580798c506402430c0_personnel_changes",
+      "subjectId": "event_c9580798c506402430c0",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-31T12:02:45.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363249_e5f1ccd44509"
+      ],
+      "id": "event_cc67770210a9745a4751_final_result",
+      "subjectId": "event_cc67770210a9745a4751",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 4,
+        "awayScore": 3,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-31T12:02:45.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363249_e5f1ccd44509"
+      ],
+      "id": "event_cc67770210a9745a4751_head_to_head_before_match",
+      "subjectId": "event_cc67770210a9745a4751",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 11,
+        "draws": 5,
+        "awayWins": 6,
+        "matches": 22,
+        "homeWinRate": 50,
+        "drawRate": 22.7,
+        "awayWinRate": 27.3
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-31T12:02:45.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16363249_e5f1ccd44509"
+      ],
+      "id": "event_cc67770210a9745a4751_personnel_changes",
+      "subjectId": "event_cc67770210a9745a4751",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:06:34.737Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16359682_225dcedc3674"
+      ],
+      "id": "event_d5fd3a27dbce0802e5c6_final_result",
+      "subjectId": "event_d5fd3a27dbce0802e5c6",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 4,
+        "awayScore": 3,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:06:34.737Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16359682_225dcedc3674"
+      ],
+      "id": "event_d5fd3a27dbce0802e5c6_head_to_head_before_match",
+      "subjectId": "event_d5fd3a27dbce0802e5c6",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-07T12:06:34.737Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16359682_225dcedc3674"
+      ],
+      "id": "event_d5fd3a27dbce0802e5c6_personnel_changes",
+      "subjectId": "event_d5fd3a27dbce0802e5c6",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310931_cd174d4980f6"
+      ],
+      "id": "event_dab5c7f5d6fbea42e645_final_result",
+      "subjectId": "event_dab5c7f5d6fbea42e645",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "result": "away_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310931_cd174d4980f6"
+      ],
+      "id": "event_dab5c7f5d6fbea42e645_head_to_head_before_match",
+      "subjectId": "event_dab5c7f5d6fbea42e645",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-30T01:37:21.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16310931_cd174d4980f6"
+      ],
+      "id": "event_dab5c7f5d6fbea42e645_personnel_changes",
+      "subjectId": "event_dab5c7f5d6fbea42e645",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708150_74623dedd715"
+      ],
+      "id": "event_dc53f28001a135a8aaaa_final_result",
+      "subjectId": "event_dc53f28001a135a8aaaa",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708150_74623dedd715"
+      ],
+      "id": "event_dc53f28001a135a8aaaa_head_to_head_before_match",
+      "subjectId": "event_dc53f28001a135a8aaaa",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 0,
+        "matches": 1,
+        "homeWinRate": 0,
+        "drawRate": 100,
+        "awayWinRate": 0
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-29T01:00:00.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16708150_74623dedd715"
+      ],
+      "id": "event_dc53f28001a135a8aaaa_personnel_changes",
+      "subjectId": "event_dc53f28001a135a8aaaa",
+      "predicate": "personnel_changes",
+      "value": []
+    },
+    {
+      "status": "confirmed",
       "validFrom": "2026-07-21T01:06:55.257Z",
       "evidenceRefs": [
         "evidence_sofascore_12813005_8e641fc95565",
@@ -1935,6 +3937,287 @@
           ]
         }
       ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_f5fabf4348893487d4e7_final_result",
+      "subjectId": "event_f5fabf4348893487d4e7",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_f5fabf4348893487d4e7_head_to_head_before_match",
+      "subjectId": "event_f5fabf4348893487d4e7",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 3,
+        "draws": 0,
+        "awayWins": 1,
+        "matches": 4,
+        "homeWinRate": 75,
+        "drawRate": 0,
+        "awayWinRate": 25
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_f5fabf4348893487d4e7_key_events",
+      "subjectId": "event_f5fabf4348893487d4e7",
+      "predicate": "key_events",
+      "value": [
+        {
+          "minute": "106'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Goal!",
+          "description": "Ferran TORRES (Spain) scores!!"
+        },
+        {
+          "minute": "108'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Lamine YAMAL (Spain) commits a foul."
+        },
+        {
+          "minute": "109'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "Match end",
+          "description": "The final whistle sounds."
+        },
+        {
+          "minute": "111'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Yellow card",
+          "description": "Alexis MAC ALLISTER (Argentina) is booked by the referee."
+        },
+        {
+          "minute": "113'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Offside",
+          "description": "Nico WILLIAMS (Spain) is ruled offside."
+        },
+        {
+          "minute": "114'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "115'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "117'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Attempt at Goal",
+          "description": "Lionel MESSI (Argentina) attempts an effort on goal."
+        },
+        {
+          "minute": "119'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Nico WILLIAMS (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+1'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Corner",
+          "description": "Lionel MESSI (Argentina) takes a corner kick."
+        },
+        {
+          "minute": "120'+3'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43922",
+          "eventType": "Foul",
+          "description": "Nicolas TAGLIAFICO (Argentina) commits a foul."
+        },
+        {
+          "minute": "120'+4'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Eric GARCIA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+5'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": "43969",
+          "eventType": "Foul",
+          "description": "Marc CUCURELLA (Spain) commits a foul."
+        },
+        {
+          "minute": "120'+6'",
+          "homeScore": 1,
+          "awayScore": 0,
+          "teamId": null,
+          "eventType": "End Time",
+          "description": "The referee blows for the end of the second period of extra time."
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-07-30T00:05:18.930Z",
+      "evidenceRefs": [
+        "evidence_sofascore_12813005_8e641fc95565",
+        "evidence_fifa_400021543_942e9b1c6b22"
+      ],
+      "id": "event_f5fabf4348893487d4e7_personnel_changes",
+      "subjectId": "event_f5fabf4348893487d4e7",
+      "predicate": "personnel_changes",
+      "value": [
+        {
+          "baseline": false,
+          "previousMatchId": "400021541",
+          "currentMatchId": "400021543",
+          "teamId": "43969",
+          "teamName": "Spain",
+          "sharedStarters": 11,
+          "currentStarters": 11,
+          "continuityRate": 100,
+          "incomingPlayerIds": [],
+          "outgoingPlayerIds": [],
+          "incomingPlayers": [],
+          "outgoingPlayers": []
+        },
+        {
+          "baseline": false,
+          "previousMatchId": "400021540",
+          "currentMatchId": "400021543",
+          "teamId": "43922",
+          "teamName": "Argentina",
+          "sharedStarters": 8,
+          "currentStarters": 11,
+          "continuityRate": 72.7,
+          "incomingPlayerIds": [
+            "402926",
+            "428882",
+            "430631"
+          ],
+          "outgoingPlayerIds": [
+            "402925",
+            "332847",
+            "485595"
+          ],
+          "incomingPlayers": [
+            {
+              "id": "402926",
+              "name": "Gonzalo MONTIEL"
+            },
+            {
+              "id": "428882",
+              "name": "Rodrigo DE PAUL"
+            },
+            {
+              "id": "430631",
+              "name": "Nico GONZALEZ"
+            }
+          ],
+          "outgoingPlayers": [
+            {
+              "id": "402925",
+              "name": "Nahuel MOLINA"
+            },
+            {
+              "id": "332847",
+              "name": "Leandro PAREDES"
+            },
+            {
+              "id": "485595",
+              "name": "Giuliano SIMEONE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-27T12:02:15.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792539_1d8617d6013a"
+      ],
+      "id": "event_ff059df588040979799a_final_result",
+      "subjectId": "event_ff059df588040979799a",
+      "predicate": "final_result",
+      "value": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "result": "home_win"
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-27T12:02:15.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792539_1d8617d6013a"
+      ],
+      "id": "event_ff059df588040979799a_head_to_head_before_match",
+      "subjectId": "event_ff059df588040979799a",
+      "predicate": "head_to_head_before_match",
+      "value": {
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 0,
+        "matches": 0,
+        "homeWinRate": null,
+        "drawRate": null,
+        "awayWinRate": null
+      }
+    },
+    {
+      "status": "confirmed",
+      "validFrom": "2026-08-27T12:02:15.000Z",
+      "evidenceRefs": [
+        "evidence_sofascore_16792539_1d8617d6013a"
+      ],
+      "id": "event_ff059df588040979799a_personnel_changes",
+      "subjectId": "event_ff059df588040979799a",
+      "predicate": "personnel_changes",
+      "value": []
     }
   ]
 }

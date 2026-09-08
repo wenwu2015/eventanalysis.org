@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["decision", "summary", "overrideFindings", "rewriteBrief", "publishLocales", "confidence", "agentVersion"],
+  "properties": {
+    "decision": { "type": "string", "enum": ["approve", "rewrite", "quarantine"] },
+    "summary": { "type": "string" },
+    "overrideFindings": { "type": "array", "items": { "type": "string" } },
+    "rewriteBrief": { "type": "string" },
+    "publishLocales": { "type": "string" },
+    "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "agentVersion": { "type": "string" }
+  },
+  "additionalProperties": false
+}

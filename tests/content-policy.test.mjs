@@ -52,11 +52,14 @@ test("version one exposes football only while future ball sports remain isolated
   }
   const policy = JSON.parse(await readFile(resolve(root, "pipeline/config/policy.json"), "utf8"));
   assert.deepEqual(policy.activeSports, ["football"]);
+  assert.deepEqual(policy.automaticPublicationLocales, ["zh", "zh-hant", "en", "ja", "es", "ar"]);
   assert.equal(policy.awsPublicationMode, "manual");
 });
 
-test("content automation prepares local previews but cannot publish to AWS", async () => {
+test("autopilot publishes through the dedicated production wrapper while legacy preview helpers stay local", async () => {
   const automaticPublisher = await readFile(resolve(root, "pipeline/publish-automatic.mjs"), "utf8");
+  const autopilot = await readFile(resolve(root, "pipeline/editorial-autopilot.mjs"), "utf8");
+  const publishAgent = await readFile(resolve(root, "pipeline/publish-agent.mjs"), "utf8");
   const postmatch = await readFile(resolve(root, "pipeline/postmatch.mjs"), "utf8");
   const release = await readFile(resolve(root, "ops/aws/release.sh"), "utf8");
   const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
@@ -67,6 +70,12 @@ test("content automation prepares local previews but cannot publish to AWS", asy
   assert.doesNotMatch(automaticPublisher, /edition\.status = "published"/);
   assert.match(automaticPublisher, /edition\.status = "approved"/);
   assert.match(automaticPublisher, /publicationMode: "local_preview"/);
+  assert.match(autopilot, /"publish:agent"/);
+  assert.match(publishAgent, /"release:aws"/);
+  assert.match(publishAgent, /"--confirm-production"/);
+  assert.match(publishAgent, /`--content=\$\{publishable\.id\}`/);
+  assert.match(packageJson.scripts["editorial:autopilot"], /editorial-autopilot/);
+  assert.match(packageJson.scripts["publish:agent"], /publish-agent/);
   assert.match(packageJson.scripts["build:zh"], /--include-approved/);
   assert.match(packageJson.scripts["build:zh"], /--locales=zh/);
   assert.equal(packageJson.scripts["build:preview"], "npm run build:zh");

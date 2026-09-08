@@ -36,9 +36,16 @@ export async function loadPipelineConfig() {
   return { root, policy, sources: normalizedSources, ai, sourcePath, aiPath };
 }
 
+export function requiresCollectionSession(source = {}) {
+  return source.kind === "browser" && source.id === "sofascore";
+}
+
 export function validateSourceForCollection(source, now = new Date(), region = process.env.EA_COLLECTION_REGION || "") {
   if (!source.active) return { ok: false, reason: "inactive" };
   if (!source.license?.authorised) return { ok: false, reason: "not_authorised" };
+  if (requiresCollectionSession(source) && !source.storageStatePath) {
+    return { ok: false, reason: "storage_state_missing" };
+  }
   if (source.license.publicAttributionRequired) {
     return { ok: false, reason: "public_attribution_conflicts_with_site_policy" };
   }

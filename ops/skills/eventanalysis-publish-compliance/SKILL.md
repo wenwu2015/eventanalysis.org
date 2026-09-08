@@ -17,7 +17,7 @@ This Skill is an orchestration contract. Repository commands make the final deci
 6. Do not publish a standalone page about a minor. A minor may appear neutrally only in an official lineup or an already occurred event.
 7. Person profiles, person comparisons, criticism, injury, discipline, transfer, contract, private life, minors, national image, ethnicity, religion, politics, betting, match fixing, doping, corruption, and crime are risk B or C and cannot auto-publish.
 8. A legal pack is usable only when the deterministic validator accepts its official-source hashes, dates, scope, and local-counsel signature. Never create, infer, backdate, or approve a counsel signature.
-9. Missing evidence, legal coverage, agent output, hash match, lease, translation, quality report, or installed-Skill hash means stop. Never bypass or downgrade a hard failure.
+9. Missing evidence, legal coverage, agent output, hash match, translation, quality report, or installed-Skill hash means stop. Never bypass or downgrade a hard failure.
 10. Public HTML must not mention agents, models, this Skill, suppliers, private evidence, internal automation, or private paths.
 
 ## Required sequence
@@ -28,22 +28,23 @@ This Skill is an orchestration contract. Repository commands make the final deci
 2. Edit only the Chinese edition. Keep each paragraph's `claimRefs` explicit.
 3. Run `npm run data:validate`.
 4. Run the repository content-generation or revision command. Generators may produce only `needs_review`.
-5. Run translations from the Chinese master with `npm run content:translate -- <content-item.json>`.
+5. Run translations from the Chinese master with `npm run content:translate -- <content-item.json>` when you are explicitly preparing derived locales outside the autopilot wrapper.
 6. Run independent pre-audit with `npm run compliance:preaudit -- --content=<id>`.
 7. Run deterministic audit with `npm run compliance:audit -- --content=<id>`.
-8. If decision is REVIEW, create or retain a private review packet and stop. Do not publish.
-9. If decision is BLOCK, quarantine immediately. Use `--delete-body` for class C or prohibited language.
+8. For unattended publication, trigger `npm run editorial:autopilot -- --content=<id>`. The editor agent receives the review packet, facts, claims, deterministic findings and preaudit output, and makes the final content decision.
+9. If the editor decides `quarantine`, quarantine immediately. Use `--delete-body` for class C or prohibited language.
 
 ### When building or publishing
 
 1. Verify this Skill installation: `npm run compliance:skill:sync -- --check`.
-2. Do not run a direct S3 sync. `npm run publish:automatic -- --content=<id> --locales=zh` prepares the Chinese class-A item for local preview only and must never invoke AWS.
-3. After local validation, generate only the Chinese static preview with `npm run build:zh` or `npm run build:preview`. Do not generate or refresh derived languages during routine local editing.
-4. Complete data validation, source checks, independent pre-audit, deterministic legal/fact/civility checks, duplicate and SEO checks, Chinese static preview, leakage checks, and local browser review before any production release.
-5. AWS publication is a separate manual action. Only after explicit approval run `npm run release:aws -- --confirm-production`; this command runs `npm run release:prepare-locales` to derive and check non-Chinese editions before the production build. Never put this confirmation flag in a generator, monitor, scheduled job, or agent command.
-6. Emergency quarantine, tombstones and global freezes may still update AWS automatically because they only remove or block public content.
-7. If any step fails, leave AWS unchanged. Never turn local preview success into implied production approval.
-8. Never convert REVIEW or BLOCK to PASS manually in JSON.
+2. Do not run a direct S3 sync. `npm run publish:automatic -- --content=<id> --locales=zh` remains a legacy local-preview helper and does not perform production publication.
+3. The official unattended path is `npm run editorial:autopilot -- --content=<id>`, which may call `npm run publish:agent -- --content=<id>` after the editor approves the content.
+4. `npm run publish:agent -- --content=<id>` stages the Chinese master, derives all non-`zh` locales with `npm run release:prepare-locales`, then runs `npm run release:aws -- --confirm-production`.
+5. Deterministic preaudit, audit, editorial and prepublish findings still run and are recorded, but content-class findings are advisory to the editor agent rather than the final veto.
+6. Hard stops are execution failures only: invalid schema, missing config or commands, agent timeout, translation failure, AWS credential or upload failure, or failed live verification.
+7. Emergency quarantine, tombstones and global freezes may still update AWS automatically because they only remove or block public content.
+8. If any execution step fails after AWS mutation begins, trigger `npm run emergency:freeze -- --reason=autopilot_release_failure`.
+9. Never convert REVIEW or BLOCK to PASS manually in JSON; only a valid editor-agent approval record may override content findings.
 
 ### When reviewing a complaint or suspicious live content
 
@@ -69,9 +70,9 @@ Target markets are decided independently: a blocked target country is omitted fr
 
 ## Risk handling
 
-- **A / PASS:** Finished-match facts and directly supported mechanism analysis may continue to deterministic local preview gates after the 20-minute result stability window and two independent authorized sources. Production still requires an explicit manual release.
-- **B / REVIEW:** Stop for a separate human signature. No unattended AWS release.
-- **C / BLOCK:** Remove publishable prose, register an incident, and prevent restoration.
+- **A / PASS:** Finished-match facts and directly supported mechanism analysis may continue to the editor agent and, if approved, to unattended production release.
+- **B / REVIEW:** Preserve the finding for audit and feed it into the editor prompt. The editor may still approve, rewrite, or quarantine.
+- **C / BLOCK:** Remove publishable prose, register an incident, and prevent restoration unless a subsequent compliant revision is approved.
 
 The stricter result always wins when the reviewer and code disagree.
 
@@ -82,6 +83,9 @@ npm run content:generate:zh
 npm run content:translate -- <content-item.json>
 npm run compliance:preaudit -- --content=<id>
 npm run compliance:audit -- --content=<id>
+npm run editorial:autopilot -- --content=<id>
+npm run editorial:autopilot -- --resume-pending
+npm run publish:agent -- --content=<id>
 npm run compliance:quarantine -- --content=<id> --rule=<rule-id> --delete-body
 npm run publish:automatic -- --content=<id> --locales=zh
 npm run build:zh

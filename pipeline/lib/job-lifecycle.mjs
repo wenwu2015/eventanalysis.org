@@ -102,6 +102,19 @@ export async function withEphemeralJob({ root, articleId = `job-${randomUUID()}`
   const retainedEvidence = new Map();
   await mkdir(jobDir, { recursive: true, mode: 0o700 });
 
+  async function persistRetainedArtifacts() {
+    if (retainedUrls.size > 0) {
+      const privateRoot = resolve(root, "private-sources");
+      await mkdir(privateRoot, { recursive: true, mode: 0o700 });
+      await mergeUrlList(resolve(privateRoot, `${safeArticleId(articleId)}.txt`), retainedUrls);
+    }
+    if (retainedEvidence.size > 0) {
+      const evidenceRoot = resolve(root, "private-evidence");
+      await mkdir(evidenceRoot, { recursive: true, mode: 0o700 });
+      await mergeEvidencePacket(resolve(evidenceRoot, `${safeArticleId(articleId)}.json`), [...retainedEvidence.values()]);
+    }
+  }
+
   const context = {
     jobDir,
     retainUrl(value) {
@@ -121,21 +134,15 @@ export async function withEphemeralJob({ root, articleId = `job-${randomUUID()}`
     async checkDisk() {
       return assertWithinDiskBudget(jobDir, diskLimitBytes);
     },
+    async flushRetainedArtifacts() {
+      await persistRetainedArtifacts();
+    },
   };
 
   try {
     return await task(context);
   } finally {
-    if (retainedUrls.size > 0) {
-      const privateRoot = resolve(root, "private-sources");
-      await mkdir(privateRoot, { recursive: true, mode: 0o700 });
-      await mergeUrlList(resolve(privateRoot, `${safeArticleId(articleId)}.txt`), retainedUrls);
-    }
-    if (retainedEvidence.size > 0) {
-      const evidenceRoot = resolve(root, "private-evidence");
-      await mkdir(evidenceRoot, { recursive: true, mode: 0o700 });
-      await mergeEvidencePacket(resolve(evidenceRoot, `${safeArticleId(articleId)}.json`), [...retainedEvidence.values()]);
-    }
+    await persistRetainedArtifacts();
     await rm(jobDir, { recursive: true, force: true });
   }
 }

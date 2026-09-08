@@ -3,6 +3,14 @@
     "command": ["node", "pipeline/agents/codex-json-runner.mjs", "writer"],
     "timeoutMs": 600000
   },
+  "editor": {
+    "command": ["node", "pipeline/agents/codex-json-runner.mjs", "editor"],
+    "timeoutMs": 600000
+  },
+  "rewriter": {
+    "command": ["node", "pipeline/agents/codex-json-runner.mjs", "rewriter"],
+    "timeoutMs": 600000
+  },
   "translator": {
     "command": ["node", "pipeline/agents/codex-json-runner.mjs", "translator"],
     "timeoutMs": 1200000

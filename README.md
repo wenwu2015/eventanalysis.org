@@ -36,7 +36,7 @@ The repository baseline and the long-term product target are intentionally docum
 
 ### Editorial and factual rules
 
-- Editing stays one-click for the editor-facing workflow: the visible action is `一键审稿通过`.
+- The editor-facing workflow is now autopilot-first: new packets enter the editorial agent chain automatically, and the visible recovery action is `重新触发自动审稿`.
 - Lawyer review, legal-pack completion and jurisdiction-material review are removed from the editorial workflow. They are not blocking requirements for routine article approval.
 - Core match facts may publish when either two independent authorised sources confirm them, or one authorised official source confirms them and the source registry marks it as official.
 - Single-source publication is never permission to invent supporting facts. If extra facts cannot be confirmed deterministically, the article must stay narrow and describe only what the authorised source actually supports.
@@ -141,29 +141,28 @@ Advertising is disabled in `site/ad-config.json`; disabled builds emit no advert
 
 ## Review and publication
 
-Drafts are private review packets. Routine editing and post-match automation approve only the Chinese master for local preview. Derived languages are generated later, during the explicit production-release preparation step, so local copy changes do not spend translation/compliance work until publication is intended.
+Drafts are private review packets. New packets go straight into the editorial autopilot chain: editor review, up to three Chinese rewrites, full-locale translation, production publish and live verification. Legacy PR and one-click local-preview tools remain in the repo for manual fallback only; they are no longer the official entry point.
 
 ```bash
-npm run review:pr
 npm run review:admin
 npm run review:html -- content/review-packets/<content>.json
-npm run release:request -- content/review-packets/<content>.json --locales=zh
-npm run publish:automatic -- --content=<id> --locales=zh
+npm run editorial:autopilot -- --content=<id>
+npm run editorial:autopilot -- --resume-pending
+npm run publish:agent -- --content=<id>
 npm run build:zh
 npm run release:prepare-locales
-npm run content:publish -- content/review-packets/<content>.json
 npm run release:aws -- --confirm-production
 ```
 
-`npm run review:admin` starts a local review console on `http://127.0.0.1:3210`. It reads `content/review-packets` directly, renders the Chinese draft without requiring a public static page, and keeps the editor-facing flow to one action: `一键审稿通过`.
+`npm run review:admin` starts a local monitoring console on `http://127.0.0.1:3210`. It reads `content/review-packets` directly, renders the Chinese draft without requiring a public static page, and centers the editor-facing workflow on autopilot state, logs, retry count, quarantine, and `重新触发自动审稿`.
 
-That one action automatically approves the Chinese master, generates the missing private static review page in `private-review/html/<content-id>/index.html`, exposes a dynamic review page at `/review-preview/<content-id>` and a static review page at `/private-review/<content-id>/`, and then continues with the backend release-request checks.
+`npm run editorial:autopilot -- --content=<id>` is the single automatic editorial entry point. It consumes the current review packet, structured facts and claims, workflow state, deterministic findings and preaudit output, then runs the `editor` agent. If the decision is `rewrite`, the `rewriter` agent may update only `editions.zh`, and the loop can run at most three times. If the decision is `approve`, the system records the override decision, stages the Chinese master, derives all non-`zh` locales, runs `npm run release:aws -- --confirm-production`, and verifies the live result. Content-class deterministic `BLOCK` or `REVIEW` findings stay as audit inputs and do not veto publication by themselves.
 
-The backend still runs `compliance:preaudit`, deterministic audit, and if the result is PASS, `publish:automatic --locales=zh` plus `build:zh`. For core match facts, the deterministic gate accepts either two independent authorised sources or one authorised official source explicitly marked in the source registry. Lawyer review, legal-pack completion, and jurisdiction-material editing are no longer part of the editor workflow. The console now uses `release_blocked` only for factual or command-level interruptions, and `release_review_required` for non-A automatic review cases. It never triggers AWS release, and the blocked state means the article stayed unpublished.
+Only execution failures remain hard stops: invalid schema, missing commands or config, agent timeout, translation failure, AWS credential or upload failure, and live verification failure. AWS-side failures also trigger `npm run emergency:freeze -- --reason=autopilot_release_failure`.
 
-`npm run review:smoke` exercises the same state machine end to end. It generates a private Chinese review HTML page, submits a release request, verifies that the workflow lands in `release_ready`, `release_review_required`, or `release_blocked`, and then resets the packet. The smoke run uses the local deterministic reviewer config in `pipeline/config/ai.smoke.json`; routine work continues to use `pipeline/config/ai.local.json`.
+`npm run review:smoke` now exercises the same autopilot chain end to end. It triggers `editorial:autopilot`, waits for `published`, `autopilot_failed`, or `quarantined`, then resets the packet. The smoke run uses `pipeline/config/ai.smoke.json`; routine work continues to use `pipeline/config/ai.local.json`.
 
-The AWS release repeats data, quality, test, editorial and prepublish gates, derives missing non-Chinese editions from the Chinese master, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. See `doc/AWS_Deployment_Guide.md`.
+The AWS release repeats data, quality, test, editorial and prepublish gates, derives missing non-Chinese editions from the Chinese master, records rollback metadata, uploads new objects, publishes the CloudFront language router, removes retired objects and invalidates CloudFront. In the official flow, this step is invoked by `publish:agent`, not by PR review. See `doc/AWS_Deployment_Guide.md`.
 
 Search Console access stays local. Copy `pipeline/config/search-console.example.json` to the ignored `search-console.local.json`, set a short-lived `GOOGLE_SEARCH_CONSOLE_TOKEN`, then run:
 

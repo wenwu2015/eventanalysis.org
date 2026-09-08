@@ -1,21 +1,13 @@
 import cf from "cloudfront";
 
-// Viewer-request guard. The KVS is deliberately fail-closed: if the store,
-// global lease, country or route record is missing, article content is not
-// fetched from S3. Public navigation and legal/correction pages stay reachable.
+// Viewer-request guard. Published article routes are globally readable while
+// missing, frozen and withdrawn routes remain fail-closed.
 const kvs = cf.kvs();
 
 var SUPPORTED = {
   zh: true, "zh-hant": true, en: true, ja: true, ko: true, ru: true, es: true, pt: true, fr: true,
   de: true, it: true, ar: true, sv: true, nl: true, tr: true, pl: true,
   hr: true, sr: true, uk: true, fa: true, id: true
-};
-
-var COUNTRY_INDEX = {
-  AE: 0, BR: 1, CN: 2, DE: 3, ES: 4, FR: 5, GB: 6, HK: 7, HR: 8,
-  ID: 9, IR: 10, IT: 11, JP: 12, KR: 13, MO: 14, NL: 15, PL: 16,
-  PT: 17, QA: 18, RS: 19, RU: 20, SA: 21, SE: 22, TR: 23, TW: 24,
-  UA: 25, US: 26
 };
 
 function redirect(location, permanent) {
@@ -46,7 +38,7 @@ function querySuffix(querystring) {
 
 function blocked(statusCode, incidentId) {
   var gone = statusCode === 410;
-  var body = gone ? "This publication has been withdrawn." : "This publication is not available in your jurisdiction.";
+  var body = gone ? "This publication has been withdrawn." : "This publication is unavailable.";
   return {
     statusCode: statusCode,
     statusDescription: gone ? "Gone" : "Unavailable For Legal Reasons",
@@ -109,25 +101,16 @@ async function handler(event) {
   }
   if (isAlwaysAvailable(uri)) return request;
 
+  var routeValue = await getValue("route:" + uri);
+  if (routeValue && routeValue.split("|")[0] === "public") return request;
+
   var mode = await getValue("publication_mode");
   if (mode !== "normal") return blocked(410, "publication-frozen");
-  var globalExpiryValue = await getValue("content_valid_until");
-  var globalExpiry = Number(globalExpiryValue);
-  var now = Math.floor(Date.now() / 1000);
-  if (!globalExpiry || globalExpiry <= now) return blocked(451, "global-lease-expired");
 
-  var routeValue = await getValue("route:" + uri);
   if (!routeValue) return blocked(451, "route-unregistered");
   var parts = routeValue.split("|");
   if (parts[0] === "gone") return blocked(410, parts[3] || "withdrawn");
   if (parts[0] !== "live") return blocked(451, "route-invalid");
-  var routeExpiry = Number(parts[2]);
-  if (!routeExpiry || routeExpiry <= now) return blocked(451, "route-lease-expired");
 
-  var country = (request.headers["cloudfront-viewer-country"] || { value: "" }).value.toUpperCase();
-  var countryBit = COUNTRY_INDEX[country];
-  if (countryBit === undefined) return blocked(451, "country-unknown");
-  var mask = parseInt(parts[1], 16);
-  if (!Number.isFinite(mask) || (mask & (1 << countryBit)) === 0) return blocked(451, "country-not-approved");
   return request;
 }

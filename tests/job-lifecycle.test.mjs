@@ -46,6 +46,27 @@ test("private evidence survives while raw job files are removed", async () => {
   assert.equal(packet.records[0].rawHash, "abc123");
 });
 
+test("flushRetainedArtifacts persists evidence before the job callback returns", async () => {
+  const root = await fixtureRoot();
+  await withEphemeralJob({ root, articleId: "flush-one", diskLimitBytes: 10_000 }, async (job) => {
+    job.retainEvidence({
+      id: "evidence_flush_one",
+      sourceId: "fixture",
+      url: "https://example.com/match/2",
+      rightsSnapshotId: "contract-2",
+      capturedAt: "2026-08-07T12:20:43Z",
+      parserVersion: "fixture-v1",
+      rawHash: "def456",
+      fieldLocations: ["event.result"],
+      excerpt: "flush-first",
+    });
+    await job.flushRetainedArtifacts();
+    const packet = JSON.parse(await readFile(resolve(root, "private-evidence/flush-one.json"), "utf8"));
+    assert.equal(packet.records[0].id, "evidence_flush_one");
+  });
+  await assertJobsEmpty(root);
+});
+
 test("failure and cancellation still delete the complete job directory", async () => {
   for (const failure of [new Error("boom"), Object.assign(new Error("cancelled"), { name: "AbortError" })]) {
     const root = await fixtureRoot();

@@ -104,7 +104,7 @@ test("sending an item back to review clears preview compliance fields", () => {
   assert.equal("complianceValidUntil" in next.editions.zh, false);
 });
 
-test("review pending guidance uses one-click review pass", () => {
+test("review pending guidance routes into autopilot", () => {
   const item = {
     id: "match-review-pending",
     file: "match-review-pending.json",
@@ -115,13 +115,13 @@ test("review pending guidance uses one-click review pass", () => {
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
-  assert.equal(guidance.stateLabel, "待编辑一键通过");
-  assert.equal(guidance.primaryAction?.action, "approve_and_submit_zh");
-  assert.equal(guidance.primaryAction?.label, "一键审稿通过");
-  assert.match(guidance.nextStep, /自动批准中文/);
+  assert.equal(guidance.stateLabel, "待自动审稿");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.match(guidance.nextStep, /自动判断、改稿并推进正式发布/);
 });
 
-test("editorial approved guidance continues with one-click review pass", () => {
+test("editorial approved guidance continues with autopilot", () => {
   const item = {
     id: "match-editorial-approved",
     file: "match-editorial-approved.json",
@@ -132,10 +132,10 @@ test("editorial approved guidance continues with one-click review pass", () => {
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] });
-  assert.equal(guidance.stateLabel, "待一键流转");
-  assert.equal(guidance.primaryAction?.action, "approve_and_submit_zh");
-  assert.equal(guidance.primaryAction?.label, "一键审稿通过");
-  assert.match(guidance.nextStep, /提交后台预审与本地预发/);
+  assert.equal(guidance.stateLabel, "待自动流转");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
+  assert.match(guidance.nextStep, /从当前稿件继续推进/);
 });
 
 test("release blocked guidance routes fact-only blockers back to the item detail", () => {
@@ -160,7 +160,7 @@ test("release blocked guidance routes fact-only blockers back to the item detail
     metrics: { missing: ["head_to_head_history"] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["ZZ"], packs: [] });
-  assert.equal(guidance.stateLabel, "系统中断（未发布）");
+  assert.equal(guidance.stateLabel, "旧流程中断");
   assert.equal(guidance.primaryAction?.type, "link");
   assert.equal(guidance.primaryAction?.label, "去补事实包");
   assert.deepEqual(guidance.secondaryActions, []);
@@ -189,7 +189,7 @@ test("release blocked guidance sends fact-only blockers back to the item detail"
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["GB"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "系统中断（未发布）");
+  assert.equal(guidance.stateLabel, "旧流程中断");
   assert.equal(guidance.primaryAction?.label, "去补事实包");
   assert.equal(guidance.resolveHref, "/items/match-3");
 });
@@ -224,8 +224,8 @@ test("release blocked guidance can be retried with one click when no fact gap re
     },
   });
   assert.equal(guidance.primaryAction?.type, "form");
-  assert.equal(guidance.primaryAction?.action, "approve_and_submit_zh");
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.equal(guidance.primaryAction?.action, "rerun_autopilot");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
 });
 
 test("published guidance exposes a terminal published state", () => {
@@ -283,8 +283,8 @@ test("release blocked guidance stays one-click retry even if historical legal bl
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["GB"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "系统中断（未发布）");
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.equal(guidance.stateLabel, "旧流程中断");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
@@ -369,8 +369,8 @@ test("release blocked guidance still requires the current operator jurisdiction 
   };
   const packValidation = new Map([["GB", { ok: true, findings: [] }]]);
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["US"], packs: [] }, { packValidation });
-  assert.equal(guidance.stateLabel, "系统中断（未发布）");
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.equal(guidance.stateLabel, "旧流程中断");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.deepEqual(guidance.secondaryActions, []);
   assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
@@ -397,8 +397,8 @@ test("release blocked guidance follows the current retry scope instead of stale 
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["AR"], packs: [] }, { packValidation: new Map() });
-  assert.match(guidance.nextStep, /重新一键审核通过/);
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.match(guidance.nextStep, /重跑自动审稿/);
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
@@ -424,7 +424,7 @@ test("release blocked guidance prioritizes operator pack before other invalid ju
     metrics: { missing: [] },
   };
   const guidance = buildItemWorkflowGuidance(item, { operatorJurisdictions: ["US"], packs: [] }, { packValidation: new Map() });
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 
@@ -463,9 +463,9 @@ test("release blocked guidance no longer sends editor into legal-only blocker ha
     packValidation: new Map([["AR", { ok: false, findings: ["pack_not_active", "invalid_reviewed_at"] }]]),
     supportByJurisdiction: new Map([["AR", { jurisdiction: "AR", hasMaterial: false }]]),
   });
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.equal(guidance.resolveHref, "/items/match-6");
-  assert.match(guidance.nextStep, /重新一键审核通过/);
+  assert.match(guidance.nextStep, /重跑自动审稿/);
 });
 
 test("release blocked guidance still stays on one-click retry with multiple historical blocked jurisdictions", () => {
@@ -497,8 +497,8 @@ test("release blocked guidance still stays on one-click retry with multiple hist
     packValidation: new Map(),
     supportByJurisdiction: new Map([["AR", { jurisdiction: "AR", hasMaterial: false }]]),
   });
-  assert.match(guidance.nextStep, /重新一键审核通过/);
-  assert.equal(guidance.primaryAction?.label, "重新一键审核通过");
+  assert.match(guidance.nextStep, /重跑自动审稿/);
+  assert.equal(guidance.primaryAction?.label, "重新触发自动审稿");
   assert.ok(guidance.blockers.some((entry) => entry.includes("后台发布检查没有通过") || entry.includes("公开站点仍未发布")));
 });
 

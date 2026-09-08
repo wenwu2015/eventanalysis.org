@@ -17,15 +17,20 @@ function formatDate(value) {
 
 function workflowStatusText(status) {
   return {
+    autopilot_failed: "自动流程失败",
+    autopilot_publishing: "自动发布中",
+    autopilot_queued: "自动排队中",
+    autopilot_reviewing: "自动审稿中",
+    autopilot_rewriting: "自动改稿中",
     deleted: "已删除",
-    editorial_approved: "编辑已批准",
+    editorial_approved: "已批准待自动流转",
     published: "已发布",
     quarantined: "已隔离",
-    release_blocked: "系统中断（未发布）",
-    release_ready: "已完成本地预发",
-    release_requested: "发布申请处理中",
-    release_review_required: "发布待人工复核",
-    review_pending: "待编辑一键通过",
+    release_blocked: "旧流程中断",
+    release_ready: "旧流程本地预发完成",
+    release_requested: "旧流程处理中",
+    release_review_required: "旧流程待人工复核",
+    review_pending: "待自动审稿",
   }[status] || status;
 }
 
@@ -93,6 +98,12 @@ export function renderReviewPreviewHtml(reviewItem) {
     ? blockedWorkflowMeaning(workflow)
     : workflow.status === "release_requested"
       ? "后台正在执行独立预审与中文本地预发，本页稍后刷新状态即可。"
+      : workflow.status === "autopilot_reviewing"
+        ? "自动编辑部正在审稿，当前还没有进入正式生产发布。"
+        : workflow.status === "autopilot_rewriting"
+          ? "自动编辑部正在根据审稿意见重写中文主稿。"
+          : workflow.status === "autopilot_publishing"
+            ? "自动编辑部正在执行全量翻译、正式生产发布与线上验收。"
       : "";
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>${escapeHtml(edition.title)} - 审稿预览</title><style>
   :root {

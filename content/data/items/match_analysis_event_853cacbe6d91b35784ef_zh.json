@@ -192,7 +192,7 @@
       "timeline": [],
       "status": "published",
       "complianceStatus": "passed",
-      "complianceValidUntil": "2026-07-21T05:11:44.170Z",
+      "complianceValidUntil": "2026-08-11T01:32:32.780Z",
       "allowedJurisdictions": [
         "CN"
       ],
@@ -357,16 +357,16 @@
   "sourceEditionHash": "d4bc010e3b5f6e1c47b31cb5497fecfde7dd2baeff5752e9854787090a00613d",
   "riskClass": "A",
   "qualityReview": {
-    "reviewer": "compliance-agent:d0b86116-6783-47d7-a2c9-13b71079142a",
+    "reviewer": "compliance-agent:1786325419399-compliance-match_analysis_event_853cacbe6d91b35784ef_zh-1f6aee02-6c81-4339-852b-60eb4614543a",
     "decision": "approved",
-    "reviewedAt": "2026-07-20T05:11:44.179Z"
+    "reviewedAt": "2026-08-10T01:32:32.794Z"
   },
   "complianceReview": {
-    "reviewRunId": "d0b86116-6783-47d7-a2c9-13b71079142a",
-    "policyHash": "b6c337805b02c349b15e97d55c1b74c7e2ca85b505eb5fb3ab6e119e255e376e",
-    "auditedAt": "2026-07-20T05:11:44.170Z",
-    "expiresAt": "2026-07-21T05:11:44.170Z"
+    "reviewRunId": "1786325419399-compliance-match_analysis_event_853cacbe6d91b35784ef_zh-1f6aee02-6c81-4339-852b-60eb4614543a",
+    "policyHash": "a01aa5ae815bc246ca0c43d36cee6355edb523c55128fab806de9cd04accb6bc",
+    "auditedAt": "2026-08-10T01:32:32.780Z",
+    "expiresAt": "2026-08-11T01:32:32.780Z"
   },
-  "reviewedAt": "2026-07-20T05:11:44.179Z",
+  "reviewedAt": "2026-08-10T01:32:32.794Z",
   "publishedAt": "2026-07-20T05:11:44.192Z"
 }

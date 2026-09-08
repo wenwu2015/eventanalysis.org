@@ -313,7 +313,7 @@ async function summarizePacket(root, packet, routes, eventMap, entityMap, eviden
 }
 
 function comparePackets(left, right) {
-  const statusOrder = ["review_pending", "editorial_approved", "release_requested", "release_review_required", "release_blocked", "release_ready", "published", "deleted", "quarantined"];
+  const statusOrder = ["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing", "autopilot_failed", "review_pending", "editorial_approved", "release_requested", "release_review_required", "release_blocked", "release_ready", "published", "deleted", "quarantined"];
   const leftStatus = left.workflow?.status || left.edition.status;
   const rightStatus = right.workflow?.status || right.edition.status;
   const leftIndex = statusOrder.indexOf(leftStatus);
@@ -837,13 +837,62 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
     blockers: [],
   };
 
+  if (status === "autopilot_queued") {
+    return {
+      ...base,
+      stateLabel: "自动排队中",
+      why: item.workflow?.summary || "新稿件已进入自动编辑部队列。",
+      nextStep: "等待自动编辑部接手。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
+    };
+  }
+
+  if (status === "autopilot_reviewing") {
+    return {
+      ...base,
+      stateLabel: "自动审稿中",
+      why: item.workflow?.summary || "自动编辑部正在审稿。",
+      nextStep: "等待自动审稿完成。",
+    };
+  }
+
+  if (status === "autopilot_rewriting") {
+    return {
+      ...base,
+      stateLabel: "自动改稿中",
+      why: item.workflow?.summary || "自动编辑部正在根据合规意见改稿。",
+      nextStep: "等待自动改稿完成。",
+    };
+  }
+
+  if (status === "autopilot_publishing") {
+    return {
+      ...base,
+      stateLabel: "自动发布中",
+      why: item.workflow?.summary || "自动编辑部正在执行翻译、生产发布与线上验收。",
+      nextStep: "等待生产发布完成。",
+    };
+  }
+
+  if (status === "autopilot_failed") {
+    return {
+      ...base,
+      stateLabel: "自动流程失败",
+      why: item.workflow?.summary || "自动编辑部未能完成本轮处理。",
+      nextStep: "查看错误后重跑自动审稿，或直接隔离稿件。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
+      secondaryActions: [{ type: "form", action: "quarantine_zh", label: "隔离稿件" }],
+      blockers: item.workflow?.autopilot?.lastError ? [item.workflow.autopilot.lastError] : [],
+    };
+  }
+
   if (status === "review_pending") {
     return {
       ...base,
-      stateLabel: "待编辑一键通过",
-      why: reviewHtmlBuilt ? "审稿材料已就绪，编辑可以直接一键通过。" : "还没有私有静态审稿页；一键通过时系统会自动补生成。",
-      nextStep: "点击一键审稿通过。系统会自动批准中文、生成私有审稿页，并提交后台预审与本地预发检查。",
-      primaryAction: { type: "form", action: "approve_and_submit_zh", label: "一键审稿通过" },
+      stateLabel: "待自动审稿",
+      why: reviewHtmlBuilt ? "审稿材料已就绪，等待自动编辑部接手。" : "还没有私有静态审稿页；自动审稿开始时系统会按需补生成。",
+      nextStep: "触发自动审稿，系统会自动判断、改稿并推进正式发布。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
       secondaryActions: [],
       blockers: missingFacts.length ? [`事实包缺口：${missingFacts.join("、")}`] : [],
     };
@@ -852,10 +901,10 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
   if (status === "editorial_approved") {
     return {
       ...base,
-      stateLabel: "待一键流转",
-      why: reviewHtmlBuilt ? "中文主稿已批准，等待进入后台检查。" : "中文主稿已批准，但还没有私有静态审稿页；一键流转时系统会自动补生成。",
-      nextStep: "点击一键审稿通过，系统会继续生成缺失审稿页并提交后台预审与本地预发。",
-      primaryAction: { type: "form", action: "approve_and_submit_zh", label: "一键审稿通过" },
+      stateLabel: "待自动流转",
+      why: reviewHtmlBuilt ? "中文主稿已批准，等待自动编辑部继续推进。" : "中文主稿已批准，但还没有私有静态审稿页。",
+      nextStep: "重新触发自动审稿，系统会从当前稿件继续推进。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
       secondaryActions: [],
       blockers: missingFacts.length ? [`事实包缺口：${missingFacts.join("、")}`] : [],
     };
@@ -864,10 +913,11 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
   if (status === "release_requested") {
     return {
       ...base,
-      stateLabel: "发布申请处理中",
-      why: "后台正在执行独立预审和中文本地预发。",
-      nextStep: "等待后台结果自动刷新。",
+      stateLabel: "旧流程处理中",
+      why: "该稿件还停在旧的 release-request 流程中。",
+      nextStep: "建议直接重跑自动审稿，切换到新自动编辑部链路。",
       resolveHref: `/items/${encodeURIComponent(item.id)}`,
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
     };
   }
 
@@ -878,15 +928,15 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
     if (missingFacts.length) blockers.push(`事实包缺口仍未补齐：${missingFacts.join("、")}。`);
     return {
       ...base,
-      stateLabel: "系统中断（未发布）",
-      why: `这次只是后台发布申请被系统中断，公开站点并未新增发布。${blockers[0]}`,
+      stateLabel: "旧流程中断",
+      why: `这次是旧发布链路中断。${blockers[0]}`,
       nextStep: missingFacts.length
-        ? "先回稿件详情补齐事实包，随后直接重新一键审核通过。"
-        : "直接重新一键审核通过，系统会重跑后台预审与中文本地预发。",
+        ? "先回稿件详情补齐事实包，再重跑自动审稿。"
+        : "直接重跑自动审稿，系统会走新的自动编辑部链路。",
       resolveHref: factsResolveHref,
       primaryAction: missingFacts.length
         ? { type: "link", href: factsResolveHref, label: "去补事实包" }
-        : { type: "form", action: "approve_and_submit_zh", label: "重新一键审核通过" },
+        : { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
       secondaryActions: [],
       blockers,
     };
@@ -895,10 +945,10 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
   if (status === "release_review_required") {
     return {
       ...base,
-      stateLabel: "待人工复核",
-      why: item.workflow?.summary || "独立预审要求人工复核。",
-      nextStep: "创建私有草稿 PR，转人工复核。",
-      primaryAction: { type: "form", action: "review_pr", label: "创建草稿 PR" },
+      stateLabel: "旧流程待人工复核",
+      why: item.workflow?.summary || "该稿件还停在旧的人工复核节点。",
+      nextStep: "直接重跑自动审稿，切换到新自动编辑部链路。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
       secondaryActions: [],
       blockers: missingFacts.length ? [`事实包缺口：${missingFacts.join("、")}`] : [],
     };
@@ -907,10 +957,10 @@ export function buildItemWorkflowGuidance(item, registry = {}, { packValidation 
   if (status === "release_ready") {
     return {
       ...base,
-      stateLabel: "已完成本地预发",
-      why: previewBuilt ? "中文本地预发页已生成，可以交付发物审核。" : "合规已经通过，但本地预发页还未找到。",
-      nextStep: "创建私有草稿 PR，进入发物审核。",
-      primaryAction: { type: "form", action: "review_pr", label: "创建草稿 PR" },
+      stateLabel: "旧流程本地预发完成",
+      why: previewBuilt ? "该稿件已经完成旧流程本地预发。" : "旧流程已经通过，但未走正式生产发布。",
+      nextStep: "直接重跑自动审稿，切换到自动生产发布链路。",
+      primaryAction: { type: "form", action: "rerun_autopilot", label: "重新触发自动审稿" },
       secondaryActions: previewBuilt ? [] : [{ type: "form", action: "build_review_html", label: "补生成审稿 HTML" }],
       blockers: missingFacts.length ? [`事实包缺口：${missingFacts.join("、")}`] : [],
     };
@@ -994,6 +1044,11 @@ export async function loadReviewAdminState(root) {
     return accumulator;
   }, {
     total: 0,
+    autopilot_queued: 0,
+    autopilot_reviewing: 0,
+    autopilot_rewriting: 0,
+    autopilot_publishing: 0,
+    autopilot_failed: 0,
     review_pending: 0,
     editorial_approved: 0,
     release_requested: 0,

@@ -17,15 +17,35 @@ function isOfficialAuthorisedSource(source = null) {
   return Boolean(source?.official && source?.license?.authorised);
 }
 
+function isAuthorisedSource(source = null) {
+  return Boolean(source?.license?.authorised);
+}
+
+function isEligibleSingleSource(coreSources, {
+  sourceRegistry = [],
+  allowSingleOfficialCoreSource = false,
+  allowSingleAuthorisedCoreSource = false,
+} = {}) {
+  if (coreSources.size !== 1) return false;
+  const sourceMap = new Map((sourceRegistry || []).map((source) => [source.id, source]));
+  const [sourceId] = [...coreSources];
+  const source = sourceMap.get(sourceId);
+  if (allowSingleOfficialCoreSource && isOfficialAuthorisedSource(source)) return true;
+  if (allowSingleAuthorisedCoreSource && isAuthorisedSource(source)) return true;
+  return false;
+}
+
 function satisfiesCoreSourceRequirement(coreSources, minimumIndependentCoreSources = 2, {
   sourceRegistry = [],
   allowSingleOfficialCoreSource = false,
+  allowSingleAuthorisedCoreSource = false,
 } = {}) {
   if (coreSources.size >= minimumIndependentCoreSources) return true;
-  if (!allowSingleOfficialCoreSource || coreSources.size !== 1) return false;
-  const sourceMap = new Map((sourceRegistry || []).map((source) => [source.id, source]));
-  const [sourceId] = [...coreSources];
-  return isOfficialAuthorisedSource(sourceMap.get(sourceId));
+  return isEligibleSingleSource(coreSources, {
+    sourceRegistry,
+    allowSingleOfficialCoreSource,
+    allowSingleAuthorisedCoreSource,
+  });
 }
 
 export function buildFactBundle(evidence, minimumIndependentCoreSources = 2, options = {}) {
@@ -60,14 +80,16 @@ export function buildFactBundle(evidence, minimumIndependentCoreSources = 2, opt
   const keyEvents = evidence.flatMap((item) => item.keyEvents || []);
   const evidenceRefs = [...new Set(evidence.map((item) => item.evidenceId).filter(Boolean))];
   const missing = [];
+  const singleSourceMode = isEligibleSingleSource(coreSources, options);
+  const collectedAt = options.now instanceof Date ? options.now.toISOString() : (options.now || new Date().toISOString());
   if (!satisfiesCoreSourceRequirement(coreSources, minimumIndependentCoreSources, options)) missing.push("independent_core_source_confirmation");
-  if (headToHead.matches === 0) missing.push("head_to_head_history");
-  if (personnelChanges.length === 0) missing.push("personnel_change_confirmation");
+  if (!singleSourceMode && headToHead.matches === 0) missing.push("head_to_head_history");
+  if (!singleSourceMode && personnelChanges.length === 0) missing.push("personnel_change_confirmation");
   return {
     schemaVersion: 1,
     id: `match-${event.id}`,
     sport: String(event.sport || "football").toLowerCase(),
-    collectedAt: new Date().toISOString(),
+    collectedAt,
     status: missing.length ? "data_incomplete" : "needs_review",
     match: {
       id: event.id,

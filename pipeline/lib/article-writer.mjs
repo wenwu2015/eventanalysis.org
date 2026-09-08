@@ -19,6 +19,11 @@ const causalReplacements = [
   [/因此/gu, "在此背景下"],
 ];
 
+const genericPrimaryIntentKeys = new Set([
+  "post_match_analysis",
+  "post_match_key_moments",
+]);
+
 function softenUnsupportedCausality(text) {
   let output = String(text || "");
   for (const [pattern, replacement] of causalReplacements) output = output.replace(pattern, replacement);
@@ -83,7 +88,7 @@ export function normalizeReviewDraft(item) {
   return item;
 }
 
-function assertDraftShape(item, structured) {
+export function assertDraftShape(item, structured) {
   if (!item.id || !item.type || !item.sport || !item.angleKey || !item.originalContribution) throw new Error("Structured draft identity fields are incomplete");
   if (!Array.isArray(item.claims) || !item.claims.length) throw new Error("Structured draft requires evidence-backed claims");
   if (!item.editions?.zh) throw new Error("Structured draft has no Chinese source edition");
@@ -98,8 +103,10 @@ function assertDraftShape(item, structured) {
     edition.status = "needs_review";
     edition.complianceStatus = "unreviewed";
   }
-  if (!item.primaryIntentKey || item.primaryIntentKey === "post_match_analysis") {
-    const eventScope = [...new Set(structured.references.eventRefs || item.eventRefs || [])].sort();
+  const eventScope = [...new Set(structured.references.eventRefs || item.eventRefs || [])].sort();
+  const needsEventScopedMomentIntent = item.type === "moment_analysis"
+    && !String(item.primaryIntentKey || "").startsWith("moment-analysis-event-");
+  if (!item.primaryIntentKey || genericPrimaryIntentKeys.has(item.primaryIntentKey) || needsEventScopedMomentIntent) {
     if (!eventScope.length) throw new Error("Structured draft has no event scope for primary intent");
     item.primaryIntentKey = normalizeSlug([item.type, ...eventScope].join("-"));
   }
@@ -108,13 +115,19 @@ function assertDraftShape(item, structured) {
   for (const pattern of forbiddenPublicPatterns) if (pattern.test(publicCopy)) throw new Error(`Public draft failed disclosure/media policy: ${pattern}`);
 }
 
-function writingPrompt(facts, structured) {
+function writingPrompt(facts, structured, { draftType = "match_analysis" } = {}) {
   return {
-    objective: "Create structured post-match football analysis editions for editorial review.",
+    objective: draftType === "moment_analysis"
+      ? "Create a structured post-match football moments analysis edition for editorial review."
+      : "Create structured post-match football analysis editions for editorial review.",
     schemaVersion: 3,
     sourceLocale: "zh",
+    requestedDraft: {
+      type: draftType,
+    },
     requirements: [
       "Return one ContentItem JSON object with stable entityRefs, eventRefs, Claim objects and exactly one Chinese Edition at editions.zh.",
+      `Set type to ${draftType} and keep the angle specific to that draft type.`,
       "Use supplied deterministic scores, head-to-head calculations and evidence references without inventing missing values.",
       "Separate fact, calculation and analysis claims; every paragraph must reference one or more claims.",
       "State a specific reader question, angleKey and originalContribution before drafting.",
@@ -122,35 +135,45 @@ function writingPrompt(facts, structured) {
       "Do not create any non-Chinese edition. Translation is a later, separately audited workflow.",
       "Never use an English placeholder for a missing language edition.",
       "Set every edition to needs_review. Publication is an editorial action outside this task.",
+      draftType === "moment_analysis"
+        ? "For moment_analysis, stay narrow: write only deterministic key events, score progression, confirmed calculations and limited mechanism descriptions supported by the evidence."
+        : "For match_analysis, explain the result through confirmed facts, deterministic calculations and limited evidence-backed mechanism analysis.",
     ],
     facts,
     structured,
   };
 }
 
-export async function createReviewArtifact({ facts, aiConfig, job, root, requestedLocales }) {
+export async function createReviewArtifact({ facts, aiConfig, job, root, requestedLocales, draftType = "match_analysis", contentId = null }) {
   const reviewRoot = resolve(root, "content/review-packets");
   await mkdir(reviewRoot, { recursive: true });
+  const outputId = contentId || facts.id;
   if (facts.status === "data_incomplete") {
-    const path = resolve(reviewRoot, `${facts.id}.json`);
+    const path = resolve(reviewRoot, `${outputId}.json`);
     await writeFile(path, `${JSON.stringify({ ...facts, publicationBlocked: true }, null, 2)}\n`);
     return { kind: "blocked", path };
   }
   if (!aiConfig.writer.command?.length) {
-    const path = resolve(reviewRoot, `${facts.id}.json`);
+    const path = resolve(reviewRoot, `${outputId}.json`);
     await writeFile(path, `${JSON.stringify({ ...facts, publicationBlocked: true, missing: [...facts.missing, "writer_configuration"] }, null, 2)}\n`);
     return { kind: "blocked", path };
   }
   const structured = materializeFactBundle(facts);
+  await job.flushRetainedArtifacts?.();
   await persistMaterializedBundle(root, structured);
   const promptPath = resolve(job.jobDir, "writer-prompt.json");
   const outputPath = resolve(job.jobDir, "writer-output.json");
-  await writeFile(promptPath, `${JSON.stringify(writingPrompt(facts, structured), null, 2)}\n`, { mode: 0o600 });
+  await writeFile(promptPath, `${JSON.stringify(writingPrompt(facts, structured, { draftType }), null, 2)}\n`, { mode: 0o600 });
   await runCommand(aiConfig.writer.command, { cwd: root, timeoutMs: aiConfig.writer.timeoutMs, env: { EA_PROMPT_PATH: promptPath, EA_OUTPUT_PATH: outputPath } });
   const item = JSON.parse(await readFile(outputPath, "utf8"));
+  if (outputId) item.id = outputId;
+  item.type = draftType;
   item.schemaVersion = 3;
   item.revision ||= 1;
+  item.eventRefs = [...structured.references.eventRefs];
+  item.entityRefs = [...structured.references.entityRefs];
   item.nexusJurisdictions = [...new Set(structured.entities.map((entity) => entity.attributes?.jurisdiction).filter(Boolean))].sort();
+  if (Array.isArray(facts.focusPeople) && facts.focusPeople.length) item.focusPeople = facts.focusPeople;
   normalizeReviewDraft(item);
   assertDraftShape(item, structured);
   const path = resolve(reviewRoot, `${item.id}.json`);

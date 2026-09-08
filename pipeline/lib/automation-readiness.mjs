@@ -1,3 +1,4 @@
+import { validateSourceForCollection } from "./config.mjs";
 import { legalValidationDisabled, targetJurisdictions, validateLegalPack } from "./compliance.mjs";
 
 export function summarizeAutomationReadiness({ config, policy, registry, requirePublication = false, now = new Date() }) {
@@ -5,9 +6,13 @@ export function summarizeAutomationReadiness({ config, policy, registry, require
   const publicationFailures = [];
   const bypassLegalValidation = legalValidationDisabled(policy);
 
-  for (const role of ["writer", "translator", "complianceReviewer"]) {
+  for (const role of ["writer", "editor", "rewriter", "translator", "complianceReviewer"]) {
     if (!config.ai[role]?.command?.length) reviewFailures.push(`agent_command_missing:${role}`);
   }
+
+  const discoverySource = (config.sources || []).find((source) => source.id === "sofascore");
+  const discoveryPolicy = discoverySource ? validateSourceForCollection(discoverySource, now) : { ok: false, reason: "missing" };
+  if (!discoveryPolicy.ok) reviewFailures.push(`collection_source_unavailable:sofascore:${discoveryPolicy.reason}`);
 
   if (!bypassLegalValidation) {
     const packs = new Map((registry.packs || []).map((pack) => [pack.jurisdiction, pack]));

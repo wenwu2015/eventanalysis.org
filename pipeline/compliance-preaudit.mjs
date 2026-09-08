@@ -27,7 +27,11 @@ const [config, policy, legalRegistry, data] = await Promise.all([
 ]);
 if (!config.ai.complianceReviewer?.command?.length) throw new Error("Compliance reviewer agent is not configured in pipeline/config/ai.local.json");
 const facts = new Map(data.facts.map((fact) => [fact.id, fact]));
+const events = new Map(data.events.map((event) => [event.id, event]));
+const entities = new Map(data.entities.map((entity) => [entity.id, entity]));
 const relevantFactIds = new Set((item.claims || []).flatMap((claim) => claim.factRefs || []));
+const relevantEventIds = new Set(item.eventRefs || []);
+const relevantEntityIds = new Set(item.entityRefs || []);
 const editorialOneClickMode = requestedLocales?.length === 1 && requestedLocales[0] === "zh";
 const bypassLegalValidation = legalValidationDisabled(policy);
 const targetCountries = editorialOneClickMode
@@ -43,8 +47,73 @@ const applicableCountries = editorialOneClickMode
 const applicablePacks = editorialOneClickMode
   ? []
   : bypassLegalValidation
-    ? []
+  ? []
   : applicableCountries.map((country) => legalRegistry.packs.find(({ jurisdiction }) => jurisdiction === country)).filter(Boolean);
+
+function summarizePolicyForReview(policy) {
+  return {
+    version: policy.version,
+    sourceLocale: policy.sourceLocale,
+    publicationLeaseHours: policy.publicationLeaseHours,
+    disableLegalPackValidation: policy.disableLegalPackValidation,
+    allowSingleOfficialCoreSource: policy.allowSingleOfficialCoreSource,
+    allowSingleAuthorisedCoreSource: policy.allowSingleAuthorisedCoreSource,
+    automaticPublicationLocales: policy.automaticPublicationLocales,
+    localeMarkets: policy.localeMarkets,
+    automaticTypes: policy.automaticTypes,
+    humanReviewTypes: policy.humanReviewTypes,
+    highRiskCategories: policy.highRiskCategories,
+  };
+}
+
+function summarizeLegalPack(pack) {
+  if (!pack) return null;
+  return {
+    jurisdiction: pack.jurisdiction,
+    reviewedAt: pack.reviewedAt || null,
+    effectiveFrom: pack.effectiveFrom || null,
+    effectiveThrough: pack.effectiveThrough || null,
+    officialSources: pack.officialSources || [],
+    counselSignature: pack.counselSignature ? "[present]" : null,
+    restrictions: pack.restrictions || [],
+  };
+}
+
+function summarizeFact(fact) {
+  return {
+    id: fact.id,
+    subjectId: fact.subjectId,
+    predicate: fact.predicate,
+    value: fact.value,
+    status: fact.status,
+  };
+}
+
+function summarizeEntity(entity) {
+  return {
+    id: entity.id,
+    kind: entity.kind,
+    sport: entity.sport,
+    names: entity.names || {},
+    aliases: entity.aliases || [],
+    attributes: entity.attributes || {},
+  };
+}
+
+function summarizeEvent(event) {
+  return {
+    id: event.id,
+    kind: event.kind,
+    sport: event.sport,
+    competitionName: event.competitionName || null,
+    startedAt: event.startedAt || null,
+    status: event.status || null,
+    homeTeamId: event.homeTeamId || null,
+    awayTeamId: event.awayTeamId || null,
+    homeScore: event.homeScore ?? null,
+    awayScore: event.awayScore ?? null,
+  };
+}
 
 await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitBytes: config.policy.jobDiskLimitBytes }, async (job) => {
   const promptPath = resolve(job.jobDir, "compliance-input.json");
@@ -71,15 +140,19 @@ await withEphemeralJob({ root, articleId: `compliance-${item.id}`, diskLimitByte
         : bypassLegalValidation
           ? "This review run ignores legal-pack completeness and jurisdiction coverage. Review only factual support, civility and translation fidelity."
         : "Use overall BLOCK when any content-nexus jurisdiction is missing or blocked; a nexus failure cannot be limited to one market.",
+      "Referenced structured entities are authoritative evidence for mapped team, competition and person names when those names appear in the item.",
+      "Referenced structured events are authoritative evidence for competition name, kickoff time, participating teams and final score. A localized restatement of those event fields is allowed when it does not add unsupported facts.",
       "Use REVIEW for a high-risk but not prohibited topic that requires an editor or counsel.",
       "Use BLOCK for uncertainty, guessing, insult, national or ethnic attack, health speculation, unsupported allegation, translation drift, missing legal coverage or missing evidence.",
       "Do not infer intent, mental state, character, future performance, injury, crime, corruption, doping, betting or match fixing.",
       "Set expiresAt to an ISO timestamp after the current review time and no later than expected.expiresAtNotAfter.",
     ],
-    policy,
-    legalPacks: applicablePacks,
+    policy: summarizePolicyForReview(policy),
+    legalPacks: applicablePacks.map(summarizeLegalPack).filter(Boolean),
     missingLegalPacks: editorialOneClickMode || bypassLegalValidation ? [] : applicableCountries.filter((country) => !applicablePacks.some((pack) => pack.jurisdiction === country)),
-    facts: [...relevantFactIds].map((id) => facts.get(id)).filter(Boolean),
+    entities: [...relevantEntityIds].map((id) => entities.get(id)).filter(Boolean).map(summarizeEntity),
+    events: [...relevantEventIds].map((id) => events.get(id)).filter(Boolean).map(summarizeEvent),
+    facts: [...relevantFactIds].map((id) => facts.get(id)).filter(Boolean).map(summarizeFact),
     claims: item.claims,
     sourceEdition: item.editions.zh,
     derivedEditions: Object.fromEntries(Object.entries(item.editions || {}).filter(([locale]) => locale !== "zh")),

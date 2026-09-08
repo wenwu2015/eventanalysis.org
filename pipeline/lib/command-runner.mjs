@@ -26,7 +26,10 @@ export function runCommand(command, { cwd, env = {}, timeoutMs = 600_000 } = {})
       clearTimeout(timer);
       if (code === 0) resolve({ stdout: Buffer.concat(stdout).toString("utf8"), stderr: Buffer.concat(stderr).toString("utf8") });
       else {
-        const error = new Error(`Command failed (${code ?? signal}): ${Buffer.concat(stderr).toString("utf8").slice(-2_000)}`);
+        const stderrText = Buffer.concat(stderr).toString("utf8");
+        const stdoutText = Buffer.concat(stdout).toString("utf8");
+        const detail = (stderrText || stdoutText).slice(-2_000);
+        const error = new Error(`Command failed (${code ?? signal}): ${detail}`);
         error.code = "COMMAND_FAILED";
         reject(error);
       }

@@ -64,22 +64,24 @@ etag = updateKeys(store.arn, etag, { puts: [{ Key: "publication_mode", Value: "f
 const current = aws("cloudfront-keyvaluestore", "list-keys", ["--kvs-arn", store.arn]).Items || [];
 const desiredRoutes = new Map((manifest.routes || []).map((route) => [
   `route:${route.path}`,
-  `live|${route.countryMask}|${Math.floor(Date.parse(route.expiresAt) / 1000)}|`,
+  "live|0|0|",
 ]));
-const staleRouteKeys = current.filter(({ Key, Value }) => Key.startsWith("route:") && String(Value).startsWith("live|") && !desiredRoutes.has(Key)).map(({ Key }) => Key);
+for (const path of manifest.publicRoutes || []) desiredRoutes.set(`route:${path}`, "public|0|0|");
+const staleRouteKeys = current.filter(({ Key, Value }) => Key.startsWith("route:") && /^(?:live|public)\|/.test(String(Value)) && !desiredRoutes.has(Key)).map(({ Key }) => Key);
 
 for (const batch of batches([...desiredRoutes].map(([Key, Value]) => ({ Key, Value })))) etag = updateKeys(store.arn, etag, { puts: batch });
 for (const batch of batches(staleRouteKeys)) etag = updateKeys(store.arn, etag, { deletes: batch });
 
 const globals = [
-  { Key: "content_valid_until", Value: String(Math.floor(Date.parse(manifest.contentValidUntil) / 1000)) },
-  { Key: "country_index", Value: JSON.stringify(manifest.countryIndex) },
   { Key: "policy_hash", Value: manifest.policyHash },
   { Key: "generated_at", Value: manifest.generatedAt },
 ];
 etag = updateKeys(store.arn, etag, { puts: globals });
+const retiredGlobalKeys = current.filter(({ Key }) => ["content_valid_until", "country_index"].includes(Key)).map(({ Key }) => Key);
+if (retiredGlobalKeys.length) etag = updateKeys(store.arn, etag, { deletes: retiredGlobalKeys });
 if (manifest.publicationMode === "normal") etag = updateKeys(store.arn, etag, { puts: [{ Key: "publication_mode", Value: "normal" }] });
 
 await mkdir(resolve(runtimePath, ".."), { recursive: true });
-await writeFile(runtimePath, `${JSON.stringify({ name, arn: store.arn, etag, publicationMode: manifest.publicationMode, routeCount: desiredRoutes.size }, null, 2)}\n`, { mode: 0o600 });
-console.log(JSON.stringify({ status: "edge_policy_synced", name, arn: store.arn, publicationMode: manifest.publicationMode, routes: desiredRoutes.size }, null, 2));
+const publicRouteCount = (manifest.publicRoutes || []).length;
+await writeFile(runtimePath, `${JSON.stringify({ name, arn: store.arn, etag, publicationMode: manifest.publicationMode, routeCount: desiredRoutes.size, articleRouteCount: (manifest.routes || []).length, publicRouteCount }, null, 2)}\n`, { mode: 0o600 });
+console.log(JSON.stringify({ status: "edge_policy_synced", name, arn: store.arn, publicationMode: manifest.publicationMode, routes: desiredRoutes.size, articleRoutes: (manifest.routes || []).length, publicRoutes: publicRouteCount }, null, 2));

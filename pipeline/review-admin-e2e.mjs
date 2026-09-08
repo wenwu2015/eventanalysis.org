@@ -159,21 +159,18 @@ try {
   const row = page.locator("article.queue-card").filter({ has: rowLink });
   recordCheck("dashboard_loaded", { ok: true });
 
-  await clickButtonIn(page, row, "一键审稿通过", "正在后台执行中文发布检查");
+  await clickButtonIn(page, row, "重新触发自动审稿", "自动编辑部监控台");
   workflow = await workflowState();
-  assert.equal(workflow.status, "release_requested");
-  assert.equal(await pathExists(reviewHtmlPath), true, "Review HTML should be created from one-click approval");
-  assert.equal(workflow.preview.reviewHtmlPath.endsWith(`${testId}/index.html`), true);
-  await waitForText(page, "发布申请处理中");
-  workflow = await waitForWorkflowStatus(["release_blocked", "release_review_required", "release_ready"]);
-  recordCheck("dashboard_one_click_review_pass", { ok: true, workflowStatus: workflow.status, decision: workflow.release.decision });
+  assert.ok(["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing", "autopilot_failed", "published"].includes(workflow.status));
+  await waitForText(page, "自动编辑部监控台");
+  workflow = await waitForWorkflowStatus(["autopilot_failed", "published", "quarantined"], 120_000);
+  recordCheck("dashboard_autopilot", { ok: true, workflowStatus: workflow.status, decision: workflow.autopilot?.lastEditorDecision || null });
 
   await openLocator(page, rowLink, "稿件详情");
   assert.equal(page.url(), detailUrl);
   recordCheck("detail_opened", { ok: true });
 
-  assert.equal(await pathExists(reviewHtmlPath), true);
-  recordCheck("detail_build_review_html", { ok: true });
+  recordCheck("detail_loaded", { ok: true });
 
   await openLinkIn(page, page.locator("main"), "打开动态审稿页", "此页面仅用于私有审稿与发物审核");
   assert.equal(page.url(), dynamicReviewUrl);
@@ -182,12 +179,15 @@ try {
   await page.goBack({ waitUntil: "domcontentloaded" });
   await waitForText(page, "稿件详情");
 
-  await openLinkIn(page, page.locator("main"), "打开静态 HTML", "此页面仅用于私有审稿与发物审核");
-  assert.equal(page.url(), staticReviewUrl);
-  recordCheck("detail_static_review_link", { ok: true });
-
-  await page.goBack({ waitUntil: "domcontentloaded" });
-  await waitForText(page, "稿件详情");
+  if (await page.getByRole("link", { name: "打开静态 HTML", exact: true }).count()) {
+    await openLinkIn(page, page.locator("main"), "打开静态 HTML", "此页面仅用于私有审稿与发物审核");
+    assert.equal(page.url(), staticReviewUrl);
+    recordCheck("detail_static_review_link", { ok: true });
+    await page.goBack({ waitUntil: "domcontentloaded" });
+    await waitForText(page, "稿件详情");
+  } else {
+    recordCheck("detail_static_review_link", { ok: true, skipped: true });
+  }
 
   await clickButtonIn(page, page.locator("main"), "隔离稿件", "标记为 quarantined");
   workflow = await workflowState();
@@ -198,17 +198,17 @@ try {
   await clickButtonIn(page, page.locator("main"), "退回待审", "退回 needs_review");
   workflow = await workflowState();
   assert.equal(workflow.status, "review_pending");
-  await waitForText(page, "发布申请状态: 待编辑一键通过");
+  await waitForText(page, "发布申请状态: 待自动审稿");
   recordCheck("detail_reset", { ok: true, workflowStatus: workflow.status });
 
-  await clickButtonIn(page, page.locator("main"), "一键审稿通过", "正在后台执行中文发布检查");
+  await clickButtonIn(page, page.locator("main"), "重新触发自动审稿", "稿件详情");
   workflow = await workflowState();
-  assert.equal(workflow.status, "release_requested");
-  workflow = await waitForWorkflowStatus(["release_blocked", "release_review_required", "release_ready"]);
+  assert.ok(["autopilot_queued", "autopilot_reviewing", "autopilot_rewriting", "autopilot_publishing", "autopilot_failed", "published"].includes(workflow.status));
+  workflow = await waitForWorkflowStatus(["autopilot_failed", "published", "quarantined"], 120_000);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForLoadState("networkidle").catch(() => {});
-  await waitForText(page, `发布申请状态: ${workflow.status === "release_blocked" ? "系统中断（未发布）" : workflow.status === "release_review_required" ? "发布待人工复核" : "本地预发完成（未公开发布）"}`);
-  recordCheck("detail_one_click_review_pass", { ok: true, workflowStatus: workflow.status, decision: workflow.release.decision });
+  await waitForText(page, `发布申请状态: ${workflow.status === "autopilot_failed" ? "自动流程失败" : workflow.status === "published" ? "已发布" : "已隔离"}`);
+  recordCheck("detail_autopilot", { ok: true, workflowStatus: workflow.status, decision: workflow.autopilot?.lastEditorDecision || null });
 
   await openLinkIn(page, page.locator("main"), "返回审稿队列", "审稿队列");
   assert.equal(page.url(), dashboardUrl);
